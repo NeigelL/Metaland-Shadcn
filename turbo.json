@@ -16,30 +16,18 @@
     "dev": {
       "cache": false,
       "persistent": true
+    },
+     "admin": {
+      "cache": false,
+      "persistent": true
+    },
+     "agent": {
+      "cache": false,
+      "persistent": true
+    },
+     "buyer": {
+      "cache": false,
+      "persistent": true
     }
-  },
-  "globalDependencies": [
-    "pnpm-lock.yaml",
-    ".env"
-  ],
-  "globalEnv": [
-    "OPENAI_API_KEY",
-    "GEMINI_API_KEY",
-    "NEXTAUTH_SECRET",
-    "AUTH_SECRET",
-    "CSRF_SECRET"
-  ],
-  "globalPassThroughEnv": [
-    "MONGODB_URI",
-    "MONGODB_DATABASE",
-    "REDIS_URL",
-    "GOOGLE_CLIENT_ID",
-    "GOOGLE_CLIENT_SECRET",
-    "AWS_ACCESS_KEY_ID",
-    "AWS_SECRET_ACCESS_KEY",
-    "AWS_REGION",
-    "AWS_S3_BUCKET_NAME",
-    "NEXT_PUBLIC_GOOGLE_MAPS_API_KEY",
-    "NEXT_PUBLIC_SOCKET_SERVER_URL"
-  ]
+  }
 }

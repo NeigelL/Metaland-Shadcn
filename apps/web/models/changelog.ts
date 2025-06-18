@@ -26,10 +26,9 @@ const collectionExceptions:any = {
 
 function changelogPlugin(schema: Schema<any>, next: Function) {
 
-  schema.post('save', async function (doc: Document & {_change_by?: string, _change_by_label?: string}) {
-    
+  schema.post('save', async function (doc: Document & {_change_by: string, _change_by_label: string}) {
     if(doc.isNew) {
-      models.Changelog && await models.Changelog.create({
+      const history = await Changelog.create({
         collection_name: schema.get('collection'),
         entity_id: doc._id,
         operation: IHistoryOperation.CREATE,
@@ -75,7 +74,7 @@ function changelogPlugin(schema: Schema<any>, next: Function) {
       description = `Soft Deleted ${collectionName} with ID ${updated._id} by ${item._change_by_label}`
     }
 
-    await this.model.create({
+    await Changelog.create({
       collection_name: collectionName,
       entity_id: original._id,
       operation: IHistoryOperation.UPDATE,
@@ -91,7 +90,7 @@ function changelogPlugin(schema: Schema<any>, next: Function) {
     const collectionName = this.model.collection.name
     let org:any = await this.model.findOne(this.getQuery())
     let item:any = this
-    await this.model.create({
+    await Changelog.create({
       collection_name: collectionName,
       entity_id: org._id,
       operation: IHistoryOperation.DELETE,
@@ -125,6 +124,6 @@ function areEqual(a: any, b: any): boolean {
 
 
 
-const Changelog: Model<IChangeHistory> = models.Changelog || model<IChangeHistory>('Changelog', HistorySchema)
+const Changelog:Model<IChangeHistory> = models.Changelog || model<IChangeHistory>('Changelog', HistorySchema)
 
 export { Changelog, changelogPlugin }

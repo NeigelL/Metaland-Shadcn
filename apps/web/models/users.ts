@@ -1,9 +1,9 @@
 import { Schema, models, model, Model } from "mongoose"
-import { changelogPlugin } from "./changelog";
-import { DEFAULT_COMPANY } from "@/lib/serverConst";
+
+import { DEFAULT_COMPANY } from "@/serverConstant";
 import { IUser } from "./interfaces/users";
 import referenceSchema, { preValidateReferenceCode } from "./base/reference_code";
-
+import { changelogPlugin } from "./changelog";
 
 const userSchema = new Schema<IUser>({
     ...referenceSchema.obj,
@@ -72,5 +72,5 @@ preValidateReferenceCode(userSchema,"USR","users")
 userSchema.virtual('fullName').get(function(){ return this.first_name + ' ' + this.middle_name+ ' ' + this.last_name })
 userSchema.index({'email' : 'text','first_name': 'text','middle_name' : 'text', 'last_name' : 'text'})
 
-const User : Model<IUser> = models.User ||  model<IUser>("User",userSchema, 'users')
-export default User;
+const User:Model<IUser> = models?.User || model<IUser>("User",userSchema, 'users')
+export default User

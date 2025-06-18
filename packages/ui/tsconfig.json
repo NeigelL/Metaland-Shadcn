@@ -6,6 +6,6 @@
       "@workspace/ui/*": ["./src/*"]
     }
   },
-  "include": [".", "../../apps/web/components/app-sidebar.tsx"],
+  "include": ["."],
   "exclude": ["node_modules", "dist"]
 }

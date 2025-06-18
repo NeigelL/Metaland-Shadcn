@@ -1,77 +1,85 @@
 import { AuthOptions, getServerSession } from "next-auth"
-import Credentials from "next-auth/providers/credentials"
 import GoogleProvider from "next-auth/providers/google"
 import dbConnect from "./mongodb"
-import bcrypt from "bcryptjs"
-// import { getUser, registerAfterSignIn } from "@/actions/actions"
-import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next"
 import User from "@/models/users"
+import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next"
+import { can, getUserPermissions } from "@/services/permissionService"
 import { getUserService, registerAfterSignInService } from "@/services/userService"
-import { getUserPermissionsService } from "@/services/permissionService"
-// import { getUserPermissions } from "@/services/permissionService"
+import { headers } from "next/headers"
+
+
 
 const nextAuthOptions : AuthOptions = {
     useSecureCookies:true,
+    // debug: true,
+    // cookies: {
+    //     callbackUrl: {
+    //         name: "next-auth.callback-url",
+    //         options: {
+    //             httpOnly: true,
+    //             sameSite: "lax",
+                
+    //         }
+    //     },
+    // },
     providers :[
         GoogleProvider({
             clientId: process.env.GOOGLE_CLIENT_ID?? "",
-            clientSecret: process.env?.GOOGLE_CLIENT_SECRET ?? ""
+            clientSecret: process.env?.GOOGLE_CLIENT_SECRET ?? "",
         }),
-        Credentials({
-            credentials: {
-                email : {
-                    label: "Email", type : "text"
-                },
-                password: {label: "Password", type : "password" }
-            },
-            authorize : async (credentials, req) => { // not using since only google sign in
-                await dbConnect()
-                const userDoc = await User.findOne({
-                    email: credentials?.email,
-                    active: false
-                }).select("+password")
+        // Credentials({
+        //     credentials: {
+        //         email : {
+        //             label: "Email", type : "text"
+        //         },
+        //         password: {label: "Password", type : "password" }
+        //     },
+        //     authorize : async(credentials) => { 
+        //         // not using since only google sign in
+        //         await dbConnect()
+        //         const host = await headers()
+        //         const user:any = await User.findOne({
+        //             email: credentials?.email,
+        //             active: false
+        //         }).select("+password")
 
-                if(!userDoc) {
-                    const userEmail = await User.findOne({
-                        email: credentials?.email
-                    }).select("+password")
-                    if(!userEmail) {
-                        await registerAfterSignInService(credentials)
-                    }
-                    return null
-                    // throw new Error("Email not found! Please register")
-                }
-                if(!credentials?.password) {
-                    throw new Error ("Password is empty")
-                }
-                if(userDoc.password) {
-                    const match = await bcrypt.compare(
-                        credentials?.password,
-                        userDoc.password
-                    )
-                    if (!match) {
-                        return null
-                    }
-                }
+        //         if(!user) {
+        //             const userEmail = await User.findOne({
+        //                 email: credentials?.email
+        //             }).select("+password")
+        //             if(!userEmail) {
+        //                 await registerAfterSignInService(credentials)
+        //             }
+        //             return null
+        //             // throw new Error("Email not found! Please register")
+        //         }
+        //         if(!credentials?.password) {
+        //             throw new Error ("Password is empty")
+        //         }
 
-                // Convert Mongoose document to plain object and ensure required fields
-                const user = userDoc.toObject()
-                return {
-                    id: userDoc.id ?? userDoc._id.toString(),
-                    ...user
-                }
-            } ,
-        })
+        //         const match = await bcrypt.compare(
+        //             credentials?.password,
+        //              user?.password
+        //         )
+
+               
+
+        //         return user
+        //     } ,
+        // })
     ],
     session : {
         strategy : "jwt"
     },
     callbacks: {
+        async redirect({url, baseUrl}) {
+            return url
+        },
         async jwt({token, user, account}) { // returns token to the client
             await dbConnect()
             // console.dir({'jwt callbacks' : 'jwt', token, user, account})
             if(token?.user_id) {
-                return {...token,  permissions : await getUserPermissionsService(token.user_id.toString())}
+                return {...token,  permissions : await getUserPermissions(token.user_id.toString())}
             }
 
             const dbUser = await User.findOne({email: token?.email})
@@ -81,7 +89,7 @@ const nextAuthOptions : AuthOptions = {
                     ...dbUser.toJSON(),
                     user_id : dbUser.id.toString(),
                     _id : dbUser._id.toString(),
-                    permissions : await getUserPermissionsService(dbUser.id.toString(), true)
+                    permissions : await getUserPermissions(dbUser.id.toString(), true)
                 }
             }
             return token
@@ -94,16 +102,28 @@ const nextAuthOptions : AuthOptions = {
         async signIn({ user, account, profile}) {
             await dbConnect()
             // console.dir({'signIn callbacks' : 'signIn',user, account, profile})
-            const checkUser = await User.findOne({email: user.email})
+            const checkUser:any = await User.findOne({email: user.email, login: true})
+            const host = await headers()
             if(!checkUser) {
                 await registerAfterSignInService(user)
             }
-            if(checkUser ) {
-                await getUserPermissionsService(checkUser._id.toString(), true)
+
+            await getUserPermissions(checkUser._id.toString(), true)
+            // console.dir({'asd' : host.get("host")})
+
+            if( await can("role:agent", checkUser._id )  && process.env.NEXT_AGENT_DOMAIN  == host.get("host")) {
+                return checkUser
             }
-            const dbUser = await User.findOne({email: user.email, login: true})
-            // Only allow sign in if dbUser exists (i.e., user is allowed to login)
-            return !!dbUser
+
+            if( await can("role:office-staff", checkUser._id )  && process.env.NEXT_ADMIN_DOMAIN  == host.get("host")) {
+                return checkUser
+            }
+
+            if( await can("role:buyer", checkUser._id )  && process.env.NEXT_BUYER_DOMAIN  == host.get("host")) {
+                return checkUser
+            }
+
+            return false
         },
         // async signOut({session, token}) {
         //     console.dir({'signOut' : 'signOut', session, token })
@@ -137,23 +157,23 @@ const nextAuthOptions : AuthOptions = {
     //     verifyRequest: "/auth/verify-request",
     //     newUser : "/auth/new-user"
     // },
-    logger : {
-        error(code, metadata){
-            // console.dir({
-            //     'error' : 'error', code, metadata
-            // })
-        },
-        warn(code) {
-            // console.dir({
-            //     'warn' : 'warn', code
-            // })
-        },
-        debug(code, metadata) {
-            // console.dir({
-            //     'debug' : 'debug', code, metadata
-            // })
-        }
-    }
+    // logger : {
+    //     error(code, metadata){
+    //         console.dir({
+    //             'error' : 'error', code, metadata
+    //         })
+    //     },
+    //     warn(code) {
+    //         console.dir({
+    //             'warn' : 'warn', code
+    //         })
+    //     },
+    //     debug(code, metadata) {
+    //         console.dir({
+    //             'debug' : 'debug', code, metadata
+    //         })
+    //     }
+    // }
 }
 
 export default nextAuthOptions
@@ -163,13 +183,10 @@ export async function auth(...args :  [GetServerSidePropsContext["req"], GetServ
     | []) {
         await dbConnect()
         const user =  await getServerSession(...args, nextAuthOptions)
-        let dbUser = null
+        let dbUser:any = {}
         if(user) {
             dbUser = await getUserService(user?.user_id+"")
-            if(dbUser) {
-                return {...user, ...dbUser.toJSON()}
-            }
-            return {...user}
+            return await {...user, ...dbUser}
         }
         return user
 }
@@ -184,3 +201,4 @@ export async function isLogin() {
     const login = await auth()
     return login && login?.user_id
 }
+

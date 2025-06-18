@@ -1,4 +1,4 @@
-import { DEFAULT_COMPANY } from "@/lib/serverConst";
+import { DEFAULT_COMPANY } from "@/serverConstant";
 import  {Schema, Document, models, model, Model} from "mongoose";
 
 
@@ -33,5 +33,5 @@ const counterSchema = new Schema<ICounter>({
 counterSchema.index({collection_name: 1})
 counterSchema.index({prefix: 1})
 
-const Counter : Model<ICounter> =  models.Counter || model<ICounter>("Counter", counterSchema,"counters")
+const Counter: Model<ICounter> = models?.Counter || model<ICounter>("Counter", counterSchema,"counters")
 export default Counter

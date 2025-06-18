@@ -1,4 +1,4 @@
-import { PermissionsMap } from "../../types/permissions";
+import { PermissionsMap } from "@/types/permissions";
 
 export interface IUser {
     company_id: string | null,

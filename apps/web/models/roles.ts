@@ -1,4 +1,4 @@
-import { DEFAULT_COMPANY } from "@/lib/serverConst"
+import { DEFAULT_COMPANY } from "@/serverConstant"
 import { IRole } from "@/types/roles"
 import {Model, model, models, Schema } from "mongoose"
 
@@ -19,5 +19,5 @@ const roleSchema = new Schema<IRole>({
     toJSON: { virtuals: true }
 })
 
-const Role :Model<IRole> = models.Role  ||  model<IRole>("Role", roleSchema, "roles")
+const Role: Model<IRole> = models?.Role || model<IRole>("Role", roleSchema, "roles")
 export default Role
