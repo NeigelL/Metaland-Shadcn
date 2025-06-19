@@ -25,7 +25,7 @@ export async function getBuyerLotsService(user_id: string, active: boolean = tru
         {path:'realty_id'},
         {path:'agent_id'},
         {path:'buyer_ids'},
-    ])
+    ]).lean()
 
 }
 
@@ -43,13 +43,14 @@ export async function getBuyerLotsDueService(user_id: string, active: boolean = 
     await dbConnect()
     const amortizations:any = await getBuyerLotsService(user_id, active)
     const buyerLots:any[] = []
+
     for(let i = 0; i < amortizations.length; i++) {
         const summary = await getAmortizationSummaryService(amortizations[i]._id)
         const delayed = summary.filter((item:any) => item.isDelayed).map((item:any) => item)
         if(delayed.length > 0) {
             buyerLots[i] = {
-                ...amortizations[i].toObject(),
-                delayed
+                ...amortizations[i],
+                delayed: delayed.length > 0 ? delayed : [],
             }
         }
     }

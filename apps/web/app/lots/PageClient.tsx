@@ -217,7 +217,7 @@ function PropertyGrid({
         const isPastDue = dueDate ? new Date() > dueDate : false;
         const overdueDays = isPastDue && dueDate ? differenceInDays(new Date(), dueDate) : 0;
 
-        const address = projectsMap.get(lot.project_id?.name.toLowerCase() || "") || "Address not found";
+        const address = lot.project_id?.name.toUpperCase();
 
         return (
           <Card key={index} className="overflow-hidden w-full min-w-0">
