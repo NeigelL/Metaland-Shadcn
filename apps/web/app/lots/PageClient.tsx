@@ -298,14 +298,14 @@ function PropertyGrid({
                   </p>
                 </div> */}
 
-        {/* <div className="flex justify-end">
+        <div className="flex justify-end">
           <Link
-            href={`/lot/${lot.lot_id._id.toString()}`}
+            href={`/amortizations/${lot._id.toString()}`}
             className="w-full sm:w-auto px-3 py-2 bg-gray-600 text-xs text-white rounded hover:bg-blue-400 text-center block sm:inline-block"
           >
             Details
           </Link>
-        </div> */}
+        </div>
               
           </div>
 

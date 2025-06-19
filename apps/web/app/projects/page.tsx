@@ -214,7 +214,7 @@ function ProjectGrid({ projects }: { projects: Project[] }) {
           </CardContent>
           
           {/* Footer with View Button - Consistent across all cards */}
-          <CardFooter className="p-4 pt-0 mt-auto">
+          {/* <CardFooter className="p-4 pt-0 mt-auto">
             <Link
               href={`/agentproject/${encodeURIComponent(project.project)}`}
               className="w-full text-xs px-3 py-2 bg-gray-600 text-white rounded hover:bg-blue-600 flex items-center justify-center gap-1.5 transition-colors"
@@ -222,7 +222,7 @@ function ProjectGrid({ projects }: { projects: Project[] }) {
               <Search className="h-3 w-3" />
               View Details
             </Link>
-          </CardFooter>
+          </CardFooter> */}
         </Card>
       ))}
     </div>

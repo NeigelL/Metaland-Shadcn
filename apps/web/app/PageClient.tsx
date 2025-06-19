@@ -97,7 +97,7 @@ export function PageClient() {
     return (
         <>
      <BackLogAlert backlogs={[]} />
-      <NotificationButton/>
+      {/* <NotificationButton/> */}
       <div className="flex flex-col lg:flex-row gap-4 min-h-screen">
         <div className="w-full lg:w-64 space-y-3 flex-shrink-0">
            {/* Pie Chart Card */}

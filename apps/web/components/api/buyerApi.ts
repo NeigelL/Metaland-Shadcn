@@ -40,3 +40,22 @@ export function useBuyerAmortizationsQuery() {
     refetchOnReconnect: true,
   });
 }
+
+export async function getBuyerAmortizationQueryApi(id:string) {
+  try {
+    const response = await axios.get('/api/amortizations/' + id);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching amortizations lots:', error);
+    throw error;
+  }
+}
+
+export function useBuyerAmortizationQuery(id:string) {
+  return useQuery({
+    queryKey: ['buyer-amortizations-'+id],
+    queryFn: async() => await getBuyerAmortizationQueryApi(id),
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+  });
+}

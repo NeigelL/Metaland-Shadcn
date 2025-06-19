@@ -27,8 +27,16 @@ export async function getBuyerLotsService(user_id: string, active: boolean = tru
         {path:'buyer_ids'},
     ])
 
-    // const summary = await getAmortizationSummaryService(amortizations[i]._id)
+}
 
+export async function getBuyerAmortizationSummaryService(amortization_id: string) {
+    await dbConnect()
+    let amortization:any = await getAmortizationService(amortization_id)
+    const summary = await getAmortizationSummaryService(amortization_id)
+    if(!amortization) {
+        return null
+    }
+    return {...amortization.toJSON(), summary}
 }
 
 export async function getBuyerLotsDueService(user_id: string, active: boolean = true) {
