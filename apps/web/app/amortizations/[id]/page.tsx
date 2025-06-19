@@ -9,7 +9,7 @@ type PageProps = {
   }
 }
 
-export default async function AmortizationPageDetail(props: PageProps) {
+export default function AmortizationPageDetail(props: PageProps) {
   const { id } = props.params
 
   return id && <PageClient amortization_id={id} />
