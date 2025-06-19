@@ -1,0 +1,23 @@
+import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
+
+export async function getBuyerLotsQueryApi() {
+  try {
+    const response = await axios.get('/api/buyer-lots');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching buyer lots:', error);
+    throw error;
+  }
+}
+
+export function useBuyerLotsQuery() {
+  return useQuery({
+    queryKey: ['buyer-lots'],
+    queryFn: getBuyerLotsQueryApi,
+    // staleTime: 1000 * 60 * 5, // 5 minutes
+    // cacheTime: 1000 * 60 * 10, // 10 minutes
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+  });
+}

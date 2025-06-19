@@ -24,7 +24,7 @@ export const registerAfterSignInService = async(user: any) => {
   
 }
 
-export const getUserService = async(user_id:string) => {
+export const getUserService = async(user_id:string | any) => {
   await dbConnect()
   return await User.findById(user_id)
 }

@@ -19,6 +19,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Popover, PopoverContent, PopoverTrigger } from "@workspace/ui/components/popover";
 import ScheduleVisit from "./(dashboard)/ScheduleVisit";
 import RequiredDocuments from "./(dashboard)/RequiredDocuments";
+import { useBuyerLotsQuery } from "@/components/api/buyerApi";
 
 
 export function PageClient() {
@@ -28,7 +29,7 @@ export function PageClient() {
     const [paymentProgress, setPaymentProgress] = useState(0);
     const [balanceRemaining, setBalanceRemaining] = useState(0);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+    const {data: lotsData} = useBuyerLotsQuery();
 
     useEffect(() => {
     const updatedLotsDetails:any = { ...initialLotsDetails, totalAmountPaid: totalAmountPaid };

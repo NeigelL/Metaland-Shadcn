@@ -19,8 +19,8 @@ interface LoginPageProps {
 export function LoginPage({ className }: LoginPageProps) {
   const [error] = useState("");
   
-  const handleLogin = () => {
-    signIn("google");
+  const handleLogin = async() => {
+    await signIn('google', { callbackUrl : '/' })
   };
 
   return (
