@@ -47,8 +47,10 @@ const getFormattedBalance = (tcp: number, payment: number): string => {
   })}`;
 };
 
-export default function PageClient({amortization_id}: { amortization_id: any }) {
-
+export default function PageClient() {
+  const params = useParams()
+  const id = params?.id as string
+  const amortization_id = id
   const {data: amortization} = useBuyerAmortizationQuery(amortization_id);
 
   if( !amortization) {
