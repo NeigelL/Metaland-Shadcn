@@ -7,9 +7,9 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
   request: NextRequest,
-  context: { params: { id: string } } // ✅ This is correct
+  { params }: { params: { id: string } }
 ) {
-  const { id } = context.params
+  const { id } = await params
   await dbConnect()
     return NextResponse.json(await getBuyerAmortizationSummaryService(id))
 }
