@@ -1,12 +1,40 @@
 "use client";
+import { useBuyerAmortizationsQuery } from '@/components/api/buyerApi';
+import { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, Legend, ResponsiveContainer, Tooltip } from 'recharts';
 export default function PaymentChartSummary() {
 
-  const data = [
-    { name: "Paid", value: 100 },
-    { name: "Remaining", value: 200 }
-  ];
+  const{data: amortizations} = useBuyerAmortizationsQuery()
+  const [graphData, setGraphData] = useState<any>( [
+    { name: "Paid", value: 0 },
+    { name: "Remaining", value: 0 }
+  ]);
+
+
   const COLORS = ["#4CAF50", "#F44336"];
+
+    useEffect(() => {
+    let tempPaidTotal = 0;
+    let tempRemainingTotal = 0;
+    if (amortizations && amortizations.length > 0) {
+        tempPaidTotal = amortizations.reduce((acc:any, item:any) => {
+            if (item.total_paid) {
+                return acc + item.total_paid;
+            }
+            return acc;
+        }, 0);
+        tempRemainingTotal = amortizations.reduce((acc:any, item:any) => {
+            if (item.tcp && item.total_paid) {
+                return acc + (item.tcp - item.total_paid);
+            }
+            return acc;
+        }, 0);
+        setGraphData([
+            { name: "Paid", value: tempPaidTotal },
+            { name: "Remaining", value: tempRemainingTotal }
+        ]);
+    }
+    },[amortizations])
 
   return (
     <>
@@ -18,7 +46,7 @@ export default function PaymentChartSummary() {
             <ResponsiveContainer className="w-100 h-100">
                 <PieChart margin={{ top: 0, right: 0, bottom: 5, left: 0 }} >
                     <Pie
-                        data={data}
+                        data={graphData}
                         cx="50%"
                         cy="50%"
                         innerRadius={30}
@@ -26,7 +54,7 @@ export default function PaymentChartSummary() {
                         dataKey="value"
                         nameKey="name"
                     >
-                        {data.map((entry, index) => (
+                        {graphData.map((entry:any, index:any) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                         ))}
                     </Pie>
@@ -48,7 +76,7 @@ export default function PaymentChartSummary() {
             </ResponsiveContainer>
         </div>
         <p className="text-center mt-1 text-xs md:text-sm font-medium">
-            12% paid of total TCP
+            { graphData[0].value > 0 ? (graphData[0].value / ( graphData[0].value + graphData[1].value  ) * 100  ).toFixed(2) : 0  }% paid of total TCP
         </p>
         </div>
     </>

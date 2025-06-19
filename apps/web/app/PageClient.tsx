@@ -200,7 +200,7 @@ export function PageClient() {
         <div className="w-full lg:w-80 flex-shrink-0">
         {/* Stack the scheduling cards vertically */}
               <div className="flex flex-col gap-4">
-                <ScheduleVisit/>
+                {/* <ScheduleVisit/> */}
                 <RequiredDocuments/>
               </div>
         </div>
