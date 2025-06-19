@@ -18,10 +18,11 @@ import {
   Wallet,
   AlertTriangle
 } from "lucide-react";
+import { useBuyerAmortizationsQuery } from "@/components/api/buyerApi";
 
 
 interface Lot {
-  lotId: string;
+  lot_id: string;
   project: string;
   lot: string;
   date?: string;
@@ -50,13 +51,14 @@ export function PageClient() {
   const [activeTab, setActiveTab] = useState<"all" | "ongoing" | "fullyPaid">("all");
   const searchParams = useSearchParams();
   const defaultTab = searchParams.get('tab') as "all" | "ongoing" | "fullyPaid" | null;
+  const{data: amortizations} = useBuyerAmortizationsQuery()
 
   useEffect(() => {
     const updatedLotsDetails = {
       ...initialLotsDetails,
       lots: initialLotsDetails.lots.map(lot => ({
         ...lot,
-        lotId: String(lot.lotId), // convert to string if needed
+        lot_id: String(lot.lotId), // convert to string if needed
         dueAmount: lot.dueAmount ?? "0",
       })),
     };
@@ -133,7 +135,7 @@ export function PageClient() {
           </div>
           
           {/* Search Bar */}
-          <div className="relative w-full md:w-80">
+          {/* <div className="relative w-full md:w-80">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="text"
@@ -142,7 +144,7 @@ export function PageClient() {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 w-full text-xs sm:text-sm"
             />
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -166,16 +168,16 @@ export function PageClient() {
 
           {/* Lots Grid */}
           <TabsContent value="all" className="mt-0 space-y-4">
-  <PropertyGrid lots={sortedFilteredLots} projectsMap={projectsMap} />
-</TabsContent>
+            <PropertyGrid lots={amortizations} projectsMap={projectsMap} />
+          </TabsContent>
 
-<TabsContent value="ongoing" className="mt-0 space-y-4">
-  <PropertyGrid lots={sortedFilteredLots} projectsMap={projectsMap} />
-</TabsContent>
+          {/* <TabsContent value="ongoing" className="mt-0 space-y-4">
+            <PropertyGrid lots={sortedFilteredLots} projectsMap={projectsMap} />
+          </TabsContent>
 
-<TabsContent value="fullyPaid" className="mt-0 space-y-4">
-  <PropertyGrid lots={sortedFilteredLots} projectsMap={projectsMap} />
-</TabsContent>
+          <TabsContent value="fullyPaid" className="mt-0 space-y-4">
+            <PropertyGrid lots={sortedFilteredLots} projectsMap={projectsMap} />
+          </TabsContent> */}
         </Tabs>
       </div>
     </div>
@@ -188,13 +190,13 @@ function PropertyGrid({
   lots,
   projectsMap,
 }: {
-  lots: Lot[];
+  lots: any[];
   projectsMap: Map<string, string>;
 }) {  
 
 
 
-  if (lots.length === 0) {
+  if (lots && lots.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center">
         <div className="bg-muted p-4 rounded-full mb-4">
@@ -207,15 +209,15 @@ function PropertyGrid({
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {lots.map((lot, index) => {
-        const reservation = lot.reservation ? new Date(lot.reservation) : null;
+      { lots &&  lots.map((lot, index) => {
+        const reservation = lot.reservation_date ? new Date(lot.reservation_date) : null;
         const dueDate = lot.dueDate ? new Date(lot.dueDate) : null;
-        const isFullyPaid = lot.status === "fully paid";
+        const isFullyPaid = lot.total_paid_percent >= 100;
 
         const isPastDue = dueDate ? new Date() > dueDate : false;
         const overdueDays = isPastDue && dueDate ? differenceInDays(new Date(), dueDate) : 0;
 
-        const address = projectsMap.get(lot.project?.toLowerCase() || "") || "Address not found";
+        const address = projectsMap.get(lot.project_id?.name.toLowerCase() || "") || "Address not found";
 
         return (
           <Card key={index} className="overflow-hidden w-full min-w-0">
@@ -239,7 +241,7 @@ function PropertyGrid({
 
               <div className="flex justify-between items-start">
               <CardTitle className="text-sm sm:text-base truncate max-w-[200px]">
-                {lot.lot}
+                {lot.lot_id.name}
               </CardTitle>
 
                 <Badge variant={isFullyPaid ? "success" : isPastDue ? "warning" : "default"}>
@@ -289,31 +291,21 @@ function PropertyGrid({
               <Separator />
 
               <div className="flex justify-between items-end">
-                <div>
+                {/* <div>
                   <p className="text-xs text-muted-foreground">Amount Due</p>
                   <p className={`text-lg font-bold ${isPastDue ? "text-destructive" : ""}`}>
                     ₱{parseFloat(lot.dueAmount || "0").toLocaleString()}
                   </p>
-                </div>
+                </div> */}
 
-                {(() => {
-  const matchingAmortization = amortizationDataStore.find(
-    (item) => item.lotId.toString() === lot.lotId.toString()
-  );
-
-  if (!matchingAmortization) return null;
-
-  return (
-    <div className="flex justify-end">
-      <Link
-        href={`/details/${matchingAmortization.lotId}`}
-        className="w-full sm:w-auto px-3 py-2 bg-gray-600 text-xs text-white rounded hover:bg-blue-400 text-center block sm:inline-block"
-      >
-        Details
-      </Link>
-    </div>
-  );
-})()}
+        {/* <div className="flex justify-end">
+          <Link
+            href={`/lot/${lot.lot_id._id.toString()}`}
+            className="w-full sm:w-auto px-3 py-2 bg-gray-600 text-xs text-white rounded hover:bg-blue-400 text-center block sm:inline-block"
+          >
+            Details
+          </Link>
+        </div> */}
               
           </div>
 
