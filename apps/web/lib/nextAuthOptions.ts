@@ -72,9 +72,9 @@ const nextAuthOptions : AuthOptions = {
         strategy : "jwt"
     },
     callbacks: {
-        async redirect({url, baseUrl}) {
-            return url
-        },
+        // async redirect({url, baseUrl}) {
+        //     return url
+        // },
         async jwt({token, user, account}) { // returns token to the client
             await dbConnect()
             // console.dir({'jwt callbacks' : 'jwt', token, user, account})
