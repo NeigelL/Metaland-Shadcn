@@ -20,7 +20,7 @@ export function LoginPage({ className }: LoginPageProps) {
   const [error] = useState("");
   
   const handleLogin = async() => {
-    await signIn('google', { callbackUrl : 'https://buyer.metaland.properties' })
+    await signIn('google', { callbackUrl : 'https://buyer.metaland.properties/' })
   };
 
   return (
