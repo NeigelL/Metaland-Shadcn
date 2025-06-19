@@ -2,15 +2,9 @@
 
 
 import PageClient from "./PageClient";
-import { getBuyerAmortizationSummaryService } from "@/services/buyerService";
 
 
-type Props = {
-  params: { id: string }
-}
-
-
-export default async function AmortizationPageDetail({ params }: Props) {
+export default async function AmortizationPageDetail({ params }: {params: { id: string }}) {
 
   const { id } = params;
 
