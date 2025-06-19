@@ -7,7 +7,7 @@ import { getBuyerAmortizationSummaryService } from "@/services/buyerService";
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
-  request: NextRequest,
+//   request: NextRequest,
   context: { params: { id: string } } // ✅ This is correct
 ) {
     await dbConnect()
