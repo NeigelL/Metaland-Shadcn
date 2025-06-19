@@ -21,3 +21,22 @@ export function useBuyerLotsQuery() {
     refetchOnReconnect: true,
   });
 }
+
+export async function getBuyerAmortizationsQueryApi() {
+  try {
+    const response = await axios.get('/api/buyer');
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching buyer lots:', error);
+    throw error;
+  }
+}
+
+export function useBuyerAmortizationsQuery() {
+  return useQuery({
+    queryKey: ['buyer-amortizations'],
+    queryFn: getBuyerAmortizationsQueryApi,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+  });
+}

@@ -1,12 +1,36 @@
 "use client";
-import { LotsDetails } from "@/types/lot-details";
+import { useBuyerAmortizationsQuery } from "@/components/api/buyerApi";
 import { Card, CardContent } from "@workspace/ui/components/card";
 import { LandPlot, PhilippinePeso } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function LotSummaryCard() {
-    const [lotsDetails, setLotsDetails] = useState<LotsDetails | null>(null);
+
+    const{data: amortizations} = useBuyerAmortizationsQuery()
+    const [fullyPaidLots, setFullyPaidLots] = useState<number>(0);
+    const [totalTCP, setTotalTCP] = useState<number>(0);
+    const [totalPaid, setTotalPaid] = useState<number>(0);
+
+    useEffect(() => {
+      let tempPaidLots = 0;
+      if (amortizations && amortizations.length > 0) {
+        tempPaidLots = amortizations.filter((item:any) => item.total_paid_percent >= 100).length;
+        setFullyPaidLots(tempPaidLots);
+        setTotalTCP(amortizations.reduce((acc:any, item:any) => {
+          if (item.tcp) {
+            return acc + item.tcp;
+          }
+          return acc;
+        },0))
+        setTotalPaid(amortizations.reduce((acc:any, item:any) => {
+          if (item.total_paid) {
+            return acc + item.total_paid;
+          }
+          return acc;
+        },0))
+      }
+    },[amortizations])
 
     return (
         <>
@@ -21,7 +45,7 @@ export default function LotSummaryCard() {
                     </div>
                     <div>
                       <p className="text-base font-semibold text-blue-600">
-                        {(lotsDetails?.totalLots ?? 0).toLocaleString()}
+                        {amortizations && amortizations.length ? amortizations.length : 0}
                       </p>
                       <p className="text-xs text-muted-foreground">Properties Reserved</p>
                     </div>
@@ -40,7 +64,7 @@ export default function LotSummaryCard() {
                     </div>
                     <div>
                         <p className="text-base font-semibold text-blue-600">
-                        {(lotsDetails?.fullyPaidLots ?? 0).toLocaleString()}
+                        {fullyPaidLots}
                       </p>
                       <p className="text-xs text-muted-foreground">Fully Paid Properties</p>
                     </div>
@@ -58,7 +82,7 @@ export default function LotSummaryCard() {
                   </div>
                   <div>
                   <p className="text-base font-semibold text-green-600">
-                  ₱ {(lotsDetails?.totalTcp ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                  ₱ {(totalTCP ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                   </p>
                   <p className="text-xs text-muted-foreground">Total TCP</p>
                   </div>
@@ -75,7 +99,7 @@ export default function LotSummaryCard() {
                   </div>
                   <div>
                     <p className="text-base font-semibold text-green-600">
-                      ₱ {(lotsDetails?.totalAmountPaid ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                      ₱ {(totalPaid ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </p>
                     <p className="text-xs text-muted-foreground">Total Payment Made</p>
                   </div>

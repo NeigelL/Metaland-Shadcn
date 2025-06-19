@@ -11,15 +11,13 @@ import { LotsDetails } from "@/types/lot-details";
 import { totalAmountPaid } from "@/data/amortization-data";
 import { lotsDetails as initialLotsDetails } from "@/data/lotDetailContent";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
+import { Card, CardContent } from "@workspace/ui/components/card";
 import { Label } from "@workspace/ui/components/label";
 import { Button } from "@workspace/ui/components/button";
-import { Badge, FileText, MapPinIcon } from "lucide-react";
+import {  MapPinIcon } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@workspace/ui/components/dialog";
-import { Popover, PopoverContent, PopoverTrigger } from "@workspace/ui/components/popover";
 import ScheduleVisit from "./(dashboard)/ScheduleVisit";
 import RequiredDocuments from "./(dashboard)/RequiredDocuments";
-import { useBuyerLotsQuery } from "@/components/api/buyerApi";
 
 
 export function PageClient() {
@@ -29,7 +27,6 @@ export function PageClient() {
     const [paymentProgress, setPaymentProgress] = useState(0);
     const [balanceRemaining, setBalanceRemaining] = useState(0);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const {data: lotsData} = useBuyerLotsQuery();
 
     useEffect(() => {
     const updatedLotsDetails:any = { ...initialLotsDetails, totalAmountPaid: totalAmountPaid };

@@ -30,20 +30,20 @@ export async function getBuyerLotsService(user_id: string, active: boolean = tru
 
 export async function getBuyerLotsDueService(user_id: string, active: boolean = true) {
     await dbConnect()
-    await Project.findOne()
-    await Block.findOne()
-    await Lot.findOne()
-    await Realty.findOne()
-    await User.findOne()
-    return await Amortization.find({buyer_ids: user_id, active})
-    .populate([
-        {path:'project_id'},
-        {path:'block_id'},
-        {path:'lot_id'},
-        {path:'realty_id'},
-        {path:'agent_id'},
-        {path:'buyer_ids'},
-    ])
+    const amortizations:any = await getBuyerLotsService(user_id, active)
+    const buyerLots:any[] = []
+    for(let i = 0; i < amortizations.length; i++) {
+        const summary = await getAmortizationSummaryService(amortizations[i]._id)
+        const delayed = summary.filter((item:any) => item.isDelayed).map((item:any) => item)
+        if(delayed.length > 0) {
+            buyerLots[i] = {
+                ...amortizations[i].toObject(),
+                delayed
+            }
+        }
+    }
+
+    return buyerLots
 }
 
 export async function getAmortizationService(amortization_id: String, populate :any = [
@@ -124,7 +124,7 @@ export async function getAmortizationSummaryService(amortization_id: String) {
             div_class?: string[]
             isPaid : boolean ,
             isWarning : boolean,
-            isDelayed : boolean,
+            isDelayed : boolean
         }
 
         let runningBalance = amortization.tcp
