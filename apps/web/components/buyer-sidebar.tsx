@@ -56,7 +56,7 @@ const items: MenuItem[] = [
     submenu: [
       { title: "DASHBOARD", url: "/", icon: <Home size={14} /> },
       { title: "LOTS", url: "/lots", icon: <LandPlot size={14} /> },
-      { title: "PROJECTS", url: "/projects", icon: <TreePine size={14} /> },
+      // { title: "PROJECTS", url: "/projects", icon: <TreePine size={14} /> },
       // { title: "DOCUMENTS", url: "/documents", icon: <File size={14} /> },
     ]
   }
