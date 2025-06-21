@@ -69,7 +69,11 @@ const nextAuthOptions : AuthOptions = {
         // })
     ],
     session : {
-        strategy : "jwt"
+        strategy : "jwt",
+        maxAge: 60 * 60 * 24 // 1 day
+    },
+    jwt : {
+        maxAge: 60 * 60 * 24, // 1 day
     },
     callbacks: {
         // async redirect({url, baseUrl}) {
@@ -111,19 +115,19 @@ const nextAuthOptions : AuthOptions = {
             await getUserPermissions(checkUser._id.toString(), true)
             // console.dir({'asd' : host.get("host")})
 
-            if( await can("role:agent", checkUser._id )  && process.env.NEXT_AGENT_DOMAIN  == host.get("host")) {
-                return checkUser
-            }
+            // if( await can("role:agent", checkUser._id )  && process.env.NEXT_AGENT_DOMAIN  == host.get("host")) {
+            //     return checkUser
+            // }
 
-            if( await can("role:office-staff", checkUser._id )  && process.env.NEXT_ADMIN_DOMAIN  == host.get("host")) {
-                return checkUser
-            }
+            // if( await can("role:office-staff", checkUser._id )  && process.env.NEXT_ADMIN_DOMAIN  == host.get("host")) {
+            //     return checkUser
+            // }
 
             if( await can("role:buyer", checkUser._id )  && process.env.NEXT_BUYER_DOMAIN  == host.get("host")) {
                 return checkUser
             }
 
-            return false
+            return "UnAuthorized"
         },
         // async signOut({session, token}) {
         //     console.dir({'signOut' : 'signOut', session, token })
