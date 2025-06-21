@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { LandPlot, TreePine, File, User, Home, LogOut, ChevronUp, Users, PhilippinePeso, LibraryBig, ChevronRight } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image  from "next/image";
 
@@ -22,15 +22,8 @@ import {
   SidebarMenuSubItem,
 } from "@workspace/ui/components/sidebar";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@workspace/ui/components/dropdown-menu";
+
 import { useUserStore } from "@/stores/useUserStore";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@workspace/ui/components/collapsible";
 import LoggedInUser from "./LoggedInUser/LoggedInUser";
 
 // Define types for menu items
@@ -56,8 +49,6 @@ const items: MenuItem[] = [
     submenu: [
       { title: "DASHBOARD", url: "/", icon: <Home size={14} /> },
       { title: "LOTS", url: "/lots", icon: <LandPlot size={14} /> },
-      // { title: "PROJECTS", url: "/projects", icon: <TreePine size={14} /> },
-      // { title: "DOCUMENTS", url: "/documents", icon: <File size={14} /> },
     ]
   }
 ]
@@ -81,11 +72,11 @@ export function BuyerAppSidebar() {
     router.push("/");
   };
 
-  if (!mounted) return null; 
+  if (!mounted) return null;
 
   return (
     <Sidebar className="flex flex-col justify-between h-screen w-64">
-      <SidebarContent className="relative"> 
+      <SidebarContent className="relative">
         <div className="flex flex-col items-center">
           <Image src="/images/metaland.png" alt="Logo" width={250} height={250} />
         </div>
