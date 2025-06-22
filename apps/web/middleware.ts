@@ -26,6 +26,7 @@ export function middleware(request: NextRequest) {
        const cookies = request.cookies.getAll()
       for (const cookie of cookies) {
         response.cookies.set(cookie.name, cookie.value)
+        console.log(`Setting cookie: ${cookie.name} = ${cookie.value}`);
       }
     return response ;
   }
