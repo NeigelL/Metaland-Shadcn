@@ -11,7 +11,7 @@ import { headers } from "next/headers"
 
 const nextAuthOptions : AuthOptions = {
     useSecureCookies:true,
-    debug: true,
+    // debug: true,
     // cookies: {
     //     callbackUrl: {
     //         name: "next-auth.callback-url",
@@ -115,9 +115,9 @@ const nextAuthOptions : AuthOptions = {
             await getUserPermissions(checkUser._id.toString(), true)
             // console.dir({'asd' : host.get("host")})
 
-            // if( await can("role:agent", checkUser._id )  && process.env.NEXT_AGENT_DOMAIN  == host.get("host")) {
-            //     return checkUser
-            // }
+            if( await can("role:agent", checkUser._id )  && process.env.NEXT_AGENT_DOMAIN  == host.get("host")) {
+                return checkUser
+            }
 
             // if( await can("role:office-staff", checkUser._id )  && process.env.NEXT_ADMIN_DOMAIN  == host.get("host")) {
             //     return checkUser
@@ -161,23 +161,23 @@ const nextAuthOptions : AuthOptions = {
     //     verifyRequest: "/auth/verify-request",
     //     newUser : "/auth/new-user"
     // },
-    logger : {
-        error(code, metadata){
-            console.dir({
-                'error' : 'error', code, metadata
-            })
-        },
-        warn(code) {
-            console.dir({
-                'warn' : 'warn', code
-            })
-        },
-        debug(code, metadata) {
-            console.dir({
-                'debug' : 'debug', code, metadata
-            })
-        }
-    }
+    // logger : {
+    //     error(code, metadata){
+    //         console.dir({
+    //             'error' : 'error', code, metadata
+    //         })
+    //     },
+    //     warn(code) {
+    //         console.dir({
+    //             'warn' : 'warn', code
+    //         })
+    //     },
+    //     debug(code, metadata) {
+    //         console.dir({
+    //             'debug' : 'debug', code, metadata
+    //         })
+    //     }
+    // }
 }
 
 export default nextAuthOptions

@@ -28,14 +28,33 @@ export function middleware(request: NextRequest) {
           response.headers.set(name, value)
         } catch (err) {
           // Some headers like `host` or `content-length` might throw errors if set
-          console.warn(`Could not set header "${name}":`, err)
+          // console.warn(`Could not set header "${name}":`, err)
         }
       })
 
       const cookies = request.cookies.getAll()
       for (const cookie of cookies) {
         response.cookies.set(cookie.name, cookie.value)
-        console.log(`Setting cookie: ${cookie.name} = ${cookie.value}`);
+        // console.log(`Setting cookie: ${cookie.name} = ${cookie.value}`);
+      }
+    return response ;
+  }
+
+    if (host?.includes(process.env.NEXT_AGENT_DOMAIN || 'agent.metaland.properties')) {
+    let response = NextResponse.rewrite(new URL(`/agent${request.nextUrl.pathname}`, request.url))
+      request.headers.forEach((value, name) => {
+        try {
+          response.headers.set(name, value)
+        } catch (err) {
+          // Some headers like `host` or `content-length` might throw errors if set
+          // console.warn(`Could not set header "${name}":`, err)
+        }
+      })
+
+      const cookies = request.cookies.getAll()
+      for (const cookie of cookies) {
+        response.cookies.set(cookie.name, cookie.value)
+        // console.log(`Setting cookie: ${cookie.name} = ${cookie.value}`);
       }
     return response ;
   }
