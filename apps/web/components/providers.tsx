@@ -61,7 +61,9 @@ export function Providers({ children, user, accountType }: { user:any, accountTy
             </SidebarProvider>
           </SessionProvider>
           </> : <div className="relative flex flex-1 flex-col">
-            <LoginPage/>
+            <LoginPage
+             url={ accountType == "buyer" ? "https://"+process.env.NEXT_BUYER_DOMAIN  : 'https://buyer.metaland.properties' }
+            />
           </div>
         }
       </QueryClientProvider>

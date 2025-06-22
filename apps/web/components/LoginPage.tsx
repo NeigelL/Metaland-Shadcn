@@ -14,13 +14,17 @@ import { cn } from "@workspace/ui/lib/utils";
 
 interface LoginPageProps {
   className?: string;
+  url?: string;
 }
 
-export function LoginPage({ className }: LoginPageProps) {
+export function LoginPage({ className, url = "https://"+process.env.NEXT_BUYER_DOMAIN || 'https://buyer.metaland.properties' }: LoginPageProps) {
   const [error] = useState("");
   
   const handleLogin = async() => {
-    await signIn('google')
+    await signIn('google',{
+      redirect: true,
+      callbackUrl: url
+    })
   };
 
   return (
