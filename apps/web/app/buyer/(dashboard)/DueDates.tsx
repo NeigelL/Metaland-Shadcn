@@ -1,14 +1,11 @@
 "use client";
 import { useBuyerLotsQuery } from "@/components/api/buyerApi";
-import { LotsDetails } from "@/types/lot-details";
 import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@workspace/ui/components/table";
 import { differenceInDays, differenceInMonths, differenceInWeeks, format, formatDate } from "date-fns";
 import { useEffect, useState } from "react";
 
-export default function DueDates(
-    { lotsDetails, searchQuery }: { lotsDetails: LotsDetails, searchQuery: string }
-) {
+export default function DueDates() {
 
   const today = new Date();
   const {data: lotsData, isLoading, isSuccess} = useBuyerLotsQuery();

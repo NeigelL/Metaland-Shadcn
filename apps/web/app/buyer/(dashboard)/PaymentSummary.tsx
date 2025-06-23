@@ -36,10 +36,10 @@ export default function PaymentChartSummary() {
     }
     },[amortizations])
 
-  return (
-    <>
-        {isLoading && <div className="flex items-center justify-center h-24">Loading...</div>}
-        {!isLoading && <> <div className="p-3 md:p-4 pb-0">
+    if(isLoading) return <div className="flex items-center justify-center h-24">Loading...</div>
+
+  return  <>{graphData.length > 0 && graphData[0].value > 0 && <div className="rounded-lg border border-gray-200 shadow">
+        <div className="p-3 md:p-4 pb-0">
             <h3 className="text-base md:text-lg font-medium">Payment Progress</h3>
         </div>
         <div className="p-2 md:p-4 flex flex-col items-center">
@@ -79,7 +79,6 @@ export default function PaymentChartSummary() {
         <p className="text-center mt-1 text-xs md:text-sm font-medium">
             { graphData[0].value > 0 ? (graphData[0].value / ( graphData[0].value + graphData[1].value  ) * 100  ).toFixed(2) : 0  }% paid of total TCP
         </p>
-        </div></>}
-    </>
-  );
+        </div>
+    </div>}</>
 }
