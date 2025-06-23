@@ -105,24 +105,35 @@ const nextAuthOptions : AuthOptions = {
         },
         async signIn({ user, account, profile}) {
             await dbConnect()
-            console.dir({'signIn callbacks' : 'signIn',user, account, profile})
+            // console.dir({'signIn callbacks' : 'signIn',user, account, profile})
             const checkUser:any = await User.findOne({email: user.email, login: true})
             const host = await headers()
             if(checkUser && checkUser?._id) {
                 await getUserPermissions(checkUser._id.toString(), true)
                 // console.dir({'asd' : host.get("host")})
-                if( await can("role:agent", checkUser._id )  && process.env.NEXT_AGENT_DOMAIN  == host.get("host")) {
-                    return checkUser
+                if( process.env.NEXT_AGENT_DOMAIN  == host.get("host")) {
+                    if(await can("role:agent", checkUser._id )) {
+                        return checkUser
+                    } else {
+                        throw new Error("NoRole")
+                    }
+                }
+
+                 if( process.env.NEXT_BUYER_DOMAIN  == host.get("host")) {
+                    if(await can("role:buyer", checkUser._id )) {
+                        return checkUser
+                    } else {
+                        throw new Error("NoRole")
+                    }
                 }
                 // if( await can("role:office-staff", checkUser._id )  && process.env.NEXT_ADMIN_DOMAIN  == host.get("host")) {
                 //     return checkUser
                 // }
 
-                if( await can("role:buyer", checkUser._id )  && process.env.NEXT_BUYER_DOMAIN  == host.get("host")) {
-                    return checkUser
-                }
+               
+            } else {
+                 throw new Error("EmailNotFound")
             }
-
 
             return "UnAuthorized " + user?.email
         },
@@ -151,13 +162,14 @@ const nextAuthOptions : AuthOptions = {
             // console.dir({'session events':'session', message})
         }
     },
-    // pages: {
-    //     signIn : "/auth/signin",
-    //     signOut: "/auth/signout",
-    //     error: "/auth/error",
-    //     verifyRequest: "/auth/verify-request",
-    //     newUser : "/auth/new-user"
-    // },
+    pages: {
+        // signIn : "/auth/signin",
+        // signOut: "/auth/signout",
+        // error: "/auth/error",
+        // verifyRequest: "/auth/verify-request",
+        // newUser : "/auth/new-user"
+        error: "/auth/error",
+    },
     // logger : {
     //     error(code, metadata){
     //         console.dir({

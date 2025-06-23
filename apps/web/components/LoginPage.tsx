@@ -10,6 +10,7 @@ import {
 } from "@workspace/ui/components/card";
 import { signIn} from "next-auth/react";
 import { cn } from "@workspace/ui/lib/utils";
+import { useSearchParams } from "next/navigation";
 
 
 interface LoginPageProps {
@@ -18,14 +19,26 @@ interface LoginPageProps {
 }
 
 export function LoginPage({ className, url = "https://"+process.env.NEXT_BUYER_DOMAIN || 'https://buyer.metaland.properties' }: LoginPageProps) {
-  const [error] = useState("");
-  
+  // const [error] = useState("");
+  const searchParams = useSearchParams()
+  const error = searchParams.get('error')
   const handleLogin = async() => {
     await signIn('google',{
       redirect: true,
       callbackUrl: url
     })
   };
+
+  const messages: Record<string, string> = {
+    Configuration: 'There is a problem with the server configuration.',
+    AccessDenied: 'You denied the request to sign in.',
+    Verification: 'The sign in link is no longer valid.',
+    OAuthCallback: 'There was an issue with the sign-in process. Please try again.',
+    default: 'Something went wrong during authentication.',
+    EmailNotFound: 'Email not found! Please register and request for login access',
+    UnAuthorized: 'Unauthorized access. Please log in again.',
+    NoRole: 'You do not have the required role to access this page.'
+  }
 
   return (
     <div className="flex flex-col md:flex-row items-center min-h-screen bg-gray-50">
@@ -59,11 +72,9 @@ export function LoginPage({ className, url = "https://"+process.env.NEXT_BUYER_D
             >
               Sign in with Google
             </button>
-            {error && (
-              <p className="text-red-500 text-center text-xs md:text-sm">
-                {error}
-              </p>
-            )}
+              {error && <p className="text-red-500 text-center text-xs md:text-sm">
+                  {messages[error ?? 'default'] ?? messages.default}
+              </p>}
           </CardContent>
         </Card>
       </div>
