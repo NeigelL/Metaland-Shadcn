@@ -108,26 +108,23 @@ const nextAuthOptions : AuthOptions = {
             console.dir({'signIn callbacks' : 'signIn',user, account, profile})
             const checkUser:any = await User.findOne({email: user.email, login: true})
             const host = await headers()
-            if(!checkUser) {
-                await registerAfterSignInService(user)
+            if(!checkUser && checkUser?._id) {
+                await getUserPermissions(checkUser._id.toString(), true)
+                // console.dir({'asd' : host.get("host")})
+                if( await can("role:agent", checkUser._id )  && process.env.NEXT_AGENT_DOMAIN  == host.get("host")) {
+                    return checkUser
+                }
+                // if( await can("role:office-staff", checkUser._id )  && process.env.NEXT_ADMIN_DOMAIN  == host.get("host")) {
+                //     return checkUser
+                // }
+
+                if( await can("role:buyer", checkUser._id )  && process.env.NEXT_BUYER_DOMAIN  == host.get("host")) {
+                    return checkUser
+                }
             }
 
-            await getUserPermissions(checkUser._id.toString(), true)
-            // console.dir({'asd' : host.get("host")})
 
-            if( await can("role:agent", checkUser._id )  && process.env.NEXT_AGENT_DOMAIN  == host.get("host")) {
-                return checkUser
-            }
-
-            // if( await can("role:office-staff", checkUser._id )  && process.env.NEXT_ADMIN_DOMAIN  == host.get("host")) {
-            //     return checkUser
-            // }
-
-            if( await can("role:buyer", checkUser._id )  && process.env.NEXT_BUYER_DOMAIN  == host.get("host")) {
-                return checkUser
-            }
-
-            return "UnAuthorized"
+            return "UnAuthorized " + user?.email
         },
         // async signOut({session, token}) {
         //     console.dir({'signOut' : 'signOut', session, token })

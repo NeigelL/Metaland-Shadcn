@@ -15,7 +15,7 @@ export default function DueDates() {
     let tempDelayedLots:any = [];
     for(let i = 0; i < lotsData?.length; i++) {
         let lot:any = lotsData[i];
-        let d:any = lot.delayed.map((item:any) =>{
+        let d:any = lot?.delayed.map((item:any) =>{
             return {
                 lot: lot.lot_id?.name || "No Lot",
                 block: lot.block_id?.name || "No Block",
@@ -24,7 +24,9 @@ export default function DueDates() {
                 project: lot.project_id?.name || "No Project",
             }
         })
+        if(d) {
         tempDelayedLots.push(...d)
+        }
     }
     setDelayedLots(tempDelayedLots);
   },[isSuccess])
