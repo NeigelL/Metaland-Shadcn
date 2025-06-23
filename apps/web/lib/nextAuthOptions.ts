@@ -115,7 +115,7 @@ const nextAuthOptions : AuthOptions = {
                     if(await can("role:agent", checkUser._id )) {
                         return checkUser
                     } else {
-                        throw new Error("NoRole")
+                        throw new Error("NoRole&msg=agent")
                     }
                 }
 
@@ -123,7 +123,7 @@ const nextAuthOptions : AuthOptions = {
                     if(await can("role:buyer", checkUser._id )) {
                         return checkUser
                     } else {
-                        throw new Error("NoRole")
+                        throw new Error("NoRole&msg=buyer")
                     }
                 }
                 // if( await can("role:office-staff", checkUser._id )  && process.env.NEXT_ADMIN_DOMAIN  == host.get("host")) {
@@ -132,7 +132,7 @@ const nextAuthOptions : AuthOptions = {
 
                
             } else {
-                 throw new Error("EmailNotFound")
+                 throw new Error("EmailNotFound&msg="+user?.email)
             }
 
             return "UnAuthorized " + user?.email

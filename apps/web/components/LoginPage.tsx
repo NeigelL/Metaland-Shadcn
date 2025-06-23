@@ -22,6 +22,7 @@ export function LoginPage({ className, url = "https://"+process.env.NEXT_BUYER_D
   // const [error] = useState("");
   const searchParams = useSearchParams()
   const error = searchParams.get('error')
+  const msg = searchParams.get('msg')
   const handleLogin = async() => {
     await signIn('google',{
       redirect: true,
@@ -75,6 +76,11 @@ export function LoginPage({ className, url = "https://"+process.env.NEXT_BUYER_D
               {error && <p className="text-red-500 text-center text-xs md:text-sm">
                   {messages[error ?? 'default'] ?? messages.default}
               </p>}
+              {
+                msg && <p className="text-red-500 text-center text-xs md:text-sm">
+                  {msg}
+                </p>
+              }
           </CardContent>
         </Card>
       </div>
