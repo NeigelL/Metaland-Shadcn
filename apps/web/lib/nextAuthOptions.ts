@@ -105,7 +105,7 @@ const nextAuthOptions : AuthOptions = {
         },
         async signIn({ user, account, profile}) {
             await dbConnect()
-            // console.dir({'signIn callbacks' : 'signIn',user, account, profile})
+            console.dir({'signIn callbacks' : 'signIn',user, account, profile})
             const checkUser:any = await User.findOne({email: user.email, login: true})
             const host = await headers()
             if(!checkUser) {
