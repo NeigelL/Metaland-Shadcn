@@ -3,7 +3,6 @@ import { Button } from "@workspace/ui/components/button";
 import { Card, CardContent } from "@workspace/ui/components/card";
 import { Label } from "@workspace/ui/components/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
-import { MapPinIcon } from "lucide-react";
 
 export default function PaymentMethod({
     setIsDialogOpen
@@ -74,6 +73,8 @@ export default function PaymentMethod({
                               <p className="mb-1 text-xs text-muted-foreground">Hours:</p>
                               <p className="text-xs font-medium mb-2">9:00 AM - 6:00 PM, Mon-Sat</p>
                               <p className="text-xs text-muted-foreground">Please bring a valid ID for verification</p>
+                              <p className="text-xs font-medium mb-2">Contact Information</p>
+                              <p className="text-xs text-muted-foreground">+032 342 8422 | +63 919 098 2727 | metalandpropertiesinc@gmail.com</p>
                             </div>
                           </div>
                           <div className="flex flex-col gap-2">
