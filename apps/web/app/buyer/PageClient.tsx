@@ -62,7 +62,7 @@ export function PageClient() {
             </DialogHeader>
             <div className="flex justify-center items-center">
               <img
-                src="/images/qr-code.png"
+                src="/images/qr-code.jpg"
                 alt="QR Code"
                 className="w-64 h-64"
               />
