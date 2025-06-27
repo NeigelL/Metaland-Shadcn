@@ -31,7 +31,7 @@ import {
 } from "@workspace/ui/components/dropdown-menu";
 import { useUserStore } from "@/stores/useUserStore";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@workspace/ui/components/collapsible";
-import LoggedInUser from "./LoggedInUser/LoggedInUser";
+import LoggedInUser from "../LoggedInUser/LoggedInUser";
 
 // Define types for menu items
 type MenuItem = {
@@ -120,17 +120,6 @@ const itemGroups: MenuItem[] = [
             { icon: <Home/>, title: "Agent Buyers Amortizations", url: "/data-integrity/agent-buyers-amortizations" }
         ]
     },
-    // {
-    //     title: "Payments",
-    //     submenu: [
-            // { title: "No Invoice Payments", url: "/data-integrity/no-invoice-payments" },
-            // {
-            //   icon: <Home size={14} />,
-            //   title: "Lot Available but has Amortization",
-            //   url: "/data-integrity/lot-available-amortizations",
-            // }
-    //     ]
-    // },
     {
         title: "Utilities",
         submenu: [
@@ -139,23 +128,9 @@ const itemGroups: MenuItem[] = [
     }
 ]
 
-const items: MenuItem[] = [
-//     {
-//     title: "MENU",
-//     submenu: [
-//       { title: "DASHBOARD", url: "/", icon: <Home size={14} /> },
-//       { title: "CLIENTS", url: "/agentclients", icon: <Users size={14} /> },
-//       { title: "LOTS", url: "/agentlots", icon: <LandPlot size={14} /> },
-//       { title: "PROJECTS", url: "/agentproject", icon: <TreePine size={14} /> },
-//       { title: "EARNINGS", url: "/agentearnings", icon: <PhilippinePeso size={14} /> },
-//       { title: "MATERIALS", url: "/agentmaterials", icon: <LibraryBig size={14} /> },
-//       { title: "DOCUMENTS", url: "/agentdocuments", icon: <File size={14} /> },
-//     ],
-//   }
-];
 
 
-export function AdminAppSidebar() {
+export default function AdminSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const [activePath, setActivePath] = useState(pathname);

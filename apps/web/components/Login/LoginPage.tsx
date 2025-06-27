@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Card,
   CardContent,
@@ -23,6 +22,7 @@ export function LoginPage({ className, url = "https://"+process.env.NEXT_BUYER_D
   const searchParams = useSearchParams()
   const error = searchParams.get('error')
   const msg = searchParams.get('msg')
+  
   const handleLogin = async() => {
     await signIn('google',{
       redirect: true,
@@ -46,9 +46,9 @@ export function LoginPage({ className, url = "https://"+process.env.NEXT_BUYER_D
       {/* Logo section - visible on all screen sizes */}
       <div className="w-full md:w-1/2 flex items-center justify-center p-4 md:p-8 bg-white md:h-screen">
         <div className="w-full max-w-xs md:max-w-md">
-          <img 
-            src="/images/metaland.png" 
-            alt="Metaland Buyer's Portal" 
+          <img
+            src="/images/metaland.png"
+            alt="Metaland Buyer's Portal"
             className="w-full h-auto"
           />
         </div>

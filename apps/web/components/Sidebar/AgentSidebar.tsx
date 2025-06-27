@@ -65,7 +65,7 @@ const items: MenuItem[] = [
   
 ];
 
-export function AgentAppSidebar() {
+export default function AgentSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const [activePath, setActivePath] = useState(pathname);
@@ -86,8 +86,7 @@ export function AgentAppSidebar() {
   }
 
   const handleLogout = async () => {
-    await signOut({ redirect: false });
-    router.push("/login");
+    await signOut();
   };
 
   if (!mounted) return null; 

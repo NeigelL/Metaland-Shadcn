@@ -24,7 +24,7 @@ import {
 
 
 import { useUserStore } from "@/stores/useUserStore";
-import LoggedInUser from "./LoggedInUser/LoggedInUser";
+import LoggedInUser from "../LoggedInUser/LoggedInUser";
 
 // Define types for menu items
 type MenuItem = {
@@ -55,7 +55,7 @@ const items: MenuItem[] = [
 
 
 
-export function BuyerAppSidebar() {
+export default function BuyerSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const [activePath, setActivePath] = useState(pathname);
