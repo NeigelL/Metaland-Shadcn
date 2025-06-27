@@ -148,8 +148,8 @@ export function AmortizationTable({ schedules }: AmortizationTableProps) {
                   <TableRow
                     key={rowId}
                     className={`${
-                      schedule.isTotal 
-                        ? "bg-gray-100 font-semibold" 
+                      schedule.isTotal
+                        ? "bg-gray-100 font-semibold"
                         : index % 2 === 0 ? "bg-white" : "bg-gray-50"
                     }`}
                   >
@@ -161,14 +161,14 @@ export function AmortizationTable({ schedules }: AmortizationTableProps) {
                         shouldHighlight ? "text-red-600 font-semibold" : "text-muted-foreground"
                       }`}
                     >
-                      { formatDate(schedule.due_date,"yyy MMM dd") } 
+                      { formatDate(schedule.due_date,"yyy MMM dd") }
                       {/* {schedule.dueTag} */}
                     </TableCell>
                     <TableCell className="px-2 py-2 text-xs text-muted-foreground">
                       {schedule.amount}
                     </TableCell>
                     <TableCell className="px-2 py-2 text-xs text-muted-foreground">
-                      {schedule.payment_date_paid || "-"}
+                      { formatDate(schedule.payment_date_paid,"yyy MMM dd") || "-"}
                     </TableCell>
                     <TableCell className="px-2 py-2 text-xs text-muted-foreground">
                       {schedule.payment_invoice_number || "-"}
