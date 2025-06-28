@@ -1,12 +1,10 @@
 
 "use client";
 import { useParams } from "next/navigation";
-import { amortizationDataStore } from "@/data/amortization-data";
 import { AmortizationTable } from "@/components/AmortizationSheetPage";
-import { lotsDetails } from "@/data/lotDetailContent";
-import { useMemo } from "react";
 import { Tabs, TabsTrigger, TabsList, TabsContent } from "@workspace/ui/components/tabs";
 import { useBuyerAmortizationQuery } from "@/components/api/buyerApi";
+import Loader from "@workspace/ui/components/loader";
 
 
 // import { SOAStatement } from "@/models/SOA";
@@ -54,7 +52,7 @@ export default function PageClient() {
   const {data: amortization} = useBuyerAmortizationQuery(amortization_id);
 
   if( !amortization) {
-    return "Loading...";
+    return <Loader/>;
   }
   const balance = getFormattedBalance(amortization.tcp, amortization.total_paid);
 

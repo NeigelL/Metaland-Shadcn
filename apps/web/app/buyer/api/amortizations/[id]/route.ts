@@ -1,7 +1,8 @@
 
 
 import dbConnect from "@/lib/mongodb"
-import { getBuyerAmortizationSummaryService } from "@/services/buyerService";
+import { auth } from "@/lib/nextAuthOptions";
+import { getAmortizationService } from "@/services/buyerService";
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
@@ -9,6 +10,7 @@ export async function GET(
    { params }: { params: any }
 ) {
   const { id } = await params
+  const user = await auth()
   await dbConnect()
-    return NextResponse.json(await getBuyerAmortizationSummaryService(id))
+  return NextResponse.json(await getAmortizationService(id, user?.user_id))
 }

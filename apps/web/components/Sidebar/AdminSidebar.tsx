@@ -32,6 +32,7 @@ import {
 import { useUserStore } from "@/stores/useUserStore";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@workspace/ui/components/collapsible";
 import LoggedInUser from "../LoggedInUser/LoggedInUser";
+import ImageLogo from "./ImageLogo";
 
 // Define types for menu items
 type MenuItem = {
@@ -149,7 +150,7 @@ export default function AdminSidebar() {
     <Sidebar className="flex flex-col justify-between h-screen w-64">
       <SidebarContent className="relative">
         <div className="flex flex-col items-center">
-          <Image src="/images/metaland.png" alt="Logo" width={250} height={250} />
+          <ImageLogo/>
         </div>
           {itemGroups.map((group:any) => (
           <SidebarGroup key={group.title}>

@@ -25,6 +25,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@workspace/ui/components/dropdown-menu";
+import ImageLogo from "./ImageLogo";
 
 // Define types for menu items
 type MenuItem = {
@@ -95,7 +96,7 @@ export default function AgentSidebar() {
     <Sidebar className="flex flex-col justify-between h-screen w-64"> 
       <SidebarContent className="relative"> 
         <div className="flex flex-col items-center">
-          <Image src="/metaland.png" alt="Logo" width={250} height={250} />
+            <ImageLogo/>
         </div>
         <SidebarGroup>
           <SidebarGroupContent>
