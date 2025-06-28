@@ -1,11 +1,11 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { ListObjectsV2Command, GetObjectCommand} from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import s3Client from "@/lib/aws";
 import dbConnect from "@/lib/mongodb";
 import { isLogin } from "@/lib/nextAuthOptions";
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
 
   await dbConnect()
   if(!await isLogin()) {
