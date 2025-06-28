@@ -8,7 +8,7 @@ export async function GET(
   request: NextRequest,
    { params }: { params: any }
 ) {
-  const { id } = params
+  const { id } = await params
   await dbConnect()
     return NextResponse.json(await getBuyerAmortizationSummaryService(id))
 }

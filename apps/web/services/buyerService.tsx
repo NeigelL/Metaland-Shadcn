@@ -36,7 +36,7 @@ export async function getBuyerAmortizationSummaryService(amortization_id: string
     if(!amortization) {
         return null
     }
-    return {...amortization.toJSON(), summary}
+    return {...amortization, summary}
 }
 
 export async function getBuyerLotsDueService(user_id: string, active: boolean = true) {
@@ -81,12 +81,13 @@ export async function getAmortizationService(amortization_id: String, populate :
     await ReceiverAccount.findOne()
     await AcceptablePayment.findOne()
     await Tag.findOne()
-    return await Amortization.findById(amortization_id)
+    const amortization = await Amortization.findById(amortization_id)
     .populate(populate).populate({
         path: 'payment_ids',
         populate: {path: 'receiver_account_id acceptable_payment_id verified_by created_by updated_by'},
         options: {sort: { display_sort: 1}}
-    })
+    }).lean()
+    return amortization
 }
 
 export async function getAmortizationSummaryService(amortization_id: String) {

@@ -4,6 +4,8 @@ import React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@workspace/ui/components/table";
 import { useUploadedFilesStore } from "@/stores/useUploadedFilesStore";
 import { formatDate } from "date-fns";
+import { formatDecimal } from "@workspace/ui/lib/utils";
+import FileGallery from "./Uploads/FileGallery";
 
 interface Schedule {
   ma: string;
@@ -59,7 +61,7 @@ export function AmortizationTable({ schedules }: AmortizationTableProps) {
                 <span className={`text-xs sm:text-sm text-left sm:text-right break-words ${
                   shouldHighlight ? "text-red-600 font-semibold" : "text-muted-foreground"
                 }`}>
-                  {schedule.due_date}
+                  { formatDate(schedule.due_date,"MMM dd yyyy") }
                    {/* {schedule.dueTag} */}
                 </span>
               </div>
@@ -68,7 +70,7 @@ export function AmortizationTable({ schedules }: AmortizationTableProps) {
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b sm:border-r border-gray-200 p-3 sm:p-2 text-sm bg-gray-50">
                 <span className="font-semibold text-xs sm:text-sm mb-1 sm:mb-0">Due Amount</span>
                 <span className="text-muted-foreground text-xs sm:text-sm text-left sm:text-right break-words">
-                  {schedule.amount}
+                  {formatDecimal(schedule.amount)}
                 </span>
               </div>
               
@@ -76,7 +78,7 @@ export function AmortizationTable({ schedules }: AmortizationTableProps) {
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b sm:border-r border-gray-200 p-3 sm:p-2 text-sm bg-gray-100">
                 <span className="font-semibold text-xs sm:text-sm mb-1 sm:mb-0">Date Paid</span>
                 <span className="text-muted-foreground text-xs sm:text-sm text-left sm:text-right">
-                  {schedule.payment_date_paid || "-"}
+                  { schedule.payment_date_paid && formatDate(schedule.payment_date_paid,"MMM dd yyyy") || "-"}
                 </span>
               </div>
               
@@ -93,9 +95,10 @@ export function AmortizationTable({ schedules }: AmortizationTableProps) {
                 <span className="font-semibold text-xs sm:text-sm mb-1 sm:mb-0">Amount Paid</span>
                 <div className="text-left sm:text-right">
                   <div className="text-muted-foreground text-xs sm:text-sm">
-                    {schedule.payment_amount || "-"}
+                    {schedule.payment_date_paid && formatDecimal(schedule.payment_amount) || "-"}
                   </div>
-                  {schedule.amountTag 
+                  {
+                  // schedule.amountTag 
                   // && (
                   //   <div className="text-[10px] text-gray-500">
                   //     [{schedule.amountTag} {schedule.mode}]
@@ -109,9 +112,26 @@ export function AmortizationTable({ schedules }: AmortizationTableProps) {
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b sm:border-r border-gray-200 p-3 sm:p-2 text-sm bg-gray-50">
                 <span className="font-semibold text-xs sm:text-sm mb-1 sm:mb-0">Running Balance</span>
                 <span className="text-muted-foreground text-xs sm:text-sm text-left sm:text-right break-words">
-                  {schedule.payment_running_balance || "-"}
+                  { schedule.payment_date_paid && formatDecimal(schedule.payment_running_balance) || "-"}
                 </span>
               </div>
+
+               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b sm:border-r border-gray-200 p-3 sm:p-2 text-sm bg-gray-50">
+                <span className="font-semibold text-xs sm:text-sm mb-1 sm:mb-0">Receipts</span>
+                <span className="text-muted-foreground text-xs sm:text-sm text-left sm:text-right break-words">
+                  { schedule?.payment?._id && <div className="">
+                      <FileGallery
+                          options={{
+                              folder: ["payments",schedule?.payment?._id].join("/"),
+                              entityID: schedule?.payment?._id,
+                              collection: "payments"
+                          }}
+                      />
+                  </div>}
+                </span>
+              </div>
+
+                 
               
             </div>
           </div>
@@ -136,7 +156,7 @@ export function AmortizationTable({ schedules }: AmortizationTableProps) {
                 <TableHead className="text-xs text-gray-600 px-2 py-2">Invoice</TableHead>
                 <TableHead className="text-xs text-gray-600 px-2 py-2">Amount Paid</TableHead>
                 <TableHead className="text-xs text-gray-600 px-2 py-2">Running Balance</TableHead>
-                {/* <TableHead className="text-xs text-gray-600 px-2 py-2">Upload</TableHead> */}
+                <TableHead className="text-xs text-gray-600 px-2 py-2">Upload</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -161,28 +181,39 @@ export function AmortizationTable({ schedules }: AmortizationTableProps) {
                         shouldHighlight ? "text-red-600 font-semibold" : "text-muted-foreground"
                       }`}
                     >
-                      { formatDate(schedule.due_date,"yyy MMM dd") }
+                      { formatDate(schedule.due_date,"MMM dd yyyy") }
                       {/* {schedule.dueTag} */}
                     </TableCell>
                     <TableCell className="px-2 py-2 text-xs text-muted-foreground">
-                      {schedule.amount}
+                      {formatDecimal(schedule.amount)}
                     </TableCell>
                     <TableCell className="px-2 py-2 text-xs text-muted-foreground">
-                      { formatDate(schedule.payment_date_paid,"yyy MMM dd") || "-"}
+                      { schedule.payment_date_paid && formatDate(schedule.payment_date_paid,"MMM dd yyyy") || "-"}
                     </TableCell>
                     <TableCell className="px-2 py-2 text-xs text-muted-foreground">
                       {schedule.payment_invoice_number || "-"}
                     </TableCell>
                     <TableCell className="px-2 py-2 text-xs text-muted-foreground">
                       <div className="flex flex-col">
-                        <span>{schedule.payment_amount || "-"}</span>
+                        <span>{schedule.payment_date_paid && formatDecimal(schedule.payment_amount) || "-"}</span>
                         {/* {schedule.amountTag && (
                           <span className="text-[10px]">[{schedule.amountTag} {schedule.mode}]</span>
                         )} */}
                       </div>
                     </TableCell>
                     <TableCell className="px-2 py-2 text-xs text-muted-foreground">
-                      {schedule.payment_running_balance || "-"}
+                      { schedule.payment_date_paid && formatDecimal(schedule.payment_running_balance) || "-"}
+                    </TableCell>
+                    <TableCell className="px-2 py-2 text-xs text-muted-foreground">
+                      { schedule?.payment?._id && <>
+                      <FileGallery
+                          options={{
+                              folder: ["payments",schedule?.payment?._id].join("/"),
+                              entityID: schedule?.payment?._id,
+                              collection: "payments"
+                          }}
+                      />
+                  </>}
                     </TableCell>
                   </TableRow>
                 );
