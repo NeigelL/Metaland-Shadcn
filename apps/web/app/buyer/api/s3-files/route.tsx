@@ -14,12 +14,9 @@ export async function GET(request: NextRequest) {
 
   const url = new URL(request.url);
   const searchParams = url.searchParams;
-  console.log("searchParams", request.url)
-  console.log(request)
-
-
   const folder = searchParams.get("folder") || "";
   const bucketName = process.env.AWS_S3_BUCKET_NAME!;
+  
 
   try {
     if(!folder) {

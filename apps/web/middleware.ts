@@ -8,9 +8,9 @@ export const config = {
 const PUBLIC_FILE = /\.(.*)$/i
 
 export function middleware(request: NextRequest) {
- const host = request.headers.get('host');
+ const host = request.headers.get('host')
  const url = request.nextUrl.clone()
-console.log("Middleware URL:",request.url, "Host:", url.searchParams.toString());
+ let prefix = ''
 
   if (
     PUBLIC_FILE.test(url.pathname) ||
@@ -22,63 +22,27 @@ console.log("Middleware URL:",request.url, "Host:", url.searchParams.toString())
   }
 
   if (host?.includes(process.env.NEXT_BUYER_DOMAIN || 'buyer.metaland.properties')) {
-    const redirectUrl = new URL(`/buyer${request.nextUrl.pathname}`)
-    redirectUrl.search = redirectUrl.searchParams.toString()
+    prefix = '/buyer'
+  }  else if(host?.includes(process.env.NEXT_AGENT_DOMAIN || 'agent.metaland.properties')) {
+    prefix = '/agent'
+  }
+
+  if(prefix) {
+    const redirectUrl = new URL(`${prefix}${request.nextUrl.pathname}`, request.url)
+    redirectUrl.search = url.searchParams.toString()
     let response = NextResponse.rewrite(redirectUrl)
-      request.headers.forEach((value, name) => {
-        try {
-          response.headers.set(name, value)
-        } catch (err) {
-          // Some headers like `host` or `content-length` might throw errors if set
-          // console.warn(`Could not set header "${name}":`, err)
-        }
-      })
-
+    request.headers.forEach((value, name) => {
+      try {
+        response.headers.set(name, value)
+      } catch (err) {
+      }
+    })
       const cookies = request.cookies.getAll()
       for (const cookie of cookies) {
         response.cookies.set(cookie.name, cookie.value)
-        // console.log(`Setting cookie: ${cookie.name} = ${cookie.value}`);
       }
     return response ;
   }
-
-    if (host?.includes(process.env.NEXT_AGENT_DOMAIN || 'agent.metaland.properties')) {
-      const redirectUrl = new URL(`/agent${request.nextUrl.pathname}`,request.url)
-      redirectUrl.search = redirectUrl.searchParams.toString()
-      let response = NextResponse.rewrite(redirectUrl)
-      request.headers.forEach((value, name) => {
-        try {
-          response.headers.set(name, value)
-        } catch (err) {
-          // Some headers like `host` or `content-length` might throw errors if set
-          // console.warn(`Could not set header "${name}":`, err)
-        }
-      })
-
-      const cookies = request.cookies.getAll()
-      for (const cookie of cookies) {
-        response.cookies.set(cookie.name, cookie.value)
-        // console.log(`Setting cookie: ${cookie.name} = ${cookie.value}`);
-      }
-    return response ;
-  }
-
-//   if (host?.includes(process.env.NEXT_ADMIN_DOMAIN || 'app.metaland.properties')) {
-//       let response = NextResponse.rewrite(new URL(`/admin${request.nextUrl.pathname}`, request.url));
-//       const cookies = request.cookies.getAll()
-//       for (const cookie of cookies) {
-//         response.cookies.set(cookie.name, cookie.value)
-//       }
-//     return response ;
-//   }
-
-//     if (host?.includes(process.env.NEXT_AGENT_DOMAIN || 'agent.metaland.properties')) {
-//       let response = NextResponse.rewrite(new URL(`/agent${request.nextUrl.pathname}`, request.url));
-//       const cookies = request.cookies.getAll()
-//       for (const cookie of cookies) {
-//         response.cookies.set(cookie.name, cookie.value)
-//       }
-//   }
 
   return NextResponse.next(); // fallback
 }
