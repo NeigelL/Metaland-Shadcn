@@ -64,7 +64,7 @@ function FileGallery({options : { folder="", entityID = "", collection = ""} , o
 
             {files.length > 0 &&
                 <div className="container mx-auto p-2">
-                    <div className={"grid grid-cols-1 sm:grid-cols-4 min-h-20 " + (files.length > 2 ? "max-h-40 overflow-y-scroll" : "")}>
+                    <div className={"grid grid-cols-1 sm:grid-cols-1 min-h-20 max-w-[240px]" + (files.length > 2 ? "max-h-40 overflow-y-scroll" : "")}>
                         {files.map((file:any) => (
                         <div key={file.Key} className="relative group">
                                 { shouldDisplayImage(file) && <LazyLoadImage

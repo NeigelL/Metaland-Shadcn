@@ -1,6 +1,7 @@
 "use client";
 import { useBuyerLotsQuery } from "@/components/api/buyerApi";
 import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
+import Loader from "@workspace/ui/components/loader";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@workspace/ui/components/table";
 import { differenceInDays, differenceInMonths, differenceInWeeks, format, formatDate } from "date-fns";
 import { useEffect, useState } from "react";
@@ -41,7 +42,7 @@ export default function DueDates() {
 
     return (
         <>
-        {isLoading && <div className="flex items-center justify-center h-24">Loading...</div>}
+        {isLoading && <div className="flex items-center justify-center h-24"><Loader/></div>}
         { delayedLots && delayedLots.length > 0 && <Card className="w-full">
             <CardHeader>
                 <CardTitle className="text-base sm:text-lg">Due Dates</CardTitle>

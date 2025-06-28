@@ -1,5 +1,6 @@
 "use client";
 import { useBuyerAmortizationsQuery } from '@/components/api/buyerApi';
+import Loader from '@workspace/ui/components/loader';
 import { useEffect, useState } from 'react';
 import { PieChart, Pie, Cell, Legend, ResponsiveContainer, Tooltip } from 'recharts';
 export default function PaymentChartSummary() {
@@ -36,7 +37,7 @@ export default function PaymentChartSummary() {
     }
     },[amortizations])
 
-    if(isLoading) return <div className="flex items-center justify-center h-24">Loading...</div>
+    if(isLoading) return <div className="flex items-center justify-center h-24"><Loader/></div>
 
   return  <>{graphData.length > 0 && graphData[0].value > 0 && <div className="rounded-lg border border-gray-200 shadow">
         <div className="p-3 md:p-4 pb-0">
