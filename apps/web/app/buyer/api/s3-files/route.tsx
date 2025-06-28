@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
   const url = new URL(request.url);
   const searchParams = url.searchParams;
   console.log("searchParams", request.url)
+  console.log(request)
 
 
   const folder = searchParams.get("folder") || "";
