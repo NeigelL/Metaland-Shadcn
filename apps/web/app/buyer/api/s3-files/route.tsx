@@ -18,6 +18,9 @@ export async function GET(request: Request) {
   const bucketName = process.env.AWS_S3_BUCKET_NAME!;
 
   try {
+    if(!folder) {
+      return NextResponse.json({ error: "Folder parameter is required" }, { status: 400 });
+    }
     const command = new ListObjectsV2Command({
       Bucket: bucketName,
       Prefix: folder,
