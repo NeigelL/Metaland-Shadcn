@@ -11,7 +11,6 @@ export function middleware(request: NextRequest) {
  const host = request.headers.get('host');
  const url = request.nextUrl.clone()
 
-
   if (
     PUBLIC_FILE.test(url.pathname) ||
     url.pathname.startsWith('/_next') ||
@@ -22,7 +21,9 @@ export function middleware(request: NextRequest) {
   }
 
   if (host?.includes(process.env.NEXT_BUYER_DOMAIN || 'buyer.metaland.properties')) {
-    let response = NextResponse.rewrite(new URL(`/buyer${request.nextUrl.pathname}`, request.url))
+    const redirectUrl = new URL(`/buyer${request.nextUrl.pathname}`,request.url)
+    redirectUrl.search = redirectUrl.searchParams.toString()
+    let response = NextResponse.rewrite(redirectUrl)
       request.headers.forEach((value, name) => {
         try {
           response.headers.set(name, value)
@@ -41,7 +42,9 @@ export function middleware(request: NextRequest) {
   }
 
     if (host?.includes(process.env.NEXT_AGENT_DOMAIN || 'agent.metaland.properties')) {
-    let response = NextResponse.rewrite(new URL(`/agent${request.nextUrl.pathname}`, request.url))
+      const redirectUrl = new URL(`/agent${request.nextUrl.pathname}`,request.url)
+      redirectUrl.search = redirectUrl.searchParams.toString()
+      let response = NextResponse.rewrite(redirectUrl)
       request.headers.forEach((value, name) => {
         try {
           response.headers.set(name, value)
