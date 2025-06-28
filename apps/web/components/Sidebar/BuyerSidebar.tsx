@@ -94,10 +94,10 @@ export default function BuyerSidebar() {
       <SidebarContent className="flex-1 overflow-y-auto">
           <NavMain items={items} />
       </SidebarContent>
-      <SidebarFooter className="p-4">
+      <SidebarFooter>
+         <LoggedInUser/>
       </SidebarFooter>
       <SidebarRail className="flex flex-col"/>
-     {/* <LoggedInUser/> */}
     </Sidebar>
   );
 }

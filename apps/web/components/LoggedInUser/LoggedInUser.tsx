@@ -17,7 +17,7 @@ export default function LoggedInUser() {
   };
 
     return (<>
-      <div className="border-t border-gray-200 p-4 mt-auto">
+      <div className="border-t border-gray-200 p-1 mt-auto">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="flex items-center w-full gap-2 px-2 py-2 rounded-md hover:bg-gray-100 transition-colors">
