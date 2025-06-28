@@ -10,7 +10,7 @@ const PUBLIC_FILE = /\.(.*)$/i
 export function middleware(request: NextRequest) {
  const host = request.headers.get('host');
  const url = request.nextUrl.clone()
-console.log("Middleware URL:",request.url, "Host:", host);
+console.log("Middleware URL:",request.url, "Host:", url.search);
 
   if (
     PUBLIC_FILE.test(url.pathname) ||
@@ -22,7 +22,7 @@ console.log("Middleware URL:",request.url, "Host:", host);
   }
 
   if (host?.includes(process.env.NEXT_BUYER_DOMAIN || 'buyer.metaland.properties')) {
-    const redirectUrl = new URL(`/buyer${request.nextUrl.pathname}`,request.url)
+    const redirectUrl = new URL(`/buyer${request.nextUrl.pathname}`)
     redirectUrl.search = redirectUrl.searchParams.toString()
     let response = NextResponse.rewrite(redirectUrl)
       request.headers.forEach((value, name) => {
