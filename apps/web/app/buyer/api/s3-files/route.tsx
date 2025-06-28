@@ -12,14 +12,17 @@ export async function GET(request: Request) {
       return new NextResponse("Unauthorized", {status: 401})
   }
 
-  const { searchParams } = new URL(request.url);
-  const folder = searchParams.get("folder") || "";
+  const url = new URL(request.url);
+  const searchParams = url.searchParams;
+  console.log("searchParams", request.url)
 
+
+  const folder = searchParams.get("folder") || "";
   const bucketName = process.env.AWS_S3_BUCKET_NAME!;
 
   try {
     if(!folder) {
-      return NextResponse.json({ error: "Folder parameter is required" }, { status: 400 });
+      return NextResponse.json({ error: "Folder parameter is required" + folder }, { status: 400 });
     }
     const command = new ListObjectsV2Command({
       Bucket: bucketName,
