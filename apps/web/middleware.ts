@@ -10,7 +10,7 @@ const PUBLIC_FILE = /\.(.*)$/i
 export function middleware(request: NextRequest) {
  const host = request.headers.get('host');
  const url = request.nextUrl.clone()
-console.log("Middleware URL:",request.url, "Host:", url.searchParams);
+console.log("Middleware URL:",request.url, "Host:", url.searchParams.toString());
 
   if (
     PUBLIC_FILE.test(url.pathname) ||
