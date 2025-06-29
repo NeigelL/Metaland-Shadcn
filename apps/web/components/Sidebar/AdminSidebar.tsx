@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { LandPlot, TreePine, File, User, Home, LogOut, ChevronUp, Users, PhilippinePeso, LibraryBig, ChevronRight } from "lucide-react";
+import { LandPlot, TreePine, File, User, Home, LogOut, ChevronUp, Users, PhilippinePeso, LibraryBig, ChevronRight, HandCoins, LucideLibrary, Flag, FileText, UtilityPole } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Image  from "next/image";
@@ -33,46 +33,33 @@ import { useUserStore } from "@/stores/useUserStore";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@workspace/ui/components/collapsible";
 import LoggedInUser from "../LoggedInUser/LoggedInUser";
 import ImageLogo from "./ImageLogo";
+import NavSidebar from "./nav-sidebar";
+import { MenuItem } from "@/types/menu";
 
-// Define types for menu items
-type MenuItem = {
-  title: string;
-  url: string;
-  icon?: any;
-  isActive?: boolean;
-} | {
-  title: string;
-  isActive?: boolean;
-  icon?: any;
-  submenu: {
-    title: string;
-    url: string;
-    icon?: any;
-  }[];
-};
 
-const itemGroups: MenuItem[] = [
+const items: MenuItem[] = [
     {
         title: "APPLICATION",
         isActive : true,
-        icon: <Home size={14}/>,
-        submenu: [
-            { icon: <Home size={14} />, title: "Dashboard", url: "/" },
-            { title: "Companies", url: "/companies", icon: <Home size={14} /> },
-            { title: "Projects", url: "/projects", icon: <Home size={14} /> },
-            { title: "Buyers", url: "/buyers", icon: <Home size={14} /> },
-            { title: "Agent", url: "/agents", icon: <Home size={14} /> },
-            { title: "Team Lead", url: "/team-lead", icon: <Home size={14} /> },
-            { title: "Realties", url: "/realties", icon: <Home size={14} /> },
-            { title: "Reservations", url: "/reservations", icon: <Home size={14} /> },
-            { title: "Incentives", url: "/incentives", icon: <Home size={14} /> },
-            { title: "Sample Calculation", url: "/monthly-calculator", icon: <Home size={14} /> },
-            { title: "Users", url: "/users", icon: <Home size={14} /> }
+        icon: Home,
+        items: [
+            { icon: Home , title: "Dashboard", url: "/" },
+            { title: "Companies", url: "/companies", icon: Home },
+            { title: "Projects", url: "/projects", icon: Home },
+            { title: "Buyers", url: "/buyers", icon: Home },
+            { title: "Agent", url: "/agents", icon: Home },
+            { title: "Team Lead", url: "/team-lead", icon: Home },
+            { title: "Realties", url: "/realties", icon: Home },
+            { title: "Reservations", url: "/reservations", icon: Home },
+            { title: "Incentives", url: "/incentives", icon: Home },
+            { title: "Sample Calculation", url: "/monthly-calculator", icon: Home },
+            { title: "Users", url: "/users", icon: Home }
         ],
     },
     {
         title: "Collections",
-        submenu: [
+        icon: HandCoins,
+        items: [
             { title: "Sales Generator", url: "/sales"},
             { title: "Running Report", url: "/sales/running-report"},
             { title: "Monthly Collectible Report", url: "/sales/monthly-collectibles"},
@@ -85,7 +72,8 @@ const itemGroups: MenuItem[] = [
     },
     {
         title: "Accounting",
-        submenu: [
+        icon: LucideLibrary,
+        items: [
             { title: "Expenses", url: "/accounting/expenses"},
             { title: "Monthly Expenses", url: "/accounting/expenses-monthly"},
             { title: "Monthly Purchases", url: "/accounting/purchases-monthly"},
@@ -101,7 +89,8 @@ const itemGroups: MenuItem[] = [
     },
     {
         title: "Reporting",
-        submenu: [
+        icon: Flag,
+        items: [
             { title: "No TIN", url: "/reporting/no-tins"},
             { title: "Top Sellers by Agent", url: "/reporting/top-sellers"},
             {title: "Top Sellers by Realties", url: "/reporting/top-sellers-realties"},
@@ -111,20 +100,22 @@ const itemGroups: MenuItem[] = [
     },
     {
         title: "Data Integrity",
-        submenu: [
-            { icon: <Home/>, title: "No Agent Amortizations", url: "/data-integrity/no-agent-amortizations", },
-            { icon: <Home/>, title: "No Realty Amortizations", url: "/data-integrity/no-realty-amortizations"},
-            { icon: <Home/>, title: "Double Check Commission Percent Amortizations", url: "/data-integrity/commission-percent-amortizations"},
-            { icon: <Home/>, title: "No Reservation Amortizations", url: "/data-integrity/no-reservation-date-amortizations" },
-            { icon: <Home/>, title: "Unlock Commission Sharing Amortizations", url: "/data-integrity/unlock-commission-sharing" },
-            { icon: <Home/>, title: "Double Book Reservation", url: "/data-integrity/double-book-reservation-amortizations"},
-            { icon: <Home/>, title: "Agent Buyers Amortizations", url: "/data-integrity/agent-buyers-amortizations" }
+        icon: FileText,
+        items: [
+            { icon: Home, title: "No Agent Amortizations", url: "/data-integrity/no-agent-amortizations", },
+            { icon: Home, title: "No Realty Amortizations", url: "/data-integrity/no-realty-amortizations"},
+            { icon: Home, title: "Double Check Commission Percent Amortizations", url: "/data-integrity/commission-percent-amortizations"},
+            { icon: Home, title: "No Reservation Amortizations", url: "/data-integrity/no-reservation-date-amortizations" },
+            { icon: Home, title: "Unlock Commission Sharing Amortizations", url: "/data-integrity/unlock-commission-sharing" },
+            { icon: Home, title: "Double Book Reservation", url: "/data-integrity/double-book-reservation-amortizations"},
+            { icon: Home, title: "Agent Buyers Amortizations", url: "/data-integrity/agent-buyers-amortizations" }
         ]
     },
     {
         title: "Utilities",
-        submenu: [
-            { icon: <Home size={14} />, title: "Clean Up", url: "/utilities" }
+        icon: UtilityPole,
+        items: [
+            { icon: Home, title: "Clean Up", url: "/utilities" }
         ]
     }
 ]
@@ -132,69 +123,8 @@ const itemGroups: MenuItem[] = [
 
 
 export default function AdminSidebar() {
-  const pathname = usePathname();
-  const router = useRouter();
-  const [activePath, setActivePath] = useState(pathname);
-  const [mounted, setMounted] = useState(false);
-  const { user, clearUser } = useUserStore();
-  useEffect(() => {
-    setMounted(true);
-    setActivePath(pathname);
-  }, [pathname]);
-
-
-
-  if (!mounted) return null; 
 
   return (
-    <Sidebar className="flex flex-col justify-between h-screen w-64">
-      <SidebarContent className="relative">
-        <div className="flex flex-col items-center">
-          <ImageLogo/>
-        </div>
-          {itemGroups.map((group:any) => (
-          <SidebarGroup key={group.title}>
-            <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
-            <SidebarMenu>
-              {/* {group.submenu.map((item: any, key:any) => ( */}
-                <Collapsible
-                  key={group.title}
-                  asChild
-                  defaultOpen={group.isActive}
-                  className="group/collapsible"
-                >
-                  <SidebarMenuItem>
-                    <CollapsibleTrigger asChild>
-                      <SidebarMenuButton tooltip={group.title}>
-                        {group.icon}
-                        <span>{group.title}</span>
-                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-
-                      </SidebarMenuButton>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                      <SidebarMenuSub>
-                        {group.submenu?.map((subItem:any) => (
-                          <SidebarMenuSubItem key={subItem.title}>
-                            <SidebarMenuSubButton asChild>
-                              <a href={subItem.url}>
-                                <span>{subItem.title}</span>
-                              </a>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
-                      </SidebarMenuSub>
-                    </CollapsibleContent>
-                  </SidebarMenuItem>
-                </Collapsible>
-              {/* ))} */}
-            </SidebarMenu>
-          </SidebarGroup>
-        ))}
-      </SidebarContent>
-
-      {/* Footer with Dropdown */}
-      <LoggedInUser/>
-    </Sidebar>
+    <NavSidebar items={items}/>
   );
 }

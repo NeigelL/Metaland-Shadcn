@@ -1,20 +1,8 @@
 "use client";
 
-import { LandPlot, LucideIcon, HomeIcon } from "lucide-react";
+import { LandPlot, HomeIcon } from "lucide-react";
 import NavSidebar from "./nav-sidebar";
-
-type MenuItem = {
-    title: string,
-    title_show?: boolean
-    url?: string,
-    icon?: LucideIcon,
-    isActive?: boolean,
-    items?: {
-        title: string,
-        url: string,
-        icon?: LucideIcon
-    }[]
-}
+import { MenuItem } from "@/types/menu";
 
 
 const items: MenuItem[] = [

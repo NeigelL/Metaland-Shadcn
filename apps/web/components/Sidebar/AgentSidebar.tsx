@@ -2,19 +2,8 @@
 
 import { LandPlot, LucideIcon, HomeIcon, Users, TreePine, PhilippinePeso, LibraryBig, File } from "lucide-react";
 import NavSidebar from "./nav-sidebar";
+import { MenuItem } from "@/types/menu";
 
-type MenuItem = {
-    title: string,
-    title_show?: boolean
-    url?: string,
-    icon?: LucideIcon,
-    isActive?: boolean,
-    items?: {
-        title: string,
-        url: string,
-        icon?: LucideIcon
-    }[]
-}
 
 
 const items: MenuItem[] = [

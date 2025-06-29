@@ -25,6 +25,8 @@ export function middleware(request: NextRequest) {
     prefix = '/buyer'
   }  else if(host?.includes(process.env.NEXT_AGENT_DOMAIN || 'agent.metaland.properties')) {
     prefix = '/agent'
+  }  else if(host?.includes(process.env.NEXT_ADMIN_DOMAIN || 'admin.metaland.properties')) {
+    prefix = '/admin'
   }
 
   if(prefix) {
@@ -35,6 +37,7 @@ export function middleware(request: NextRequest) {
       try {
         response.headers.set(name, value)
       } catch (err) {
+        throw new Error(`Failed to set header ${name}: ${err}`);
       }
     })
       const cookies = request.cookies.getAll()

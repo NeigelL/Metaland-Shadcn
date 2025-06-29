@@ -27,10 +27,12 @@ export default async function RootLayout({
         className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
       >
         <Providers
-        user={JSON.stringify(user)}
-        accountType="admin"
-        callbackURL={ ["https://", process.env.NEXT_ADMIN_DOMAIN || "admin.metaland.properties"].join("") }
-        >{children}</Providers>
+          user={JSON.stringify(user)}
+          accountType="admin"
+          callbackURL={ ["https://", process.env.NEXT_AGENT_DOMAIN || "admin.metaland.properties"].join("") }
+        >
+          {children}
+        </Providers>
       </body>
     </html>
   )
