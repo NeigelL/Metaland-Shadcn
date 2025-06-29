@@ -27,9 +27,7 @@ interface AmortizationTableProps {
 }
 
 export function AmortizationTable({ schedules }: AmortizationTableProps) {
-  const addFiles = useUploadedFilesStore((state) => state.addFiles);
 
- console.dir(schedules)
 
   // Card view for mobile - matching your responsive pattern
   const CardView = () => (

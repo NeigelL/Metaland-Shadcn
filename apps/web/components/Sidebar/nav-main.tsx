@@ -25,8 +25,6 @@ export default function NavMain({
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => (
-              <>
-            {/* {item?.title_show && <SidebarGroupLabel>{item.title}</SidebarGroupLabel> } */}
             <Collapsible
               key={item.title}
               asChild
@@ -65,7 +63,7 @@ export default function NavMain({
                   </SidebarMenuSub>
                 </CollapsibleContent>
               </SidebarMenuItem>
-            </Collapsible></>
+            </Collapsible>
           ))}
         </SidebarMenu>
       </SidebarGroupContent>

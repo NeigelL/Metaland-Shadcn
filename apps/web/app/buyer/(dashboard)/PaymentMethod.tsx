@@ -1,14 +1,16 @@
+"use client";
 import OfficeMap from "@/components/Maps/OfficeMap";
 import { Button } from "@workspace/ui/components/button";
 import { Card, CardContent } from "@workspace/ui/components/card";
 import { Label } from "@workspace/ui/components/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@workspace/ui/components/dialog";
 
-export default function PaymentMethod({
-    setIsDialogOpen
-}: {
-    setIsDialogOpen: (isOpen: boolean) => void;
-}) {
+
+export default function PaymentMethod() {
+
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     return <>
     <h3 className="text-sm font-medium mb-4 p-4">Payment Methods</h3>
@@ -89,5 +91,20 @@ export default function PaymentMethod({
                   </TabsContent>
                 </div>
               </Tabs>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger />
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Scan QR Code</DialogTitle>
+            </DialogHeader>
+            <div className="flex justify-center items-center">
+              <img
+                src="/images/qr-code.png"
+                alt="QR Code"
+                className="w-64 h-64"
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
     </>
 }

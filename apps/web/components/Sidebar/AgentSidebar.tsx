@@ -12,20 +12,20 @@ const items: MenuItem[] = [
       url: "/",
       icon: HomeIcon,
     },
-     {
-      title: "MY LOTS",
-      url: "/lots",
-      icon: LandPlot,
-    },
-    {
-      title: "CLIENTS",
-      url: "/clients",
-      icon: Users
-    },
-      { title: "PROJECTS", url: "/projects", icon: TreePine },
-      { title: "EARNINGS", url: "/earnings", icon: PhilippinePeso },
-      { title: "MATERIALS", url: "/materials", icon: LibraryBig },
-      { title: "DOCUMENTS", url: "/documents", icon: File },
+    //  {
+    //   title: "MY LOTS",
+    //   url: "/lots",
+    //   icon: LandPlot,
+    // },
+    // {
+    //   title: "CLIENTS",
+    //   url: "/clients",
+    //   icon: Users
+    // },
+      // { title: "PROJECTS", url: "/projects", icon: TreePine },
+      // { title: "EARNINGS", url: "/earnings", icon: PhilippinePeso },
+      // { title: "MATERIALS", url: "/materials", icon: LibraryBig },
+      // { title: "DOCUMENTS", url: "/documents", icon: File },
 ]
 
 
