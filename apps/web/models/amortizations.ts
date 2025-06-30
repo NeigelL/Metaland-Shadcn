@@ -276,9 +276,9 @@ amortSchema.virtual('cancellable').get(function() {
 
 amortSchema.virtual('summary').get(function() {
     
-    if(this?.payment_ids?.length == 0) {
-        return []
-    }
+    // if(this?.payment_ids?.length == 0) {
+    //     return []
+    // }
     const amortization:any = this ?? {}
     const amortization_id = amortization?._id?.toString() ?? ""
     const { monthly_equities: equities = [], monthly_schedules : schedules = [], payment_ids: payments = [] } = amortization ?? {}

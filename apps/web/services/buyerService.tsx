@@ -25,7 +25,8 @@ export async function getBuyerLotsService(user_id: string, active: boolean = tru
         {path:'realty_id'},
         {path:'agent_id'},
         {path:'buyer_ids'},
-    ]).select("-commission_sharing -agent_id -agent_id_2 -team_lead -team_lead_2 -buyer_id -buyer_ids -description -descriptionHistory")
+        {path:'payment_ids'}
+    ])
 }
 
 
@@ -35,10 +36,11 @@ export async function getBuyerLotsDueService(user_id: string, active: boolean = 
     const buyerLots:any[] = []
 
     for(let i = 0; i < amortizations.length; i++) {
-        const delayed:any[] = amortizations[i].summary.filter((item:any) => item.isDelayed).map((item:any) => item)
-        if(delayed?.length > 0 && amortizations[i]) {
+        console.log(amortizations[i].summary)
+        const delayed:any[] = amortizations[i].summary.filter((item:any) => item.isDelayed)
+        if(delayed?.length > 0) {
             buyerLots.push({
-                // ...amortizations[i].toObject(),
+                ...amortizations[i],
                  project_id: amortizations[i].project_id,
                 block_id: amortizations[i].block_id,
                 lot_id: amortizations[i].lot_id,
