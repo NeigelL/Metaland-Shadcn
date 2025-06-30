@@ -55,7 +55,7 @@ export async function getBuyerLotsDueService(user_id: string, active: boolean = 
     return buyerLots
 }
 
-export async function getAmortizationService(amortization_id: String, user_id: String, populate :any = [
+export async function getAmortizationService(amortization_id: String, agent_id: String, populate :any = [
     {path:'project_id'},
     {path:'block_id'},
     {path:'lot_id'},
@@ -78,7 +78,15 @@ export async function getAmortizationService(amortization_id: String, user_id: S
     await ReceiverAccount.findOne()
     await AcceptablePayment.findOne()
     await Tag.findOne()
-    const amortization = await Amortization.findOne({_id: amortization_id, buyer_ids: user_id})
+    const amortization = await Amortization.findOne({
+        _id: amortization_id,
+        $or: [
+            {agent_id: agent_id},
+            {agent_id_2: agent_id},
+            {team_lead: agent_id},
+            {team_lead_2: agent_id}
+        ]
+    })
     .populate(populate).populate({
         path: 'payment_ids',
         populate: {path: 'receiver_account_id acceptable_payment_id verified_by created_by updated_by'},

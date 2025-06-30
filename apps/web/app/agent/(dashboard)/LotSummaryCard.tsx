@@ -102,7 +102,7 @@ export default function LotSummaryCard() {
               </CardContent>
             </Card> */}
             {/* <Link href="/agentearnings?tab=incentives"> */}
-              <Card className="shadow-md h-20 hover:bg-gray-50 transition-colors">
+              <Card className="shadow-md h-20 hover:bg-gray-50 transition-colors py-2">
                 <CardContent className="p-0">
                   <div className="flex items-center justify-start h-full ml-3">
                     <div className="bg-yellow-100 p-2 rounded-full">
