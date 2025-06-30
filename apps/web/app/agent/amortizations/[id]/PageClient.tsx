@@ -95,7 +95,7 @@ export default function PageClient() {
         <div>
         <h1 className="text-lg sm:text-xl md:text-2xl font-bold tracking-tight">Amortization Details</h1>
         <p className="text-gray-500 mt-1 text-sm sm:text-base">
-          Payment schedule and history for <strong>{amortization.lot_id?.name}</strong> in <strong>{amortization.project_id?.name}</strong>
+          Payment schedule and history for <strong>{amortization.block_id?.name}</strong> <strong>{amortization.lot_id?.name}</strong> in <strong>{amortization.project_id?.name}</strong>
         </p>
       </div>
 
