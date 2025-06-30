@@ -236,10 +236,10 @@ export async function getAgentDueDateAmortization(
         {path:'lot_id'},
         {path:'realty_id'},
         {path: "payment_ids"},
-        {path: 'agent_id', select: 'first_name middle_name last_name fullName'},
-        {path: 'agent_id_2', select: 'first_name middle_name last_name fullName'},
-        {path: 'team_lead', select: 'first_name middle_name last_name fullName'},
-        {path: 'team_lead_2', select: 'first_name middle_name last_name fullName'},
+        {path: 'agent_id', select: 'first_name middle_name last_name fullName phone'},
+        {path: 'agent_id_2', select: 'first_name middle_name last_name fullName phone'},
+        {path: 'team_lead', select: 'first_name middle_name last_name fullName phone'},
+        {path: 'team_lead_2', select: 'first_name middle_name last_name fullName phone'},
     ])
     // .select("payment_ids lot_id block_id project_id summary amount tcp")
 

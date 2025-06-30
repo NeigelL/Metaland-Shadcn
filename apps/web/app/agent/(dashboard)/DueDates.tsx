@@ -84,6 +84,7 @@ export default function DueDates() {
                         <TableRow>
                             <TableHead className="text-xs sm:text-sm">Project</TableHead>
                             <TableHead className="text-xs sm:text-sm">Agent</TableHead>
+                            <TableHead className="text-xs sm:text-sm">Contact</TableHead>
                             <TableHead className="text-xs sm:text-sm">Due Date</TableHead>
                             <TableHead className="text-xs sm:text-sm text-right pr-4">Amount</TableHead>
                         </TableRow>
@@ -96,10 +97,10 @@ export default function DueDates() {
                                 <TableRow key={index}>
                                 <TableCell className="whitespace-nowrap text-xs sm:text-sm">{[lot.project, lot.block ,lot.lot].join(" ")}</TableCell>
                                 <TableCell className="text-xs sm:text-sm truncate">
-                                    { lot?.agent_id && user_id !== lot?.agent_id?._id && lot?.agent_id?.fullName }
-                                    { lot?.agent_id_2 && user_id !== lot?.agent_id_2?._id && lot?.agent_id_2?.fullName }
-                                    { lot?.team_lead && user_id !== lot?.team_lead?._id && lot?.team_lead?.fullName }
-                                    { lot?.team_lead_2 && user_id !== lot?.team_lead_2?._id && lot?.team_lead_2?.fullName }
+                                    { lot?.agent_id && user_id !== lot?.agent_id?._id && [lot?.agent_id?.fullName, lot?.agent_id?.phone] }
+                                    { lot?.agent_id_2 && user_id !== lot?.agent_id_2?._id && [lot?.agent_id_2?.fullName,lot?.agent_id_2?.phone] }
+                                    { lot?.team_lead && user_id !== lot?.team_lead?._id && [lot?.team_lead?.fullName,lot?.team_lead?.phone] }
+                                    { lot?.team_lead_2 && user_id !== lot?.team_lead_2?._id && [lot?.team_lead_2?.fullName,lot?.team_lead_2?.phone] }
                                 </TableCell>
                                 <TableCell className="text-xs sm:text-sm">
                                     <div className="flex flex-col sm:flex-row sm:items-center">
