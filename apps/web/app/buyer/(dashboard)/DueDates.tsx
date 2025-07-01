@@ -106,6 +106,7 @@ export default function DueDates() {
                             return (
                                 <TableRow
                                 key={index}
+                                className="hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors cursor-pointer"
                                  onClick={
                                     () => {
                                         router.push(`/amortizations/${lot._id}`);
