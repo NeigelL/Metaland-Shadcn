@@ -5,6 +5,7 @@ import { AmortizationTable } from "@/components/AmortizationSheetPage";
 import { Tabs, TabsTrigger, TabsList, TabsContent } from "@workspace/ui/components/tabs";
 import { useBuyerAmortizationQuery } from "@/components/api/buyerApi";
 import Loader from "@workspace/ui/components/loader";
+import { formatDecimal } from "@workspace/ui/lib/utils";
 
 
 // import { SOAStatement } from "@/models/SOA";
@@ -62,9 +63,9 @@ export default function PageClient() {
   })}`;
   const fields = [
     { label: "Project", value: amortization.project_id.name },
-    { label: "Lot", value: amortization.lot_id.name },
-    { label: "Area & Price", value: [amortization.area + "sqm", amortization.price_per_sqm ].join(" / ") },
-    { label: "Agent", value: amortization?.agent_id?.first_name },
+    { label: "Lot", value: [amortization?.block_id?.name , amortization?.lot_id?.name].join(" / ") },
+    { label: "Area & Price", value: [amortization.area + "sqm", formatDecimal(amortization.price_per_sqm) ].join(" / ") },
+    { label: "Agent", value: [amortization?.agent_id?.first_name, amortization?.agent_id?.middle_name, amortization?.agent_id?.last_name].join(" ") },
     { label: "Realty", value: amortization?.realty_id?.name },
     { label: "Discount", value: amortization.discount },
     { label: "Down Payment", value: amortization.down_payment },
@@ -74,12 +75,6 @@ export default function PageClient() {
     { label: "Balance", value: balance },
   ];
 
-  // const buyer = buyerProfiles.find(
-  //   (b) => b.name === selectedData.userName || b.fullName === selectedData.userName
-  // );
-  
-
-  // if (!buyer) return <p>No buyer found for this lot.</p>;
 
   return (
     <div className="min-h-screen w-full">
@@ -114,7 +109,11 @@ export default function PageClient() {
         {/* Info Table - Responsive Fix */}
         <div className="w-full overflow-x-auto border rounded-xl ">
         <div className="p-4 bg-gray-100 border-b border-gray-200">
-          <h2 className="text-base sm:text-lg justify-center item-center">LOT # : <strong>{amortization.reference_code}</strong></h2>
+          <h2 className="text-base sm:text-lg justify-center item-center">BUYER :
+            <span className="font-semibold text-gray-800">
+              {amortization?.buyer_ids?.map((buyer:any) => buyer?.fullName).join(", ")}
+            </span>
+          </h2>
         </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {fields.map((field, index) => (

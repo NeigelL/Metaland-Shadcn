@@ -39,7 +39,7 @@ export async function getBuyerLotsDueService(user_id: string, active: boolean = 
         const delayed:any[] = amortizations[i].summary.filter((item:any) => item.isDelayed)
         if(delayed?.length > 0) {
             buyerLots.push({
-                ...amortizations[i],
+                _id:amortizations[i]._id,
                  project_id: amortizations[i].project_id,
                 block_id: amortizations[i].block_id,
                 lot_id: amortizations[i].lot_id,
@@ -55,7 +55,7 @@ export async function getBuyerLotsDueService(user_id: string, active: boolean = 
     return buyerLots
 }
 
-export async function getAmortizationService(amortization_id: String, agent_id: String, populate :any = [
+export async function getAmortizationService(amortization_id: String, buyer_id: String, populate :any = [
     {path:'project_id'},
     {path:'block_id'},
     {path:'lot_id'},
@@ -80,12 +80,7 @@ export async function getAmortizationService(amortization_id: String, agent_id: 
     await Tag.findOne()
     const amortization = await Amortization.findOne({
         _id: amortization_id,
-        $or: [
-            {agent_id: agent_id},
-            {agent_id_2: agent_id},
-            {team_lead: agent_id},
-            {team_lead_2: agent_id}
-        ]
+        buyer_ids: buyer_id
     })
     .populate(populate).populate({
         path: 'payment_ids',

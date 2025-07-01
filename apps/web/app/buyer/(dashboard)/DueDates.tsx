@@ -3,7 +3,9 @@ import { useBuyerLotsQuery } from "@/components/api/buyerApi";
 import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
 import Loader from "@workspace/ui/components/loader";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@workspace/ui/components/table";
-import { differenceInDays, differenceInMonths, differenceInWeeks, format, formatDate } from "date-fns";
+import { formatDateClient } from "@workspace/ui/lib/utils";
+import { differenceInDays, differenceInMonths, differenceInWeeks } from "date-fns";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function DueDates() {
@@ -11,13 +13,15 @@ export default function DueDates() {
   const today = new Date();
   const {data: lotsData, isLoading, isSuccess} = useBuyerLotsQuery();
   const [delayedLots , setDelayedLots ]= useState<any>([])
-
+  const router = useRouter();
   useEffect(() => {
     let tempDelayedLots:any = [];
     for(let i = 0; i < lotsData?.length; i++) {
         let lot:any = lotsData[i];
         let d:any = lot?.delayed.map((item:any) =>{
             return {
+                ...lot,
+                _id: lot._id,
                 lot: lot.lot_id?.name || "No Lot",
                 block: lot.block_id?.name || "No Block",
                 date: item.due_date,
@@ -53,11 +57,20 @@ export default function DueDates() {
                     {/* Mobile Card View: visible on small screens only */}
                     <div className="block lg:hidden space-y-3">
                     {delayedLots.map((lot:any, index:any) => {
+                        console.log(lot)
 
                     const timeAgo =  ` (${getTimeAgoLabel(lot.date)})`;
 
                         return (
-                            <Card key={index} className="p-3 shadow-sm border rounded-md">
+                            <Card
+                            key={index}
+                            className="p-3 shadow-sm border rounded-md gap-1"
+                            onClick={
+                                () => {
+                                    router.push(`/amortizations/${lot._id}`);
+                                }
+                            }
+                            >
                             <div className="flex justify-between items-center mb-1">
                                 <span className="font-semibold text-sm truncate">{lot.project}</span>
                                 <span className={`text-sm font-medium tabular-nums text-destructive`}>
@@ -65,8 +78,9 @@ export default function DueDates() {
                                 </span>
                             </div>
                             <div className="text-sm text-muted-foreground truncate">Lot: {lot.lot}</div>
+                            <div className="text-sm text-muted-foreground truncate">{[lot.block ,lot.lot].join(" ")}</div>
                             <div className="text-sm flex items-center text-muted-foreground">
-                                <span>{lot.date}</span>
+                                <span>{formatDateClient(lot.date)}</span>
                                 {<span className="ml-2 text-xs italic">{timeAgo}</span>}
                             </div>
                             </Card>
@@ -90,12 +104,19 @@ export default function DueDates() {
                             const timeAgo = ` (${getTimeAgoLabel(lot.date)})`;
 
                             return (
-                                <TableRow key={index}>
+                                <TableRow
+                                key={index}
+                                 onClick={
+                                    () => {
+                                        router.push(`/amortizations/${lot._id}`);
+                                    }
+                                }
+                                >
                                 <TableCell className="whitespace-nowrap text-xs sm:text-sm">{lot.project}</TableCell>
                                 <TableCell className="text-xs sm:text-sm truncate">{lot.lot}</TableCell>
                                 <TableCell className="text-xs sm:text-sm">
                                     <div className="flex flex-col sm:flex-row sm:items-center">
-                                    <span className="truncate">{ formatDate(lot.date, "MMM dd yyyy")}</span>
+                                    <span className="truncate">{ formatDateClient(lot.date)}</span>
                                     <span className="text-[10px] text-muted-foreground sm:ml-2">{timeAgo}</span>
                                     </div>
                                 </TableCell>

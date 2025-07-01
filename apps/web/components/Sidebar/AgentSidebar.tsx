@@ -17,11 +17,11 @@ const items: MenuItem[] = [
     //   url: "/lots",
     //   icon: LandPlot,
     // },
-    // {
-    //   title: "CLIENTS",
-    //   url: "/clients",
-    //   icon: Users
-    // },
+    {
+      title: "CLIENTS",
+      url: "/clients",
+      icon: Users
+    },
       // { title: "PROJECTS", url: "/projects", icon: TreePine },
       // { title: "EARNINGS", url: "/earnings", icon: PhilippinePeso },
       // { title: "MATERIALS", url: "/materials", icon: LibraryBig },

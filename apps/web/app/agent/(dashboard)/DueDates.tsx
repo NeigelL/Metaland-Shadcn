@@ -4,6 +4,7 @@ import { useUserStore } from "@/stores/useUserStore";
 import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
 import Loader from "@workspace/ui/components/loader";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@workspace/ui/components/table";
+import { formatDateClient } from "@workspace/ui/lib/utils";
 import { differenceInDays, differenceInMonths, differenceInWeeks,  formatDate } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -80,7 +81,7 @@ export default function DueDates() {
                                 <div className="text-sm text-muted-foreground truncate">{lot?.buyer_ids?.map( (buyer:any) => buyer?.fullName).join(" ")}</div>
                                 <div className="text-sm text-muted-foreground truncate">{[lot.block ,lot.lot].join(" ")}</div>
                                 <div className="text-sm flex items-center text-muted-foreground">
-                                    <span>{formatDate(lot.date,"MMM dd yyyy")}</span>
+                                    <span>{formatDateClient(lot.date)}</span>
                                     {<span className="ml-2 text-xs italic">{timeAgo}</span>}
                                 </div>
                             </Card>
@@ -124,7 +125,7 @@ export default function DueDates() {
                                     </TableCell>
                                     <TableCell className="text-xs sm:text-sm">
                                         <div className="flex flex-col sm:flex-row sm:items-center">
-                                        <span className="truncate">{ formatDate(lot.date, "MMM dd yyyy")}</span>
+                                        <span className="truncate">{ formatDateClient(lot.date)}</span>
                                         <span className="text-[10px] text-muted-foreground sm:ml-2">{timeAgo}</span>
                                         </div>
                                     </TableCell>
