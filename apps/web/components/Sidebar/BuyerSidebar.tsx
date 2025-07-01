@@ -1,6 +1,6 @@
 "use client";
 
-import { LandPlot, HomeIcon } from "lucide-react";
+import { LandPlot, HomeIcon, Factory } from "lucide-react";
 import NavSidebar from "./nav-sidebar";
 import { MenuItem } from "@/types/menu";
 
@@ -15,6 +15,11 @@ const items: MenuItem[] = [
       title: "MY LOTS",
       url: "/lots",
       icon: LandPlot,
+    },
+    {
+      title: "FAQ",
+      url: "/faq",
+      icon: Factory,
     }
 ]
 

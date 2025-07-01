@@ -2,11 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { lotsDetails as initialLotsDetails } from "@/data/lotDetailContent";
+import { projectsDetails } from "@/data/projectsDetailContents";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
 import { Separator } from "@workspace/ui/components/separator";
 import { useSearchParams } from 'next/navigation';
 import { useBuyerAmortizationsQuery } from "@/components/api/buyerApi";
 import PropertyGrid from "@/components/Property/PropertyGrid";
+import { Search } from "lucide-react";
+import { Input } from "@workspace/ui/components/input";
 
 
 interface Lot {
@@ -121,8 +124,8 @@ export function PageClient() {
             </p>
           </div>
           
-          {/* Search Bar */}
-          {/* <div className="relative w-full md:w-80">
+          Search Bar
+          <div className="relative w-full md:w-80">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="text"
@@ -131,7 +134,7 @@ export function PageClient() {
               onChange={(e) => setSearchQuery(e.target.value)}
               className="pl-10 w-full text-xs sm:text-sm"
             />
-          </div> */}
+          </div>
         </div>
       </div>
 
@@ -145,7 +148,7 @@ export function PageClient() {
         >
           <div className="flex items-center justify-between">
             <TabsList className="w-full overflow-x-auto flex-nowrap whitespace-nowrap scrollbar-hide">
-            <TabsTrigger value="all" className="capitalize text-[11px] sm:text-sm px-2 sm:px-3">All Lots</TabsTrigger>
+            <TabsTrigger value="all" className="capitalize text-[11px] sm:text-sm px-2 sm:px-3">All</TabsTrigger>
             <TabsTrigger value="ongoing" className="capitalize text-[11px] sm:text-sm px-2 sm:px-3">Ongoing</TabsTrigger>
             <TabsTrigger value="fullyPaid" className="capitalize text-[11px] sm:text-sm px-2 sm:px-3">Fully Paid</TabsTrigger>
             </TabsList>
@@ -171,6 +174,5 @@ export function PageClient() {
   );
 }
 
-// In your existing LotsPage component
 
 

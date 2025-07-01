@@ -132,7 +132,7 @@ export default function SalesGraph() {
                           className="border rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-green-400"
                           aria-label="Start date"
                           min={parameters?.min_date?.toISOString().slice(0, 10)}
-                          value={parameters?.start_date?.toISOString().slice(0, 10)}
+                          value={parameters?.start_date ? parameters?.start_date?.toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10)}
                           onChange={
                             (e) => {
                               setParameters({
@@ -146,7 +146,7 @@ export default function SalesGraph() {
                           type="date"
                           className="border rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-green-400"
                           aria-label="End date"
-                          value={parameters?.end_date?.toISOString().slice(0, 10) }
+                          value={parameters?.end_date ? parameters?.end_date?.toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10)}
                           onChange={
                             (e) => {
                               setParameters({

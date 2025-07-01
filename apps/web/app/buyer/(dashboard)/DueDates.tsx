@@ -91,7 +91,7 @@ export default function DueDates() {
                     {/* Desktop Table View: visible on lg+ screens */}
                     <div className="hidden lg:block rounded-md border overflow-auto max-h-[400px]">
                     <Table className="w-full">
-                        <TableHeader className="sticky top-0 bg-background z-10">
+                        <TableHeader className="sticky top-0 bg-background">
                         <TableRow>
                             <TableHead className="text-xs sm:text-sm">Project</TableHead>
                             <TableHead className="text-xs sm:text-sm">Lot</TableHead>
