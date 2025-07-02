@@ -1,5 +1,10 @@
 import { PageClient } from "./PageClient";
-
+import { Metadata } from "next"
+export const metadata: Metadata = {
+    title:
+      "My Lots",
+    description: "My Lots",
+};
 
 export default async function Page() {
   return (
