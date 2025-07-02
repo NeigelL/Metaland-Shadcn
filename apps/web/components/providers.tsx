@@ -9,6 +9,7 @@ import { SidebarInset, SidebarProvider, SidebarTrigger } from "@workspace/ui/com
 import { LoginPage } from "./Login/LoginPage";
 import dynamic from "next/dynamic";
 import Loader from "@workspace/ui/components/loader";
+import GoogleAnalytics from "./GoogleAnalytics/GoogleAnalytics";
 
 
 const queryClient = new QueryClient()
@@ -82,6 +83,7 @@ export function Providers({ children, user, accountType, callbackURL }: { user:a
             />
           </div>
         }
+        <GoogleAnalytics GA_ID={process.env.NEXT_PUBLIC_GA_ID} />
       </QueryClientProvider>
     </NextThemesProvider>
   )
