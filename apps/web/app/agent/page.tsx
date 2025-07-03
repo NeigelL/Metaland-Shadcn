@@ -2,8 +2,8 @@ import { PageClient } from "./PageClient";
 import { Metadata } from "next"
 export const metadata: Metadata = {
     title:
-      "Agent Dashboard",
-    description: "Agent Dashboard",
+      "Agent Portal",
+    description: "Agent Portal",
 };
 
 export default async function Page() {
