@@ -23,10 +23,11 @@ interface Schedule {
 }
 
 interface AmortizationTableProps {
+  amortization: any,
   schedules: any[];
 }
 
-export function AmortizationTable({ schedules }: AmortizationTableProps) {
+export function AmortizationTable({ amortization,schedules }: AmortizationTableProps) {
 
 
   // Card view for mobile - matching your responsive pattern
@@ -34,7 +35,9 @@ export function AmortizationTable({ schedules }: AmortizationTableProps) {
     <div className="space-y-3 sm:space-y-4">
       {schedules.map((schedule, index) => {
         const shouldHighlight = !schedule.isPaid && schedule.due_date && schedule.isDelayed;
-        
+        const runningDue = (
+              (amortization?.tcp - amortization?.discount_percent_amount) * (schedule?.completed_percent/100)
+            ) - amortization?.total_paid
         return (
           <div
             key={`card-${index}`}
@@ -69,6 +72,13 @@ export function AmortizationTable({ schedules }: AmortizationTableProps) {
                 <span className="font-semibold text-xs sm:text-sm mb-1 sm:mb-0">Due Amount</span>
                 <span className="text-muted-foreground text-xs sm:text-sm text-left sm:text-right break-words">
                   {formatDecimal(schedule.amount)}
+                </span>
+              </div>
+              {/* Running Due Amount */}
+              <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b sm:border-r border-gray-200 p-3 sm:p-2 text-sm bg-gray-50">
+                <span className="font-semibold text-xs sm:text-sm mb-1 sm:mb-0">Running Due</span>
+                <span className="text-red-600 font-semibold text-muted-foreground text-xs sm:text-sm text-left sm:text-right break-words">
+                  {runningDue > 0 && formatDecimal(runningDue)}
                 </span>
               </div>
               
@@ -150,6 +160,7 @@ export function AmortizationTable({ schedules }: AmortizationTableProps) {
                 <TableHead className="text-xs text-gray-600 px-2 py-2">MA</TableHead>
                 <TableHead className="text-xs text-gray-600 px-2 py-2">Due Date</TableHead>
                 <TableHead className="text-xs text-gray-600 px-2 py-2">Due Amount</TableHead>
+                <TableHead className="text-xs text-gray-600 px-2 py-2">Running Due</TableHead>
                 <TableHead className="text-xs text-gray-600 px-2 py-2">Date Paid</TableHead>
                 <TableHead className="text-xs text-gray-600 px-2 py-2">Invoice</TableHead>
                 <TableHead className="text-xs text-gray-600 px-2 py-2">Amount Paid</TableHead>
@@ -161,7 +172,9 @@ export function AmortizationTable({ schedules }: AmortizationTableProps) {
               {schedules.map((schedule, index) => {
                 const rowId = `row-${index}`;
                 const shouldHighlight = !schedule.payment_date_paid && schedule.due_date && schedule.isDelayed;
-
+                const runningDue = (
+              (amortization?.tcp - amortization?.discount_percent_amount) * (schedule?.completed_percent/100)
+            ) - amortization?.total_paid
                 return (
                   <TableRow
                     key={rowId}
@@ -184,6 +197,9 @@ export function AmortizationTable({ schedules }: AmortizationTableProps) {
                     </TableCell>
                     <TableCell className="px-2 py-2 text-xs text-muted-foreground">
                       {formatDecimal(schedule.amount)}
+                    </TableCell>
+                    <TableCell className="px-2 py-2 text-xs text-muted-foreground text-red-600 font-semibold">
+                      {runningDue > 0 && formatDecimal(runningDue)}
                     </TableCell>
                     <TableCell className="px-2 py-2 text-xs text-muted-foreground">
                       { schedule.payment_date_paid && formatDate(schedule.payment_date_paid,"MMM dd yyyy") || "-"}

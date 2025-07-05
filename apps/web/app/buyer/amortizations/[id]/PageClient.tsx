@@ -161,6 +161,7 @@ export default function PageClient() {
               <h1 className="text-base sm:text-lg lg:text-xl font-bold mb-4">Amortization Sheet</h1>
               <div className="overflow-x-auto">
                 <AmortizationTable
+                  amortization={amortization}
                   schedules={amortization.summary}
                 />
               </div>
