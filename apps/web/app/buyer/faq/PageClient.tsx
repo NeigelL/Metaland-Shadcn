@@ -28,7 +28,7 @@ export default function PageClient() {
             const question = file.Key.split(folderPath).pop()
             return (
               <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger>{question?.replace("/","")}</AccordionTrigger>
+                <AccordionTrigger>{question?.replace("/","")?.replace(".mp4","")}</AccordionTrigger>
                 <AccordionContent>
                   <div className="p-4 bg-gray-100 rounded-md">
                     {
