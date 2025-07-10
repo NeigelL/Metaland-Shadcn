@@ -37,8 +37,16 @@ export default function ActivatePage() {
       {status === 'idle' && <p>Preparing activation...</p>}
       {status === 'verifying' && <p>Verifying your activation code...</p>}
       {status === 'success' && (
-        <p className="text-green-600">✅ Your account has been successfully activated! Please login again</p>
+        <>
+            <p className="text-green-600">✅ Your account has been successfully activated! Please login again</p>
+            <p className="mt-4">
+              <a href="/" className="text-blue-600 hover:underline">
+                Go to Login
+              </a>
+            </p>
+        </>
       )}
+      
       {status === 'error' && (
         <p className="text-red-600">❌ Invalid or expired activation link.</p>
       )}
