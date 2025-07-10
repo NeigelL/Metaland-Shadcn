@@ -16,6 +16,7 @@ export function middleware(request: NextRequest) {
     PUBLIC_FILE.test(url.pathname) ||
     url.pathname.startsWith('/_next') ||
     url.pathname.startsWith('/api/auth') || // allow API routes like /api/auth/*
+    url.pathname.startsWith('/api/activate') || // allow API routes like /api/auth/*
     url.pathname.startsWith('/favicon.ico')
   ) {
     return NextResponse.next()

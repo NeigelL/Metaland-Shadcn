@@ -10,6 +10,7 @@ import { LoginPage } from "./Login/LoginPage";
 import dynamic from "next/dynamic";
 import Loader from "@workspace/ui/components/loader";
 import GoogleAnalytics from "./GoogleAnalytics/GoogleAnalytics";
+import { usePathname } from "next/navigation";
 
 
 const queryClient = new QueryClient()
@@ -31,7 +32,7 @@ const BuyerAppSidebar = dynamic( () => import("./Sidebar/BuyerSidebar"), {
 export function Providers({ children, user, accountType, callbackURL }: { user:any, accountType : string , callbackURL : string, children: React.ReactNode }) {
 
   const {setUser, user_id} = useUserStore()
-
+  const path = usePathname()
   React.useEffect(() => {
       setUser(JSON.parse(user))
   }, [user])
@@ -65,7 +66,7 @@ export function Providers({ children, user, accountType, callbackURL }: { user:a
     >
       <QueryClientProvider client={queryClient}>
         {
-          user && user !== "null" ? <>
+          user && user !== "null" && path !== "/activate" ? <>
           <SessionProvider session={JSON.parse(user)}>
             <SidebarProvider>
               { accountType == "admin" && <AdminSidebar /> }
@@ -78,9 +79,9 @@ export function Providers({ children, user, accountType, callbackURL }: { user:a
             </SidebarProvider>
           </SessionProvider>
           </> : <div className="relative flex flex-1 flex-col">
-            <LoginPage
+            { path !== "/activate"  ? <LoginPage
              url={callbackURL}
-            />
+            /> : <div className="flex-1 flex items-center justify-center">{children}</div>}
           </div>
         }
         <GoogleAnalytics GA_ID={process.env.NEXT_PUBLIC_GA_ID} />

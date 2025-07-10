@@ -47,43 +47,44 @@ function changelogPlugin(schema: Schema<any>, next: Function) {
 
     let item:any = this
     let description = ""
-
     const user = await auth()
     item._original = org
-    item._change_by = user?.user_id
-    item._change_by_label = user?.first_name + " " + user?.last_name
+    if(user?.user_id){
+        item._change_by = user?.user_id
+        item._change_by_label = user?.first_name + " " + user?.last_name
 
-    const original:any = org.toJSON()
-    const updatedSet:any = this.getUpdate()
-    const updated:any = updatedSet?.$set || updatedSet
-    const diff: ChangeDiff = {}
+        const original:any = org.toJSON()
+        const updatedSet:any = this.getUpdate()
+        const updated:any = updatedSet?.$set || updatedSet
+        const diff: ChangeDiff = {}
 
-    for(const key of Object.keys(updated)) {
-      if(
-        typeof original[key] !== undefined &&
-        typeof updated[key] !== undefined &&
-        !areEqual(original[key], updated[key]) &&
-        updated[key] !== undefined &&
-        collectionExceptions[collectionName]?.includes(key) === false
-      ) {
-          diff[key] = { from: original[key], to: updated[key] }
+        for(const key of Object.keys(updated)) {
+          if(
+            typeof original[key] !== undefined &&
+            typeof updated[key] !== undefined &&
+            !areEqual(original[key], updated[key]) &&
+            updated[key] !== undefined &&
+            collectionExceptions[collectionName]?.includes(key) === false
+          ) {
+              diff[key] = { from: original[key], to: updated[key] }
+          }
+        }
+
+        if(updated?.deleted) {
+          description = `Soft Deleted ${collectionName} with ID ${updated._id} by ${item._change_by_label}`
+        }
+
+        await Changelog.create({
+          collection_name: collectionName,
+          entity_id: original._id,
+          operation: IHistoryOperation.UPDATE,
+          changed_by: item._change_by,
+          changed_by_label: item._change_by_label,
+          description: updated?.deleted ?  description : `Updated ${collectionName} with ID ${updated._id}`,
+          summary: updated?.deleted ?  description : `Updated ${collectionName} with ID ${updated._id} by ${item._change_by_label}`,
+          diff: diff,
+        })
       }
-    }
-
-    if(updated?.deleted) {
-      description = `Soft Deleted ${collectionName} with ID ${updated._id} by ${item._change_by_label}`
-    }
-
-    await Changelog.create({
-      collection_name: collectionName,
-      entity_id: original._id,
-      operation: IHistoryOperation.UPDATE,
-      changed_by: item._change_by,
-      changed_by_label: item._change_by_label,
-      description: updated?.deleted ?  description : `Updated ${collectionName} with ID ${updated._id}`,
-      summary: updated?.deleted ?  description : `Updated ${collectionName} with ID ${updated._id} by ${item._change_by_label}`,
-      diff: diff,
-    })
   })
 
   schema.pre("findOneAndDelete", async function (next) {
