@@ -6,18 +6,21 @@ import { Label } from "@workspace/ui/components/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@workspace/ui/components/dialog";
+import ProofDropOff from "@/components/ProofDropOff/ProofDropOff";
+import { useSession } from "next-auth/react";
 
 
 export default function PaymentMethod() {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+     const {data: user } = useSession();
     return <>
     <h3 className="text-sm font-medium mb-4 p-4">Payment Methods</h3>
               <Tabs defaultValue="credit-card" className="w-full h-full">
-                <TabsList className="grid w-full grid-cols-2">
+                <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger value="credit-card">Unionbank</TabsTrigger>
                   <TabsTrigger value="cash">Cash</TabsTrigger>
+                  <TabsTrigger value="proof">Proof of Payment</TabsTrigger>
                 </TabsList>
 
                 <div className="h-250px">
@@ -88,6 +91,13 @@ export default function PaymentMethod() {
                         </div>
                       </CardContent>
                     </Card>
+                  </TabsContent>
+                  <TabsContent value="proof" className="mt-2 h-250px">
+                    <Card className="border shadow-sm h-full">
+                      <CardContent className="p-4 h-full">
+                        {user?.user_id && <ProofDropOff user_id={user?.user_id ?? ""} /> }
+                      </CardContent>
+                      </Card>
                   </TabsContent>
                 </div>
               </Tabs>
