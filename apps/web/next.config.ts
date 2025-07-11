@@ -15,7 +15,7 @@ const nextConfig = {
         pathname: '/**/**',
       }, {
         protocol: 'https',
-        hostname: 'https://www.google-analytics.com'
+        hostname: 'www.google-analytics.com'
       }
     ]
   },
