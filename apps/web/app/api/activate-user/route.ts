@@ -1,9 +1,8 @@
 
 
 import dbConnect from "@/lib/mongodb"
-import { auth } from "@/lib/nextAuthOptions";
 import User from "@/models/users";
-import { getAmortizationService } from "@/services/buyerService";
+import { logAccessService } from "@/services/accessService";
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
@@ -14,8 +13,25 @@ export async function GET(
   const searchParams = url.searchParams;
   const email = searchParams.get("email") || "";
   const code = searchParams.get("code") || "";
-  const response = await User.findOneAndUpdate({ email, login_code: code }, { $set: {login: true, roles: ["680e3ce332db572507c23337"] } }, { new: true })
+
+  await logAccessService({
+    request,
+    metadata : {email: email, action: "activate_user"},
+  });
+
+  const response = await User.findOneAndUpdate(
+    { email, login_code: code, login: false },
+    { $set: {login: true, roles: ["680e3ce332db572507c23337"] } },
+    { new: true }
+  )
+
+  console.dir(response)
+
   return NextResponse.json(
-    response ? { success: true, message: "User activated successfully" } : { success: false, message: "User not found or already activated" },
+    response ? {
+      success: true, message: "User activated successfully"
+    } : {
+      success: false, message: "User not found or already activated"
+    }
   )
 }

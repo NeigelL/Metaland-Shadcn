@@ -2,6 +2,7 @@
 
 import dbConnect from "@/lib/mongodb"
 import { auth } from "@/lib/nextAuthOptions";
+import { logAccessService } from "@/services/accessService";
 import { getAgentAmortizationService } from "@/services/agentService";
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -12,5 +13,9 @@ export async function GET(
   const { id } = await params
   const user = await auth()
   await dbConnect()
+ await logAccessService({
+        request,
+        metadata : { action: "VIEWED AMORTIZATION", id, user_id: user?.user_id },
+  })
   return NextResponse.json(await getAgentAmortizationService(id, user?.user_id))
 }

@@ -21,7 +21,8 @@ export default function ActivatePage() {
       headers: { 'Content-Type': 'application/json' },
     })
       .then(async (res) => {
-        if (res.ok) {
+        let data = await res.json()
+        if (res.ok && data.success) {
             setStatus('success');
         }
         else throw new Error();

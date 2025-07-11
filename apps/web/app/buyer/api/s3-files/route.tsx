@@ -1,9 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server"
 import { ListObjectsV2Command, GetObjectCommand} from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
-import s3Client from "@/lib/aws";
-import dbConnect from "@/lib/mongodb";
-import { isLogin } from "@/lib/nextAuthOptions";
+import s3Client from "@/lib/aws"
+import dbConnect from "@/lib/mongodb"
+import { isLogin } from "@/lib/nextAuthOptions"
+import { logAccessService } from "@/services/accessService"
 
 export async function GET(request: NextRequest) {
 
@@ -12,16 +13,21 @@ export async function GET(request: NextRequest) {
       return new NextResponse("Unauthorized", {status: 401})
   }
 
-  const url = new URL(request.url);
-  const searchParams = url.searchParams;
-  const folder = searchParams.get("folder") || "";
-  const bucketName = process.env.AWS_S3_BUCKET_NAME!;
+  const url = new URL(request.url)
+  const searchParams = url.searchParams
+  const folder = searchParams.get("folder") || ""
+  const bucketName = process.env.AWS_S3_BUCKET_NAME!
   
 
   try {
     if(!folder) {
-      return NextResponse.json({ error: "Folder parameter is required" + folder }, { status: 400 });
+      return NextResponse.json({ error: "Folder parameter is required" + folder }, { status: 400 })
     }
+
+    await logAccessService({
+              request,
+              metadata : { action: "VIEW AGENT S3 FILES", folder: folder, bucket: bucketName },
+    })
     const command = new ListObjectsV2Command({
       Bucket: bucketName,
       Prefix: folder,
@@ -54,12 +60,12 @@ export async function GET(request: NextRequest) {
       )
 
     }
-    return NextResponse.json( files );
+    return NextResponse.json( files )
   } catch (error) {
-    console.error("S3 List Error:", error);
+    console.error("S3 List Error:", error)
     return NextResponse.json(
       { error: "Failed to list files" },
       { status: 500 }
-    );
+    )
   }
 }

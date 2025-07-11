@@ -4,6 +4,7 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import s3Client from "@/lib/aws";
 import dbConnect from "@/lib/mongodb";
 import { isLogin } from "@/lib/nextAuthOptions";
+import { logAccessService } from "@/services/accessService";
 
 export async function GET(request: NextRequest) {
 
@@ -22,6 +23,11 @@ export async function GET(request: NextRequest) {
     if(!folder) {
       return NextResponse.json({ error: "Folder parameter is required" + folder }, { status: 400 });
     }
+
+    await logAccessService({
+              request,
+              metadata : { action: "VIEW AGENT S3 FILES", folder: folder, bucket: bucketName },
+    })
     const command = new ListObjectsV2Command({
       Bucket: bucketName,
       Prefix: folder,

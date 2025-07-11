@@ -1,18 +1,23 @@
-import dbConnect from "@/lib/mongodb";
-import {  auth, isLogin } from "@/lib/nextAuthOptions";
-import { getAgentSummaryAmortization } from "@/services/agentService";
-import { NextResponse, NextRequest } from "next/server";
+import dbConnect from "@/lib/mongodb"
+import {  auth, isLogin } from "@/lib/nextAuthOptions"
+import { logAccessService } from "@/services/accessService"
+import { getAgentSummaryAmortization } from "@/services/agentService"
+import { NextResponse, NextRequest } from "next/server"
 
 
-export  async function POST(req:NextRequest) {
+export  async function POST(request:NextRequest) {
 
   await dbConnect()
   if(!await isLogin()) {
       return new NextResponse("Unauthorized", {status: 401})
   }
-  const {params} = await req.json()
+  const {params} = await request.json()
 
   const user = await auth()
+  await logAccessService({
+              request,
+              metadata : { action: "VIEW AGENT SUMMARY"},
+    })
   return NextResponse.json(
     await getAgentSummaryAmortization(
       {
