@@ -49,7 +49,7 @@ function changelogPlugin(schema: Schema<any>, next: Function) {
     let description = ""
     const user = await auth()
     item._original = org
-    if(org){
+    if(org && user){
         item._change_by = user?.user_id
         item._change_by_label = user?.first_name + " " + user?.last_name
 
