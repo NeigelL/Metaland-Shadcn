@@ -5,6 +5,7 @@ import UppyMultipartUploader from "./UppyUploaderMultipart";
 import { getS3FolderFilesQueryApi } from "../api/awsApi";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "@workspace/ui/components/loader";
+import useSocketListener, { useSocketBroadcast } from "@/hooks/useSocketListener";
 
 export default function GalleryWithUploader(
     {
@@ -22,6 +23,10 @@ export default function GalleryWithUploader(
         const {data: awsFiles, refetch: onCompleteCallbackBase } = useQuery({
         queryKey: ["s3-files", folderPath],
         queryFn: async() => await getS3FolderFilesQueryApi(folderPath)
+    })
+
+    useSocketListener( folderPath, (data:any) => {
+        onCompleteCallbackBase(folderPath)
     })
 
     useEffect(() => {
@@ -166,7 +171,10 @@ export default function GalleryWithUploader(
             <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row pb-10">
                 <UppyMultipartUploader
                 options={ { folder : folderPath, entityID: entityID, collection: collection } }
-                onCompleteCallback={  () => onCompleteCallbackBase(folderPath) }
+                onCompleteCallback={  () => {
+                    onCompleteCallbackBase(folderPath)
+                    useSocketBroadcast(folderPath)
+                } }
                 createFolderProp={createFolderProp}
                 />
             </div>

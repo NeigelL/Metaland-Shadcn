@@ -16,7 +16,13 @@ const nextConfig = {
       }, {
         protocol: 'https',
         hostname: 'www.google-analytics.com'
-      }
+      } , {
+          protocol: 'https',
+          hostname: 'metaland-socket.onrender.com',
+          port: '',
+          pathname: '/**/**',
+        }
+      
     ]
   },
     // async rewrites() {
