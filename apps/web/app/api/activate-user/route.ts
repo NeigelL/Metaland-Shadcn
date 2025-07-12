@@ -18,7 +18,16 @@ export async function GET(
     request,
     metadata : {email: email, action: "activate_user"},
   });
+  const checkUser = await User.findOne({
+    email: email, login: true
+  })
 
+  if(checkUser) {
+    return NextResponse.json({
+      success: true,
+      message: "User already activated"
+    })
+  }
   const response = await User.findOneAndUpdate(
     { email, login_code: code, login: false },
     { $set: {login: true, roles: ["680e3ce332db572507c23337"] } },

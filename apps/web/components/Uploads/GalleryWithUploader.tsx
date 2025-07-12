@@ -120,7 +120,7 @@ export default function GalleryWithUploader(
             {files.length > 0 &&
                 <div className="container mx-auto p-2">
                     <h4 className="text-2xl font-bold mb-6">{label}</h4>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2">
                         {files.map((file:any) => (
                         <div key={file.Key} className="relative group" onDoubleClick={ (e:any) => {
                             if(confirm('Are you sure you want to delete' + file.Key.split("/").pop() + "? " )) {
@@ -131,13 +131,13 @@ export default function GalleryWithUploader(
                         }}>
                                 {shouldDisplayImage(file) && <LazyLoadImage
                                         alt={file.alt}
-                                        className="w-full h-48 object-cover rounded shadow-md"
+                                        className="aspect-3/2 object-contain  rounded shadow-md"
                                         wrapperProps={{
                                             style: {transitionDelay: "1s"},
                                         }}
                                         src={file.src} />}
                                 {
-                                    shouldDisplayPDF(file) && <div className="w-full h-48 object-cover rounded shadow-md">
+                                    shouldDisplayPDF(file) && <div className="aspect-3/2 object-contain  rounded shadow-md">
                                         <iframe
                                             src={file.src}
                                             className="w-full h-full"
@@ -147,7 +147,7 @@ export default function GalleryWithUploader(
                                 }
                                 {
                                     shouldDisplayVideo(file) && <video
-                                        className="w-full h-58 object-cover rounded shadow-md"
+                                        className="w-full h-58 object-contain  rounded shadow-md"
                                         controls
                                         src={file.src}
                                         style={{border:"none"}}
