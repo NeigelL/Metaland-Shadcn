@@ -6,8 +6,8 @@ const HistorySchema = new Schema<IChangeHistory>({
   collection_name: { type: String, required: true },
   entity_id: { type: Schema.Types.ObjectId, required: true, default: null },
   operation: { type: String, enum: IHistoryOperation, required: true },
-  changed_by: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  changed_by_label: { type: String, required: true },
+  changed_by: { type: Schema.Types.ObjectId, ref: "User", required: true, default: null },
+  changed_by_label: { type: String, required: true, default: "" },
   description: { type: String, required: true },
   summary: { type: String, required: true },
   timestamp: { type: Date, default: Date.now },
@@ -49,7 +49,9 @@ function changelogPlugin(schema: Schema<any>, next: Function) {
     let description = ""
     const user = await auth()
     item._original = org
-    if(org && user){
+        if(!org) {
+          return next()
+        }
         item._change_by = user?.user_id
         item._change_by_label = user?.first_name + " " + user?.last_name
 
@@ -84,7 +86,6 @@ function changelogPlugin(schema: Schema<any>, next: Function) {
           summary: updated?.deleted ?  description : `Updated ${collectionName} with ID ${updated._id} by ${item._change_by_label}`,
           diff: diff,
         })
-      }
   })
 
   schema.pre("findOneAndDelete", async function (next) {

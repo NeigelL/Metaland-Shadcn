@@ -30,11 +30,12 @@ export async function GET(
   }
   const response = await User.findOneAndUpdate(
     { email, login_code: code, login: false },
-    { $set: {login: true, roles: ["680e3ce332db572507c23337"] } },
+    {
+      $set: { login: true },
+      $addToSet: { roles: "680e3ce332db572507c23337" }
+    },
     { new: true }
   )
-
-  console.dir(response)
 
   return NextResponse.json(
     response ? {
