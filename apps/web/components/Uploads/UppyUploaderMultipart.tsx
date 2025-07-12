@@ -96,7 +96,13 @@ const UppyMultipartUploader = ({options : { folder="", entityID = "", collection
       // toast.success(`File uploaded successfully: ${location}`);
     }
   })
-  uppy.use(Webcam)
+  uppy.use(Webcam, {
+    videoConstraints: {
+      facingMode: 'environment', // Use 'environment' for back camera
+      width: 1280,
+      height: 720,
+    }
+  })
 
   uppy.on('file-added',(file) => {
     uppy.setFileMeta(file.id, {
