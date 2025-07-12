@@ -97,10 +97,20 @@ const UppyMultipartUploader = ({options : { folder="", entityID = "", collection
     }
   })
   uppy.use(Webcam, {
+    modes: ['picture'], // Only allow capturing images
+    mirror: false,
+    countdown: false, // No countdown before capture
+    showRecordingLength: false,
     videoConstraints: {
-      facingMode: 'environment', // Use 'environment' for back camera
-      width: 1280,
-      height: 720,
+      facingMode: 'environment',
+      width: { ideal: 1280 },
+      height: { ideal: 720 },
+    },
+    locale: {
+      strings: {
+        // Custom label for receipts
+        takePicture: 'Capture Receipt Photo',
+      }
     }
   })
 
