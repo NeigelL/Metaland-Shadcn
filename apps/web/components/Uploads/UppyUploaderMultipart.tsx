@@ -5,8 +5,10 @@ import Uppy, { Body, Meta } from "@uppy/core";
 import AwsS3Multipart from "@uppy/aws-s3";
 import { Dashboard } from "@uppy/react";
 import { toast } from "sonner"
+import Webcam from '@uppy/webcam';
 import "@uppy/core/dist/style.css";
 import "@uppy/dashboard/dist/style.css";
+import '@uppy/webcam/dist/style.min.css';
 
 const UppyMultipartUploader = ({options : { folder="", entityID = "", collection = ""} , onCompleteCallback = () => {}, createFolderProp = null  } : any) => {
   const uppy = new Uppy<Meta, Body>({
@@ -94,6 +96,7 @@ const UppyMultipartUploader = ({options : { folder="", entityID = "", collection
       // toast.success(`File uploaded successfully: ${location}`);
     }
   })
+  uppy.use(Webcam)
 
   uppy.on('file-added',(file) => {
     uppy.setFileMeta(file.id, {

@@ -82,7 +82,10 @@ importers:
         version: 4.2.1(@uppy/core@4.4.7)
       '@uppy/react':
         specifier: ^4.4.0
-        version: 4.4.0(@uppy/core@4.4.7)(@uppy/dashboard@4.3.4(@uppy/core@4.4.7))(@uppy/drag-drop@4.1.3(@uppy/core@4.4.7))(@uppy/file-input@4.1.3(@uppy/core@4.4.7))(@uppy/progress-bar@4.2.1(@uppy/core@4.4.7))(@uppy/status-bar@4.1.3(@uppy/core@4.4.7))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        version: 4.4.0(@uppy/core@4.4.7)(@uppy/dashboard@4.3.4(@uppy/core@4.4.7))(@uppy/drag-drop@4.1.3(@uppy/core@4.4.7))(@uppy/file-input@4.1.3(@uppy/core@4.4.7))(@uppy/progress-bar@4.2.1(@uppy/core@4.4.7))(@uppy/status-bar@4.1.3(@uppy/core@4.4.7))(@uppy/webcam@4.2.1(@uppy/core@4.4.7))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@uppy/webcam':
+        specifier: ^4.2.1
+        version: 4.2.1(@uppy/core@4.4.7)
       '@uppy/xhr-upload':
         specifier: ^4.3.3
         version: 4.3.3(@uppy/core@4.4.7)
@@ -2234,6 +2237,11 @@ packages:
   '@uppy/utils@6.1.5':
     resolution: {integrity: sha512-R+3l4ir01I6MzZ80t5CSBoOGvV9mCqLZC9FoNYVTp/lsanQ3yMAZFGLN/x7JVGO7oi/m/ykmNR1jAH+JTtXdFg==}
 
+  '@uppy/webcam@4.2.1':
+    resolution: {integrity: sha512-zcQVvYlVqszZCDVoVZVssV0BwEYy3/fg9hqqusT42P2LVFmo8AKrIkK0oDFBfLimMGU5ofa5WYH6kdiWEKv+zA==}
+    peerDependencies:
+      '@uppy/core': ^4.4.7
+
   '@uppy/xhr-upload@4.3.3':
     resolution: {integrity: sha512-I7RVppwTvLRlVfoW5piMxcZKzWF42E6CwYFQ42d2LzizrkG4tVLQkQrTZlw85za3nhcSrX3o/d1eNx3pzLmsdw==}
     peerDependencies:
@@ -3197,6 +3205,9 @@ packages:
   is-map@2.0.3:
     resolution: {integrity: sha512-1Qed0/Hr2m+YqxnM09CjA2d/i6YZNfF6R2oRAOj36eUdS6qIV/huPJNSEpKbupewFs+ZsJlxsjjPbc0/afW6Lw==}
     engines: {node: '>= 0.4'}
+
+  is-mobile@4.0.0:
+    resolution: {integrity: sha512-mlcHZA84t1qLSuWkt2v0I2l61PYdyQDt4aG1mLIXF5FDMm4+haBCxCPYSr/uwqQNRk1MiTizn0ypEuRAOLRAew==}
 
   is-network-error@1.1.0:
     resolution: {integrity: sha512-tUdRRAnhT+OtCZR/LxZelH/C7QtjtFrTu5tXCA8pl55eTUElUHT+GPYV8MBMBvea/j+NxQqVt3LbWMRir7Gx9g==}
@@ -6833,7 +6844,7 @@ snapshots:
       namespace-emitter: 2.0.1
       p-retry: 6.2.1
 
-  '@uppy/components@0.2.0(@uppy/core@4.4.7)':
+  '@uppy/components@0.2.0(@uppy/core@4.4.7)(@uppy/webcam@4.2.1(@uppy/core@4.4.7))':
     dependencies:
       '@tailwindcss/cli': 4.1.11
       '@uppy/core': 4.4.7
@@ -6843,6 +6854,8 @@ snapshots:
       preact: 10.26.9
       pretty-bytes: 6.1.1
       tailwindcss: 4.0.8
+    optionalDependencies:
+      '@uppy/webcam': 4.2.1(@uppy/core@4.4.7)
 
   '@uppy/compressor@2.2.1(@uppy/core@4.4.7)':
     dependencies:
@@ -6919,9 +6932,9 @@ snapshots:
       p-queue: 8.1.0
       preact: 10.26.9
 
-  '@uppy/react@4.4.0(@uppy/core@4.4.7)(@uppy/dashboard@4.3.4(@uppy/core@4.4.7))(@uppy/drag-drop@4.1.3(@uppy/core@4.4.7))(@uppy/file-input@4.1.3(@uppy/core@4.4.7))(@uppy/progress-bar@4.2.1(@uppy/core@4.4.7))(@uppy/status-bar@4.1.3(@uppy/core@4.4.7))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
+  '@uppy/react@4.4.0(@uppy/core@4.4.7)(@uppy/dashboard@4.3.4(@uppy/core@4.4.7))(@uppy/drag-drop@4.1.3(@uppy/core@4.4.7))(@uppy/file-input@4.1.3(@uppy/core@4.4.7))(@uppy/progress-bar@4.2.1(@uppy/core@4.4.7))(@uppy/status-bar@4.1.3(@uppy/core@4.4.7))(@uppy/webcam@4.2.1(@uppy/core@4.4.7))(react-dom@19.0.0(react@19.0.0))(react@19.0.0)':
     dependencies:
-      '@uppy/components': 0.2.0(@uppy/core@4.4.7)
+      '@uppy/components': 0.2.0(@uppy/core@4.4.7)(@uppy/webcam@4.2.1(@uppy/core@4.4.7))
       '@uppy/core': 4.4.7
       '@uppy/utils': 6.1.5
       preact: 10.26.9
@@ -6934,6 +6947,7 @@ snapshots:
       '@uppy/file-input': 4.1.3(@uppy/core@4.4.7)
       '@uppy/progress-bar': 4.2.1(@uppy/core@4.4.7)
       '@uppy/status-bar': 4.1.3(@uppy/core@4.4.7)
+      '@uppy/webcam': 4.2.1(@uppy/core@4.4.7)
     transitivePeerDependencies:
       - '@uppy/audio'
       - '@uppy/google-drive-picker'
@@ -6959,6 +6973,13 @@ snapshots:
   '@uppy/utils@6.1.5':
     dependencies:
       lodash: 4.17.21
+      preact: 10.26.9
+
+  '@uppy/webcam@4.2.1(@uppy/core@4.4.7)':
+    dependencies:
+      '@uppy/core': 4.4.7
+      '@uppy/utils': 6.1.5
+      is-mobile: 4.0.0
       preact: 10.26.9
 
   '@uppy/xhr-upload@4.3.3(@uppy/core@4.4.7)':
@@ -8114,6 +8135,8 @@ snapshots:
       lower-case: 1.1.4
 
   is-map@2.0.3: {}
+
+  is-mobile@4.0.0: {}
 
   is-network-error@1.1.0: {}
 
