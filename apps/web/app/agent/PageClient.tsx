@@ -4,13 +4,28 @@ import AvatarUser from "../buyer/(dashboard)/AvatarUser";
 import LotSummaryCard from "./(dashboard)/LotSummaryCard";
 import SalesGraph from "./(dashboard)/SalesGraph";
 import DueDates from "./(dashboard)/DueDates";
+import { Alert, AlertDescription, AlertTitle } from "@workspace/ui/components/alert";
+import { AlertCircle } from "lucide-react";
+import Link from "next/link";
 
 export function PageClient() {
 
     return (
         <>
-     <BackLogAlert backlogs={[]} />
+     {/* <BackLogAlert backlogs={[]} /> */}
       {/* <NotificationButton/> */}
+      <Alert variant="success" className="mb-4">
+        <AlertCircle className="h-4 w-4" />
+        <AlertTitle className="ml-2">Official Receipt Release Notice and Commission Policy</AlertTitle>
+        <AlertDescription>
+          To ensure proper documentation, transparency, and timely processing of official receipts and commissions, please be guided by the follow policy
+          <Link
+          href="/files/Memo 001_ Sales Invoice Release A.pdf"
+          target="_blank"
+          className="text-blue underline"
+          >here</Link>
+        </AlertDescription>
+      </Alert>
       <div className="flex flex-col lg:flex-row gap-4 min-h-screen">
         <div className="w-full lg:w-64 space-y-3 flex-shrink-0">
            {/* Pie Chart Card */}
