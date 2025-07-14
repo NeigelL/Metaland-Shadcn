@@ -111,7 +111,7 @@ export function PageClient() {
   });
 
   return (
-    <div className="flex-1 p-3 sm:p-4 md:p-6 space-y-6 max-w-7xl mx-auto w-full">
+    <div className="flex-1 sm:p-4 md:p-6 space-y-6 max-w-7xl mx-auto w-full">
       {/* Header */}
       <div className="space-y-4 sm:space-y-6">
         <div className="flex flex-col gap-3 sm:gap-4 md:flex-row md:justify-between md:items-center">

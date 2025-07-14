@@ -18,7 +18,7 @@ export default function PageClient() {
     },[])
 
   return (
-    <div className="w-full p-2 md:p-4">
+    <div className="">
       <h1 className="text-2xl font-bold mb-4">Frequently Asked Questions</h1>
       <p className="mb-6">Here are some common questions and answers to help you.</p>
       <Accordion type="single" collapsible>
