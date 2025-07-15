@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Link from "next/link";
 import UppyMultipartUploader from "./UppyUploaderMultipart";
-import { getS3FolderFilesQueryApi } from "../api/awsApi";
+import { getS3FolderFilesQueryApi, s3DeleteObjectQueryApi } from "../api/awsApi";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "@workspace/ui/components/loader";
 import useSocketListener, { useSocketBroadcast } from "@/hooks/useSocketListener";
@@ -104,7 +104,7 @@ export default function GalleryWithUploader(
                             }}
                             onDoubleClick={ (e:any) => {
                                 if(confirm('Are you sure you want to delete' + file.Key.split("/").pop() + "? " )) {
-                                    s3DeleteObjectApi(file.Key, (res:any) => {
+                                    s3DeleteObjectQueryApi(file.Key, (res:any) => {
                                         onCompleteCallbackBase(folder)
                                     })
                                 }
@@ -124,9 +124,9 @@ export default function GalleryWithUploader(
                         {files.map((file:any) => (
                         <div key={file.Key} className="relative group" onDoubleClick={ (e:any) => {
                             if(confirm('Are you sure you want to delete' + file.Key.split("/").pop() + "? " )) {
-                                // s3DeleteObjectApi(file.Key, (res:any) => {
-                                //     onCompleteCallbackBase(folder)
-                                // })
+                                s3DeleteObjectQueryApi(file.Key, (res:any) => {
+                                    onCompleteCallbackBase(folder)
+                                })
                             }
                         }}>
                                 {shouldDisplayImage(file) && <LazyLoadImage

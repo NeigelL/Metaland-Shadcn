@@ -10,3 +10,9 @@ export const getS3FolderFilesQueryApi = async(key:any) => {
 export const postAmortizationIndexQueryApi = async(query:any = "*", signal:any)  => {
     return (await axios.post(API_URL.RESERVATION.index, {...query}, {signal})).data
 }
+export const s3DeleteObjectQueryApi = async(key:any, callback:any) => {
+     const resp =  (await axios.get(API_URL.S3_FILES.delete + "?key=" + key)).data
+     if(resp) {
+        callback(resp)
+     }
+}

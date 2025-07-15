@@ -121,7 +121,8 @@ export const API_URL = {
         index: "/api/fund-approver"
     },
     S3_FILES: {
-        index: "/api/s3-files"
+        index: "/api/s3-files",
+        delete: "/api/s3-delete"
     },
     REALTY: {
         agents: "/api/realties"

@@ -53,6 +53,9 @@ importers:
       '@react-google-maps/api':
         specifier: ^2.20.7
         version: 2.20.7(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@smithy/util-waiter':
+        specifier: ^4.0.6
+        version: 4.0.6
       '@tanstack/react-query':
         specifier: ^5.80.7
         version: 5.80.7(react@19.0.0)
