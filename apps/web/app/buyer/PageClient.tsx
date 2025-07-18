@@ -21,7 +21,7 @@ export function PageClient() {
         <AlertDescription>
           To ensure proper documentation, transparency, and timely processing of official receipts and commissions, please be guided by the following policy
           <Link
-          href="/files/Memo_002_Sales Invoice_Release_B.pdf"
+          href="/files/Memo_002_Sales_Invoice_Release_B.pdf"
           target="_blank"
           className="text-blue underline"
           >learn more</Link>
