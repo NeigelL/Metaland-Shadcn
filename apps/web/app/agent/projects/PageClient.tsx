@@ -18,14 +18,14 @@ export default function PageClient() {
     useEffect(() => {
         if(projects.length > 0) {
             const filtered = projects.filter((project:IProject) => {
-                let s = searchQuery.trim()?.toLowerCase() || "";
-                let name = project.name.toLowerCase() || "";
-                let address1 = project.address1 && project.address1.toLowerCase() || "";
-                let address2 = project.address2 && project.address2 && project.address2.toLowerCase() || "";
-                let projectType = project.project_type && project.project_type.toLowerCase() || "";
-                const matchesSearch = name.includes(s) || address1.includes(s) || address2.includes(s) || projectType.includes(s);
-                const matchesType = selectedType === "all" || (project?.project_type && project?.project_type.includes(selectedType));
-                return matchesSearch || matchesType;
+                let s = searchQuery.trim()?.toLowerCase() || ""
+                let name = project.name.toLowerCase() || ""
+                let address1 = project.address1 && project.address1.toLowerCase() || ""
+                let address2 = project.address2 && project.address2 && project.address2.toLowerCase() || ""
+                let projectType = project.project_type && project.project_type.toLowerCase() || ""
+                const matchesSearch = (name.length > 0 && name.includes(s)) || (address1.length > 0 && address1.includes(s)) || (address2.length > 0 && address2.includes(s)) || (projectType.length > 0 && projectType.includes(s))
+                const matchesType = selectedType === "all" || (projectType && projectType.includes(selectedType));
+                return matchesSearch && matchesType;
             })
             setFilteredProjects(filtered)
         }
@@ -67,9 +67,8 @@ export default function PageClient() {
             {<Tabs
                 defaultValue="all"
                 value={selectedType}
-                onValueChange={setSelectedType}
-                className="w-full"
-                >
+                onValueChange={(e) => setSelectedType(e?.toLowerCase())}
+                className="w-full">
                 <TabsList className="w-full flex-wrap sm:flex-nowrap whitespace-nowrap overflow-x-auto scrollbar-hide gap-1 sm:gap-2">
                     {tabValues.map((type) => (
                     <TabsTrigger
