@@ -25,7 +25,7 @@ export async function getProjectAvailableService() {
     for (const project of availableProjects) {
         const availableLot = await getProjectBlocksService(project._id.toString());
         project.id = project._id.toString();
-        project.total_available_lots = availableLot.length;
+        project.total_available_lots = availableLot?.reduce((acc, lot:any) => acc + (lot.availableCounter || 0), 0);
     }
 
     return availableProjects

@@ -73,7 +73,7 @@ export default function ProjectGrid({ projects }: { projects: (IProject & { tota
                     AREA
                   </span>
                 </div>
-                <p className="text-xs sm:text-sm pl-5">{ [project?.total_area + "", "HECTARE"] }</p>
+                <p className="text-xs sm:text-sm pl-5">{ [project?.total_area + "", " HECTARE"] }</p>
               </div>
 
               <div>
