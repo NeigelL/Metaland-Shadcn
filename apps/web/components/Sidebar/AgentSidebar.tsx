@@ -1,6 +1,6 @@
 "use client";
 
-import { LandPlot, LucideIcon, HomeIcon, Users, TreePine, PhilippinePeso, LibraryBig, File, Factory } from "lucide-react";
+import { HomeIcon,  TreePine,  Factory } from "lucide-react";
 import NavSidebar from "./nav-sidebar";
 import { MenuItem } from "@/types/menu";
 
@@ -16,12 +16,12 @@ const items: MenuItem[] = [
       title: "FAQ",
       url: "/faq",
       icon: Factory,
-    }
-    // {
-    //   title: "LOTS",
-    //   url: "/lots",
-    //   icon: LandPlot,
-    // },
+    },
+    {
+      title: "PROJECTS",
+      url: "/projects",
+      icon: TreePine,
+    },
     // {
     //   title: "CLIENTS",
     //   url: "/clients",

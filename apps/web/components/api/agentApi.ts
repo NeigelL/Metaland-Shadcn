@@ -97,3 +97,21 @@ export function useAgentDueDatesQuery() {
     });
 }
 
+export async function getAgentProjectsAvailableQueryApi() {
+    try {
+        const response = await axios.get('/api/projects-available');
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching agent projects available', error);
+        throw error;
+    }
+}
+
+export function useAgentProjectsAvailableQuery() {
+    return useQuery({
+        queryKey: ['agent-projects-available'],
+        queryFn: () => getAgentProjectsAvailableQueryApi(),
+        refetchOnWindowFocus: true,
+        refetchOnReconnect: true,
+    });
+}
