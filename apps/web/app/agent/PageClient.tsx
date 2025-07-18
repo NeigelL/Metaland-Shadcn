@@ -18,12 +18,12 @@ export function PageClient() {
         <AlertCircle className="h-4 w-4" />
         <AlertTitle className="ml-2">Official Receipt Release Notice and Commission Policy</AlertTitle>
         <AlertDescription>
-          To ensure proper documentation, transparency, and timely processing of official receipts and commissions, please be guided by the follow policy
+          To ensure proper documentation, transparency, and timely processing of official receipts and commissions, please be guided by the following policy
           <Link
-          href="/files/Memo_001_ Sales Invoice_Release_A.pdf"
+          href="/files/Memo_001_Sales Invoice_Release_A.pdf"
           target="_blank"
           className="text-blue underline"
-          >here</Link>
+          >learn more</Link>
         </AlertDescription>
       </Alert>
       <div className="flex flex-col lg:flex-row gap-4 min-h-screen">
