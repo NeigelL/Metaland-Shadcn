@@ -12,16 +12,16 @@ const items: MenuItem[] = [
       url: "/",
       icon: HomeIcon,
     },
-      {
-      title: "FAQ",
-      url: "/faq",
-      icon: Factory,
-    },
-    {
+     {
       title: "PROJECTS",
       url: "/projects",
       icon: TreePine,
     },
+      {
+      title: "FAQ",
+      url: "/faq",
+      icon: Factory,
+    }
     // {
     //   title: "CLIENTS",
     //   url: "/clients",
