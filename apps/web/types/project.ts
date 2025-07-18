@@ -1,5 +1,6 @@
 
 export interface IProject {
+    _id?: String,
     company_id: String,
     created_by: String,
     branch_id: String,
