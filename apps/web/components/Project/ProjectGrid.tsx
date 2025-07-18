@@ -4,7 +4,7 @@ import { Badge } from "@workspace/ui/components/badge";
 import Link from "next/link";
 import { IProject } from "@/types/project";
 
-export default function ProjectGrid({ projects }: { projects: IProject[] }) {
+export default function ProjectGrid({ projects }: { projects: (IProject & { total_available_lots?: number })[] }) {
   if (projects.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 text-center px-4">
@@ -95,19 +95,19 @@ export default function ProjectGrid({ projects }: { projects: IProject[] }) {
                 </div>
               </div>
 
-              {/* {project.condition && (
+              {project.total_available_lots && (
                 <div>
                   <div className="flex items-center gap-1.5 mb-1">
                     <User className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
                     <span className="text-xs font-medium text-muted-foreground">
-                      CONDITION
+                      AVAILABLE LOTS
                     </span>
                   </div>
                   <p className="text-xs sm:text-sm pl-5 leading-relaxed">
-                    {project.condition}
+                    {project.total_available_lots}
                   </p>
                 </div>
-              )} */}
+              )}
             </div>
           </CardContent>
 
