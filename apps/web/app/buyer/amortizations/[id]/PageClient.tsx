@@ -64,12 +64,12 @@ export default function PageClient() {
   const fields = [
     { label: "Project", value: amortization.project_id.name },
     { label: "Lot", value: [amortization?.block_id?.name , amortization?.lot_id?.name].join(" / ") },
-    { label: "Area & Price", value: [amortization.area + "sqm", formatDecimal(amortization.price_per_sqm) ].join(" / ") },
+    { label: "Area & Price", value: [formatDecimal(amortization.area,false) + " sqm", formatDecimal(amortization.price_per_sqm) ].join(" / ") },
     { label: "Agent", value: [amortization?.agent_id?.first_name, amortization?.agent_id?.middle_name, amortization?.agent_id?.last_name].join(" ") },
     { label: "Realty", value: amortization?.realty_id?.name },
-    { label: "Discount", value: amortization.discount },
-    { label: "Down Payment", value: amortization.down_payment },
-    { label: "Reservation", value: amortization.reservation },
+    { label: "Discount", value: amortization.discount_percent_amount ?  formatDecimal(amortization.discount_percent_amount) : "₱ 0.00" },
+    { label: "Down Payment", value: formatDecimal(amortization.down_payment) },
+    { label: "Reservation", value: formatDecimal(amortization.reservation) },
     { label: "Total Contract Price", value: `₱ ${amortization.tcp.toLocaleString()}` },
     { label: "Total Payment", value: formattedTotalPayment },
     { label: "Balance", value: balance  }
