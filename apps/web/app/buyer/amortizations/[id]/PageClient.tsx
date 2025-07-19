@@ -38,8 +38,8 @@ const calculateTotalAmountPaid = (schedules: Schedule[]) => {
   return totalPaid;
 };
 
-const getFormattedBalance = (tcp: number, payment: number): string => {
-  const balance = tcp - payment;
+const getFormattedBalance = (tcp: number, payment: number, discount: number): string => {
+  const balance = tcp - (payment + discount);
   return `₱ ${balance.toLocaleString(undefined, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
@@ -55,7 +55,7 @@ export default function PageClient() {
   if( !amortization) {
     return <Loader/>;
   }
-  const balance = getFormattedBalance(amortization.tcp, amortization.total_paid);
+  const balance = getFormattedBalance(amortization.tcp, amortization.total_paid, amortization.discount_percent_amount);
 
   const formattedTotalPayment = `₱ ${amortization.total_paid.toLocaleString(undefined, {
     minimumFractionDigits: 2,
@@ -72,7 +72,7 @@ export default function PageClient() {
     { label: "Reservation", value: amortization.reservation },
     { label: "Total Contract Price", value: `₱ ${amortization.tcp.toLocaleString()}` },
     { label: "Total Payment", value: formattedTotalPayment },
-    { label: "Balance", value: balance },
+    { label: "Balance", value: balance  }
   ];
 
 
