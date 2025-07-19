@@ -216,7 +216,7 @@ export function AmortizationTable({ amortization,schedules }: AmortizationTableP
                       </div>
                     </TableCell>
                     <TableCell className="px-2 py-2 text-xs text-muted-foreground">
-                      { schedule.payment_date_paid && formatDecimal(schedule.payment_running_balance) || "-"}
+                      { schedule.payment_date_paid && formatDecimal(schedule.payment_running_balance - amortization.discount_percent_amount) || "-"}
                     </TableCell>
                     <TableCell className="px-2 py-2 text-xs text-muted-foreground">
                         {/* {
