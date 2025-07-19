@@ -120,7 +120,7 @@ export function AmortizationTable({ amortization,schedules }: AmortizationTableP
               <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center border-b sm:border-r border-gray-200 p-3 sm:p-2 text-sm bg-gray-50">
                 <span className="font-semibold text-xs sm:text-sm mb-1 sm:mb-0">Running Balance</span>
                 <span className="text-muted-foreground text-xs sm:text-sm text-left sm:text-right break-words">
-                  { schedule.payment_date_paid && formatDecimal(schedule.payment_running_balance - amortization.discount_percent_amount) || "-"}
+                  { schedule.payment_date_paid && formatDecimal(schedule.payment_running_balance ) || "-"}
                 </span>
               </div>
 
@@ -216,7 +216,7 @@ export function AmortizationTable({ amortization,schedules }: AmortizationTableP
                       </div>
                     </TableCell>
                     <TableCell className="px-2 py-2 text-xs text-muted-foreground">
-                      { schedule.payment_date_paid && formatDecimal(schedule.payment_running_balance - amortization.discount_percent_amount) || "-"}
+                      { schedule.payment_date_paid && formatDecimal(schedule.payment_running_balance) || "-"}
                     </TableCell>
                     <TableCell className="px-2 py-2 text-xs text-muted-foreground">
                         {/* {
