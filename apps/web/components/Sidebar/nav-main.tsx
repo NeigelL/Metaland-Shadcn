@@ -35,7 +35,7 @@ export default function NavMain({
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton tooltip={item.title}>
                         {item.url && item.icon && <item.icon size={14} className="text-gray-500"/>}
-                          {item.url && item.icon && <Link href={item.url} className="flex items-center gap-2 w-full text-gray-500"><span className="text-xs">{item.title}</span>
+                          {item.url && item.icon && <Link prefetch={false} href={item.url} className="flex items-center gap-2 w-full text-gray-500"><span className="text-xs">{item.title}</span>
                       </Link>}
                       {!item.url && <>
                               {item.icon && <item.icon size={14} className="text-gray-500"/>}

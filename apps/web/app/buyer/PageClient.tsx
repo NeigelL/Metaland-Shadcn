@@ -24,6 +24,7 @@ export function PageClient() {
           href="/files/Memo_002_Sales_Invoice_Release_B.pdf"
           target="_blank"
           className="text-blue underline"
+          prefetch={false}
           >learn more</Link>
         </AlertDescription>
       </Alert>

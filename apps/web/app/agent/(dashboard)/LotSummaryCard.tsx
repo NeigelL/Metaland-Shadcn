@@ -28,7 +28,7 @@ export default function LotSummaryCard() {
     return (
         <>
             {/* Lots Purchased Card */}
-            <Link href = "/lots">
+            <Link href = "/lots" prefetch={false}>
               <Card
                 className="cursor-pointer transition-colors hover:bg-gray-100 rounded-lg">
                 <CardContent className="flex items-center justify-between py-1 px-2 sm:px-3">
@@ -48,7 +48,7 @@ export default function LotSummaryCard() {
             </Link>
             
             {/* Fully Paid Lots Card */}
-            <Link href="/lots?tab=fullyPaid">
+            <Link href="/lots?tab=fullyPaid" prefetch={false}>
               <Card className="cursor-pointer transition-colors hover:bg-gray-100 rounded-lg">
                 <CardContent className="flex items-center justify-between py-1 px-2 sm:px-3">
                   <div className="flex items-center space-x-1 sm:space-x-2">

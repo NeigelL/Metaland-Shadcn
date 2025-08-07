@@ -18,7 +18,7 @@ export default function PageClient() {
     return <div className="flex-1 p-4 space-y-6 max-w-7xl mx-auto w-full">
         <div className="space-y-4 sm:space-y-6">
             <div className="mb-6">
-                <Link href="/projects" className="w-fit">
+                <Link href="/projects" className="w-fit" prefetch={false}>
                     <Button variant="outline" size="icon" className="rounded-md">
                         <ChevronLeft className="h-4 w-4" />
                     </Button>

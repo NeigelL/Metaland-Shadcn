@@ -157,7 +157,7 @@ export default function GalleryWithUploader(
                                     </video>
                                 }
                             <div className="cursor-pointer absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity duration-300">
-                            <Link href={file.src} target="_blank" className="cursor-pointer text-center" style={{width:"90%"}}>
+                            <Link prefetch={false} href={file.src} target="_blank" className="cursor-pointer text-center" style={{width:"90%"}}>
                                 <p className="text-white text-sm overflow-hidden text-ellipsis">{file.Key.split("/").pop()}</p>
                             </Link>
                             </div>

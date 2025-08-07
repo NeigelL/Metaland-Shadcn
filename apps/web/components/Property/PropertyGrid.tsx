@@ -115,6 +115,7 @@ export default function PropertyGrid({ lots }: { lots: any[]}) {
      <Link
       href={`/amortizations/${lot._id.toString()}`}
       className="w-full sm:w-auto px-3 py-2 bg-gray-600 text-xs text-white rounded hover:bg-blue-400 text-center block sm:inline-block"
+      prefetch={false}
      >
       Details
      </Link>

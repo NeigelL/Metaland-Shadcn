@@ -87,11 +87,11 @@ function FileGallery({options : { folder="", entityID = "", collection = ""} , o
                                 }
 
                             <div className={"cursor-pointer absolute inset-0 flex items-center justify-center " + (isPDF(file) ? "hidden" : "bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300") }>
-                            { !isPDF(file) && <Link href={file.src} target="_blank" className="text-center cursor-pointer" style={{width:"90%"}}>
+                            { !isPDF(file) && <Link prefetch={false} href={file.src} target="_blank" className="text-center cursor-pointer" style={{width:"90%"}}>
                                 <p className="text-white text-sm overflow-hidden text-ellipsis">{file.Key.split("/").pop()}</p>
                             </Link> }
                             </div>
-                            { isPDF(file) && <Link href={file.src} target="_blank" className="text-center cursor-pointer" style={{width:"90%"}}>
+                            { isPDF(file) && <Link prefetch={false} href={file.src} target="_blank" className="text-center cursor-pointer" style={{width:"90%"}}>
                                 <p className=" text-sm overflow-hidden text-ellipsis">{file.Key.split("/").pop()}</p>
                             </Link> }
                             { !isPDF(file) && <p className="text-center text-sm overflow-hidden text-ellipsis">{file.Key.split("/").pop()}</p> }

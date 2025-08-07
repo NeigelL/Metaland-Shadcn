@@ -50,7 +50,7 @@ export default function LoggedInUser() {
           </DropdownMenuTrigger>
           <DropdownMenuContent className="w-56 absolute left-0 bottom-0" align="start" side="top">
             <DropdownMenuItem asChild>
-              <Link href="/profile" className="flex items-center cursor-pointer">
+              <Link href="/profile" className="flex items-center cursor-pointer" prefetch={false}>
                 <User className="mr-2" size={16} />
                 <span>Profile</span>
               </Link>
