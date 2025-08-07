@@ -112,7 +112,7 @@ const nextAuthOptions : AuthOptions = {
                 await getUserPermissions(checkUser._id.toString(), true)
                 // console.dir({'asd' : host.get("host")})
                 if( process.env.NEXT_AGENT_DOMAIN  == host.get("host")) {
-                    if(await can("role:agent", checkUser._id )) {
+                    if(await can("role:agent", checkUser._id.toString() )) {
                         return checkUser
                     } else {
                         throw new Error("NoRole&msg=agent")
@@ -120,7 +120,7 @@ const nextAuthOptions : AuthOptions = {
                 }
 
                 if( process.env.NEXT_BUYER_DOMAIN  == host.get("host")) {
-                    if(await can("role:buyer", checkUser._id )) {
+                    if(await can("role:buyer", checkUser._id.toString() )) {
                         return checkUser
                     } else {
                         throw new Error("NoRole&msg=buyer")
@@ -128,7 +128,7 @@ const nextAuthOptions : AuthOptions = {
                 }
 
                 if( process.env.NEXT_REALTY_DOMAIN  == host.get("host")) {
-                    if(await can("role:realty-staff", checkUser._id )) {
+                    if(await can("role:realty-staff", checkUser._id.toString() )) {
                         return checkUser
                     } else {
                         throw new Error("NoRole&msg=realty")
@@ -136,7 +136,7 @@ const nextAuthOptions : AuthOptions = {
                 }
 
                 if( process.env.NEXT_ADMIN_DOMAIN  == host.get("host")) {
-                    if(await can("role:office-staff", checkUser._id )) {
+                    if(await can("role:office-staff", checkUser._id.toString() )) {
                         return checkUser
                     } else {
                         throw new Error("NoRole&msg=admin")
