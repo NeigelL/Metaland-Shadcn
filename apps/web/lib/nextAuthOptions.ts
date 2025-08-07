@@ -119,17 +119,29 @@ const nextAuthOptions : AuthOptions = {
                     }
                 }
 
-                 if( process.env.NEXT_BUYER_DOMAIN  == host.get("host")) {
+                if( process.env.NEXT_BUYER_DOMAIN  == host.get("host")) {
                     if(await can("role:buyer", checkUser._id )) {
                         return checkUser
                     } else {
                         throw new Error("NoRole&msg=buyer")
                     }
                 }
-                // if( await can("role:office-staff", checkUser._id )  && process.env.NEXT_ADMIN_DOMAIN  == host.get("host")) {
-                //     return checkUser
-                // }
 
+                if( process.env.NEXT_REALTY_DOMAIN  == host.get("host")) {
+                    if(await can("role:realty", checkUser._id )) {
+                        return checkUser
+                    } else {
+                        throw new Error("NoRole&msg=realty")
+                    }
+                }
+
+                if( process.env.NEXT_ADMIN_DOMAIN  == host.get("host")) {
+                    if(await can("role:office-staff", checkUser._id )) {
+                        return checkUser
+                    } else {
+                        throw new Error("NoRole&msg=admin")
+                    }
+                }
                
             } else {
                  throw new Error("EmailNotFound&msg="+user?.email)

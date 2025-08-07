@@ -106,6 +106,7 @@ const projectSchema = new Schema<IProject>({
     },
     total_area: {type: Number, required: true},
     titled: {type: Boolean, default: false},
+    description: { type: String, default: "" },
     portal: {
         agent: {type: Boolean, default: false},
         buyer: {type: Boolean, default: false},

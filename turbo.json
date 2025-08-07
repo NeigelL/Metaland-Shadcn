@@ -28,6 +28,10 @@
      "buyer": {
       "cache": false,
       "persistent": true
+    },
+     "realty": {
+      "cache": false,
+      "persistent": true
     }
   },
   "globalDependencies": [

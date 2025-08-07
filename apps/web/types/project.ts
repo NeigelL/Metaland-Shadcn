@@ -36,6 +36,7 @@ export interface IProject {
     total_area: Number,
     acronym?: string,
     titled: boolean,
+    description?: string,
     portal?: {
         agent: boolean,
         buyer: boolean,

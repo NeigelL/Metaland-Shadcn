@@ -29,6 +29,11 @@ const BuyerAppSidebar = dynamic( () => import("./Sidebar/BuyerSidebar"), {
   loading: () => <div><Loader/></div>
 })
 
+const RealtySidebar = dynamic( () => import("./Sidebar/RealtySidebar"), {
+  ssr: false,
+  loading: () => <div><Loader/></div>
+})
+
 export function Providers({ children, user, accountType, callbackURL }: { user:any, accountType : string , callbackURL : string, children: React.ReactNode }) {
 
   const {setUser, user_id} = useUserStore()
@@ -72,6 +77,7 @@ export function Providers({ children, user, accountType, callbackURL }: { user:a
               { accountType == "admin" && <AdminSidebar /> }
               { accountType == "agent" && <AgentSidebar /> }
               { accountType == "buyer" && <BuyerAppSidebar /> }
+              { accountType == "realty" && <RealtySidebar /> }
               <SidebarInset className="flex-1 flex flex-col">
                  <SidebarTrigger />
                 {children}

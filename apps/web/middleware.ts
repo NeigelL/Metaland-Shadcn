@@ -29,6 +29,8 @@ export function middleware(request: NextRequest) {
     prefix = '/agent'
   }  else if(host?.includes(process.env.NEXT_ADMIN_DOMAIN || 'admin.metaland.properties')) {
     prefix = '/admin'
+  } else if(host?.includes(process.env.NEXT_REALTY_DOMAIN || 'realty.metaland.properties')) {
+    prefix = '/realty'
   }
 
   if(prefix) {
