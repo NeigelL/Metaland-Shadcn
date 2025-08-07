@@ -128,7 +128,7 @@ const nextAuthOptions : AuthOptions = {
                 }
 
                 if( process.env.NEXT_REALTY_DOMAIN  == host.get("host")) {
-                    if(await can("role:realty", checkUser._id )) {
+                    if(await can("role:realty-staff", checkUser._id )) {
                         return checkUser
                     } else {
                         throw new Error("NoRole&msg=realty")
