@@ -2,6 +2,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@workspace/
 import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem } from "@workspace/ui/components/sidebar"
 import { ChevronRight, LucideIcon } from "lucide-react"
 import Link from "next/link"
+import { canFn } from "../permission"
 
 export default function NavMain({
     items
@@ -11,6 +12,7 @@ export default function NavMain({
         title_show?: boolean,
         url?: string,
         icon?: LucideIcon,
+        permissions?: string[] | string,
         isActive?: boolean,
         items?: {
             title: string,
@@ -25,7 +27,7 @@ export default function NavMain({
       <SidebarGroupContent>
         <SidebarMenu>
           {items.map((item) => (
-            <Collapsible
+            (!item?.permissions || canFn(item.permissions)) && <Collapsible
               key={item.title}
               asChild
               defaultOpen={item.isActive}

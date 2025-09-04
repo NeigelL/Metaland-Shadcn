@@ -10,6 +10,8 @@ import ReceiverAccount from "@/models/receiver_accounts";
 import User from "@/models/users";
 import Tag from "@/models/tags"
 import { ObjectId } from "mongodb"
+import BuyerProspect, { ProspectSourced, ProspectStatus } from "@/models/buyer_prospects";
+import { auth } from "@/lib/nextAuthOptions";
 
 export async function getAgentEarliestReservation(agent_id: string) {
     await dbConnect()
@@ -307,4 +309,38 @@ export async function getAgentAmortizationService(amortization_id: String, agent
         options: {sort: { display_sort: 1}}
     })
     return amortization
+}
+
+export async function getLeadsService(leadId: string) {
+    await dbConnect()
+    const leads = await BuyerProspect.find({
+        created_by: leadId
+    })
+    return leads
+}
+
+export async function saveLeadService(leadData: any) {
+    await dbConnect()
+    const existingLead = await checkLeadService(leadData)
+    if(existingLead) {
+        return { error: "Lead with the same email or phone number already exists." }
+    } else {
+        const user = await auth()
+        leadData.created_by = user.id
+        leadData.status = ProspectStatus.NEW
+        leadData.source = ProspectSourced.PORTAL
+        const newLead = await BuyerProspect.create(leadData)
+        return newLead
+    }
+}
+
+export async function checkLeadService(data: any) {
+    await dbConnect()
+    const lead = await BuyerProspect.findOne({
+        $or: [
+            { email: data.email },
+            { phone: data.phone }
+        ]
+    })
+    return lead
 }

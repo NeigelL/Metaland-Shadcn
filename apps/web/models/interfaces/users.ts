@@ -1,5 +1,24 @@
 import { PermissionsMap } from "@/types/permissions";
 
+export interface IBuyerProspect {
+    created_by?: string | null,
+    first_name: string | null,
+    middle_name?: string | null,
+    last_name: string | null,
+    address?: string | null,
+    email: string | null,
+    phone_prefix: string | null,
+    phone?: string | null,
+    land_line?: string | null,
+    status?: string | null,
+    sourced?: string | null,
+    remarks?: string | null,
+    type: string | null,
+    communicationPreference?: string | null,
+    communicationAccount?: string | null,
+    otherCommunication?: string | null,
+}
+
 export interface IUser {
     company_id: string | null,
     spouse_user_id?: String  | null,

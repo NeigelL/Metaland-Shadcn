@@ -5,6 +5,7 @@ export type MenuItem = {
     title_show?: boolean
     url?: string,
     icon?: LucideIcon,
+    permissions?: string[] | string,
     isActive?: boolean,
     items?: {
         title: string,

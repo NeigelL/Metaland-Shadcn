@@ -1,8 +1,9 @@
 "use client";
 
-import { HomeIcon,  TreePine,  Factory } from "lucide-react";
+import { HomeIcon,  TreePine,  Factory, Users } from "lucide-react";
 import NavSidebar from "./nav-sidebar";
 import { MenuItem } from "@/types/menu";
+import { canFn } from "../permission";
 
 
 
@@ -21,6 +22,12 @@ const items: MenuItem[] = [
       title: "FAQ",
       url: "/faq",
       icon: Factory,
+    },
+    {
+      title: "PROSPECTS",
+      url: "/prospects",
+      icon: Users,
+      permissions: ["users:manage-prospects"]
     }
     // {
     //   title: "CLIENTS",
@@ -32,8 +39,6 @@ const items: MenuItem[] = [
       // { title: "MATERIALS", url: "/materials", icon: LibraryBig },
       // { title: "DOCUMENTS", url: "/documents", icon: File },
 ]
-
-
 
 export default function AgentSidebar() {
   return (

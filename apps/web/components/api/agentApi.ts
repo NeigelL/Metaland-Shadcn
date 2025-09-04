@@ -115,3 +115,33 @@ export function useAgentProjectsAvailableQuery() {
         refetchOnReconnect: true,
     });
 }
+
+export async function getAgentLeadsQueryApi() {
+    try {
+        const response = await axios.get('/api/prospects');
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching agent leads', error);
+        throw error;
+    }
+}
+
+
+export function useLeadsQuery() {
+    return useQuery({
+        queryKey: ['agent-leads'],
+        queryFn: () => getAgentLeadsQueryApi(),
+        refetchOnWindowFocus: true,
+        refetchOnReconnect: true,
+    });
+}
+
+export async function saveAgentLeadQueryApi(data: any) {
+    try {
+        const response = await axios.post('/api/prospects', data);
+        return response.data;
+    } catch (error) {
+        console.error('Error saving agent lead', error);
+        throw error;
+    }
+}
