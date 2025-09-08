@@ -1,6 +1,6 @@
 "use client";
 
-import { HomeIcon,  TreePine,  Factory, Users } from "lucide-react";
+import { HomeIcon,  TreePine,  Factory, Users, Paperclip, File } from "lucide-react";
 import NavSidebar from "./nav-sidebar";
 import { MenuItem } from "@/types/menu";
 import { canFn } from "../permission";
@@ -22,6 +22,18 @@ const items: MenuItem[] = [
       title: "FAQ",
       url: "/faq",
       icon: Factory,
+    },
+    {
+      title: "MY FILES",
+      url: "/my-files",
+      icon: File,
+      permissions: ["users:manage-assets"]
+    },
+    {
+      title: "AVAILABLE ASSETS",
+      url: "/assets",
+      icon: Paperclip,
+      permissions: ["users:manage-assets"]
     },
     {
       title: "PROSPECTS",
