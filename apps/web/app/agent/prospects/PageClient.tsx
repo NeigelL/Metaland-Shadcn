@@ -132,7 +132,7 @@ const ProspectPage = ()=> {
             if (exists?.error) {
                 setMessage({
                     type: 'error',
-                    text: 'Error: This buyer already exists.'
+                    text: 'Error: This person already exists.'
                 });
 
                 // const autoRejectedProspect: Prospect = {
@@ -419,7 +419,6 @@ const triggerCSVImport = () => {
                         {isImporting ? 'Importing...' : 'Import CSV'}
                     </Button> */}
                 </div>
-                <CurrentProspect prospects={prospects} />
 
                 <Card className="shadow-sm border-0 bg-white relative">
                     <CardContent>
@@ -516,7 +515,7 @@ const triggerCSVImport = () => {
                                     placeholder="Enter Email Address"
                                     className="h-8 truncate"
                                     autoComplete="off"
-                                    required/>
+                                    />
                                 </div>
                             </div>
 
@@ -561,8 +560,8 @@ const triggerCSVImport = () => {
                                             type="number"
                                             value={formData.phone}
                                             onChange={(e) => {
-                                                if(e.target.value?.length <= 10) {
-                                                    handleInputChange('phone', e.target.value)
+                                                if (/^\d*$/.test(e.target.value) && e.target.value.length <= 15) {
+                                                    handleInputChange('phone', e.target.value);
                                                 }
                                             }}
                                             placeholder="Enter phone number"
@@ -583,7 +582,6 @@ const triggerCSVImport = () => {
                                     placeholder="Enter land line number"
                                     className="h-8 truncate"
                                     autoComplete="off"
-                                    required
                                     />
                                 </div>
 
@@ -704,6 +702,10 @@ const triggerCSVImport = () => {
                         </form>
                     </CardContent>
                 </Card>
+
+                <div className="flex flex-col sm:flex-row gap-3 mb-4">
+                    <CurrentProspect prospects={prospects} />
+                </div>
             </div>
         </div>
     )

@@ -138,7 +138,7 @@ export function useLeadsQuery() {
 
 export async function saveAgentLeadQueryApi(data: any) {
     try {
-        const response = await axios.post('/api/prospects', data);
+        const response = await axios.post('/api/prospects', {...data, action: "SAVE"});
         return response.data;
     } catch (error) {
         console.error('Error saving agent lead', error);

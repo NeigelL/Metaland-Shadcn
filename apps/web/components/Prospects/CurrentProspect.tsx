@@ -1,5 +1,6 @@
 
 "use client"
+import { ProspectStatus } from "@/types/prospect";
 import { Badge } from "@workspace/ui/components/badge";
 import { Button } from "@workspace/ui/components/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
@@ -115,6 +116,17 @@ export default function CurrentProspect({
                                                     </div>
                                                 )}
                                                 {prospect.createdAt && (
+                                                    <div className="flex items-center gap-1">
+                                                        <span className="text-xs truncate">
+                                                            {new Date(prospect.createdAt).toLocaleDateString('en-US', {
+                                                                month: 'short',
+                                                                day: 'numeric',
+                                                                year: 'numeric'
+                                                            })}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                                {prospect.status === ProspectStatus.NEW && (
                                                     <div className="flex items-center gap-1">
                                                         <span className="text-xs truncate">
                                                             {new Date(prospect.createdAt).toLocaleDateString('en-US', {

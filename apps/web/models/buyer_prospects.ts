@@ -2,20 +2,8 @@ import { Schema, models, model, Model } from "mongoose"
 import { IBuyerProspect, IUser } from "./interfaces/users";
 import referenceSchema, { preValidateReferenceCode } from "./base/reference_code";
 import { changelogPlugin } from "./changelog";
+import { ProspectSourced, ProspectStatus } from "@/types/prospect";
 
-
-export enum ProspectStatus {
-    NEW = "NEW",
-    CONTACTED = "CONTACTED",
-    FOLLOW_UP = "FOLLOW_UP",
-    INTERESTED = "INTERESTED",
-    NOT_INTERESTED = "NOT_INTERESTED",
-}
-
-export enum ProspectSourced {
-    PORTAL = "PORTAL",
-    ADMIN = "ADMIN",
-}
 
 const buyerProspectSchema = new Schema<IBuyerProspect>({
     ...referenceSchema.obj,

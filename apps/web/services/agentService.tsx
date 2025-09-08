@@ -10,8 +10,9 @@ import ReceiverAccount from "@/models/receiver_accounts";
 import User from "@/models/users";
 import Tag from "@/models/tags"
 import { ObjectId } from "mongodb"
-import BuyerProspect, { ProspectSourced, ProspectStatus } from "@/models/buyer_prospects";
+import BuyerProspect from "@/models/buyer_prospects";
 import { auth } from "@/lib/nextAuthOptions";
+import { ProspectSourced, ProspectStatus } from "@/types/prospect";
 
 export async function getAgentEarliestReservation(agent_id: string) {
     await dbConnect()
@@ -311,17 +312,18 @@ export async function getAgentAmortizationService(amortization_id: String, agent
     return amortization
 }
 
-export async function getLeadsService(leadId: string) {
+export async function getAgentLeadsService(leadId: string) {
     await dbConnect()
     const leads = await BuyerProspect.find({
-        created_by: leadId
+        created_by: leadId,
+        status: { $ne: ProspectStatus.DELETED }
     })
     return leads
 }
 
-export async function saveLeadService(leadData: any) {
+export async function saveAgentLeadService(leadData: any) {
     await dbConnect()
-    const existingLead = await checkLeadService(leadData)
+    const existingLead = await checkAgentLeadService(leadData)
     if(existingLead) {
         return { error: "Lead with the same email or phone number already exists." }
     } else {
@@ -334,7 +336,7 @@ export async function saveLeadService(leadData: any) {
     }
 }
 
-export async function checkLeadService(data: any) {
+export async function checkAgentLeadService(data: any) {
     await dbConnect()
     const lead = await BuyerProspect.findOne({
         $or: [
@@ -343,4 +345,14 @@ export async function checkLeadService(data: any) {
         ]
     })
     return lead
+}
+
+export async function deleteAgentLeadService(leadId: string ) {
+    const user = await auth()
+    const userId = user.id
+    await dbConnect()
+    const lead = await BuyerProspect.findOneAndUpdate({
+        _id: leadId,
+        created_by: userId
+    }, { status: ProspectStatus.DELETED }, { new: true })
 }
