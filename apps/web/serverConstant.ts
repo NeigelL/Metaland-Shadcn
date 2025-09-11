@@ -80,6 +80,11 @@ export enum EnumSOCKET {
     AMORTIZATION_INDEX="amortization-index",
     ROLES_INDEX="roles-index",
     PERMISSIONS_INDEX="permissions-index",
+    REALTY_INDEX="realties-index",
+    CHEQUE_INDEX="cheque-index",
+    DTR_INDEX = 'dtr-index',
+    PROSPECT_INDEX = "prospect-index",
+    USER_PROOFS = "user-proofs"
 }
 
 export enum LotHistoryAction {
