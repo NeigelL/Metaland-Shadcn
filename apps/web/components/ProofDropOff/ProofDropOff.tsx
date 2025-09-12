@@ -19,7 +19,8 @@ export default function ProofDropOff({
                 label: "Upload Proof of Payment"
             }}
             onCompleteCallback={
-                () => {
+                (files:any[]) => {
+                    if(files.length === 0) return;
                     debounceWithKey("user-proofs-" + user_id, () => {
                         useSocketBroadcast(EnumSOCKET.USER_PROOFS, { message: [first_name, middle_name, last_name,  "has uploaded a proof of payment, click here to view"].join(" "), link: `/users/${user_id}?tab=proof` });
                     },5000)();

@@ -46,7 +46,7 @@ export default function GalleryWithUploader(
             setFiles(tempFiles)
             setFolders(tempFolders)
             setFilesRequesting(false)
-            onCompleteCallback(folderPath)
+            onCompleteCallback(tempFiles)
         }
     }, [awsFiles])
 
