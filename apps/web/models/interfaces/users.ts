@@ -1,4 +1,5 @@
 import { PermissionsMap } from "@/types/permissions";
+import { ProspectStatus } from "@/types/prospect";
 
 export interface IBuyerProspect {
     created_by?: string | null,
@@ -10,7 +11,7 @@ export interface IBuyerProspect {
     phone_prefix: string | null,
     phone?: string | null,
     land_line?: string | null,
-    status?: string | null,
+    status?: ProspectStatus | null,
     sourced?: string | null,
     remarks?: string | null,
     type: string | null,

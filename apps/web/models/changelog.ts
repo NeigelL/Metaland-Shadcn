@@ -41,7 +41,7 @@ function changelogPlugin(schema: Schema<any>, next: Function) {
     }
   })
 
-  schema.pre('findOneAndUpdate', async function () {
+  schema.pre('findOneAndUpdate', async function (next) {
     const collectionName = this.model.collection.name
     let org:any = await this.model.findOne(this.getQuery()).lean(false)
 

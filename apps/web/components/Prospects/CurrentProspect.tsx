@@ -1,17 +1,29 @@
 
 "use client"
 import { ProspectStatus } from "@/types/prospect";
+import { useMutation } from "@tanstack/react-query";
 import { Badge } from "@workspace/ui/components/badge";
-import { Button } from "@workspace/ui/components/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@workspace/ui/components/card";
-import { Eye, Mail, MapPin, MessageCircle, Phone, Plus } from "lucide-react";
-import { useState } from "react";
+import {  Mail, MapPin, MessageCircle, Phone, Plus, Trash } from "lucide-react";
+import { deleteAgentLeadQueryApi } from "../api/agentApi";
 export default function CurrentProspect({
-    prospects
+    prospects,
+    refetch
 }: {
-    prospects: any[]
+    prospects: any[],
+    refetch: () => void
 }) {
-    const [showAllProspects, setShowAllProspects] = useState(false);
+    // const [showAllProspects, setShowAllProspects] = useState(false);
+
+    const deleteProspectMutation = useMutation({
+        mutationFn: async({leadId}: {leadId: string}) => await deleteAgentLeadQueryApi(leadId),
+        onSettled: (e) => {
+            if(refetch) {
+                refetch()
+            }
+        }
+    });
+
     const getStatusText = (status: string) =>{
         switch (status) {
             case 'in_queue' :
@@ -47,7 +59,7 @@ export default function CurrentProspect({
                             <Badge variant="secondary" className="text-xs px-2 py-1">
                                 {prospects.length} Total
                             </Badge>
-                            {prospects.length > 3 && (
+                            {/* {prospects.length > 3 && (
                                 <Button
                                     variant="outline"
                                     size="sm"
@@ -57,7 +69,7 @@ export default function CurrentProspect({
                                     <Eye className="w-3 h-3 mr-1" />
                                     View All
                                 </Button>
-                            )}
+                            )} */}
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -135,6 +147,22 @@ export default function CurrentProspect({
                                                                 year: 'numeric'
                                                             })}
                                                         </span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                            <div className="flex flex-row justify-end items-center gap-3 text-gray-600 text-xs mt-4">
+                                                {prospect?.status?.includes(ProspectStatus.NEW) && (
+                                                    <div
+                                                        className="flex items-center gap-1 text-destructive"
+                                                            onClick={async () => {
+                                                                if(confirm("Are you sure you want to delete this prospect? This action cannot be undone.")) {
+                                                                    deleteProspectMutation.mutate({leadId : prospect.id})
+                                                                }
+                                                            }
+                                                        }
+                                                    >
+                                                        <Trash className="w-3 h-3 flex-shrink-0"/>
+                                                        <span>DELETE</span>
                                                     </div>
                                                 )}
                                             </div>

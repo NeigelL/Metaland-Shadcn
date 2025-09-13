@@ -704,7 +704,7 @@ const triggerCSVImport = () => {
                 </Card>
 
                 <div className="flex flex-col sm:flex-row gap-3 mb-4">
-                    <CurrentProspect prospects={prospects} />
+                    <CurrentProspect prospects={prospects} refetch={refetch} />
                 </div>
             </div>
         </div>

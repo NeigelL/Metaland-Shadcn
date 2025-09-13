@@ -145,3 +145,13 @@ export async function saveAgentLeadQueryApi(data: any) {
         throw error;
     }
 }
+
+export async function deleteAgentLeadQueryApi(buyer_prospect_id: any) {
+    try {
+        const response = await axios.post('/api/prospects', { action: "DELETE", leadId: buyer_prospect_id});
+        return response.data;
+    } catch (error) {
+        console.error('Error deleting agent lead', error);
+        throw error;
+    }
+}

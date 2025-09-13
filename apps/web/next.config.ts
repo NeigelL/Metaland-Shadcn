@@ -15,8 +15,10 @@ const nextConfig = {
         pathname: '/**/**',
       }, {
         protocol: 'https',
-        hostname: 'www.google-analytics.com'
-      } , {
+        hostname: 'www.google-analytics.com',
+        port: '',
+        pathname: '/**/**',
+      }, {
           protocol: 'https',
           hostname: 'metaland-socket.onrender.com',
           port: '',

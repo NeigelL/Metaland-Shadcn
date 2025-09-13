@@ -17,8 +17,8 @@ const fontMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
-    title: "Buyer Portal",
-    description: "Buyer Portal",
+    title: "Agent Portal",
+    description: "Agent Portal",
 };
 
 export default async function RootLayout({

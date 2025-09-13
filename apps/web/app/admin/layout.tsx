@@ -4,6 +4,7 @@ import "@workspace/ui/globals.css"
 import { Providers } from "@/components/providers"
 import { getServerSession } from "next-auth"
 import nextAuthOptions from "@/lib/nextAuthOptions"
+import { Metadata } from "next"
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -14,6 +15,11 @@ const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
 })
+
+export const metadata: Metadata = {
+    title: "Admin Portal",
+    description: "Admin Portal",
+};
 
 export default async function RootLayout({
   children,

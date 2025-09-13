@@ -26,7 +26,7 @@ const buyerProspectSchema = new Schema<IBuyerProspect>({
         type: String,
         unique: true,
         required: [true, "Phone number is required"],
-        match: [/^\d{10}$/, "Phone number must be exactly 10 digits"]
+        // match: [/^\d{10}$/, "Phone number must be exactly 15 digits"]
     },
     type: {type: String, required: true, enum: ['local', 'international'], default: 'local'},
     communicationPreference: {type: String, default: ''},
@@ -38,7 +38,7 @@ const buyerProspectSchema = new Schema<IBuyerProspect>({
         default: null,
     },
     remarks: {type : String, default: null},
-    status: {type: String, default: ProspectStatus.NEW, enum: Object.values(ProspectStatus)},
+    status: {type: [String], default: [ProspectStatus.NEW], enum: Object.values(ProspectStatus)},
     sourced: {type: String, enum: Object.values(ProspectSourced), default: ProspectSourced.PORTAL},
 },{
     timestamps : true,

@@ -316,7 +316,7 @@ export async function getAgentLeadsService(leadId: string) {
     await dbConnect()
     const leads = await BuyerProspect.find({
         created_by: leadId,
-        status: { $ne: ProspectStatus.DELETED }
+        status: { $nin: ProspectStatus.DELETED }
     })
     return leads
 }
@@ -329,7 +329,7 @@ export async function saveAgentLeadService(leadData: any) {
     } else {
         const user = await auth()
         leadData.created_by = user.id
-        leadData.status = ProspectStatus.NEW
+        leadData.status = [ProspectStatus.NEW]
         leadData.source = ProspectSourced.PORTAL
         const newLead = await BuyerProspect.create(leadData)
         return newLead
@@ -354,5 +354,6 @@ export async function deleteAgentLeadService(leadId: string ) {
     const lead = await BuyerProspect.findOneAndUpdate({
         _id: leadId,
         created_by: userId
-    }, { status: ProspectStatus.DELETED }, { new: true })
+    }, { status: ProspectStatus.DELETED }
+    )
 }
