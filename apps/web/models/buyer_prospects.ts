@@ -1,8 +1,8 @@
 import { Schema, models, model, Model } from "mongoose"
-import { IBuyerProspect, IUser } from "./interfaces/users";
+import { IBuyerProspect} from "./interfaces/users";
 import referenceSchema, { preValidateReferenceCode } from "./base/reference_code";
 import { changelogPlugin } from "./changelog";
-import { ProspectSourced, ProspectStatus } from "@/types/prospect";
+import { ProspectSourced } from "@/types/prospect";
 
 
 const buyerProspectSchema = new Schema<IBuyerProspect>({
@@ -38,7 +38,7 @@ const buyerProspectSchema = new Schema<IBuyerProspect>({
         default: null,
     },
     remarks: {type : String, default: null},
-    status: {type: [String], default: [ProspectStatus.NEW], enum: Object.values(ProspectStatus)},
+    status: {type: [Schema.Types.ObjectId], ref:"Tag", default: []},
     sourced: {type: String, enum: Object.values(ProspectSourced), default: ProspectSourced.PORTAL},
 },{
     timestamps : true,

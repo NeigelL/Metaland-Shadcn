@@ -93,7 +93,7 @@ export default function CurrentProspect({
                                                 {`${prospect.first_name} ${prospect.middle_name} ${prospect.last_name}`.trim().replace(/\s+/g, ' ')}
                                             </h3>
                                                 <Badge className= {`text-xs font-medium px-2 py-0.5 ${getStatusColor(prospect.status)}`}>
-                                                    {getStatusText(prospect.status)}
+                                                    {prospect?.status?.map( (stat:any) => stat.name?.toLowerCase() ).join(", ") }
                                                 </Badge>
                                                 <Badge variant="outline" className="text-xs px-1.5 py-0.5">
                                                     {prospect.type}
@@ -138,7 +138,7 @@ export default function CurrentProspect({
                                                         </span>
                                                     </div>
                                                 )}
-                                                {prospect.status === ProspectStatus.NEW && (
+                                                {prospect.status?.map( (stat:any) => stat._id ).includes(ProspectStatus.SUBMITTED) && (
                                                     <div className="flex items-center gap-1">
                                                         <span className="text-xs truncate">
                                                             {new Date(prospect.createdAt).toLocaleDateString('en-US', {
@@ -151,7 +151,7 @@ export default function CurrentProspect({
                                                 )}
                                             </div>
                                             <div className="flex flex-row justify-end items-center gap-3 text-gray-600 text-xs mt-4">
-                                                {prospect?.status?.includes(ProspectStatus.NEW) && (
+                                                {prospect.status?.map( (stat:any) => stat._id ).includes(ProspectStatus.SUBMITTED) && (
                                                     <div
                                                         className="flex items-center gap-1 text-destructive"
                                                             onClick={async () => {
