@@ -13,6 +13,7 @@ import { ObjectId } from "mongodb"
 import BuyerProspect from "@/models/buyer_prospects";
 import { auth } from "@/lib/nextAuthOptions";
 import { ProspectSourced, ProspectStatus } from "@/types/prospect";
+import { updateBuyerProspectTags } from "@/lib/TagHelper";
 
 export async function getAgentEarliestReservation(agent_id: string) {
     await dbConnect()
@@ -327,11 +328,17 @@ export async function saveAgentLeadService(leadData: any) {
     if(existingLead) {
         return { error: "Lead with the same email or phone number already exists." }
     } else {
+        const submittedID = "68c4f4a8d443c3af24b040de"
         const user = await auth()
         leadData.created_by = user.id
-        leadData.status = ["68c4f4a8d443c3af24b040de"]
         leadData.source = ProspectSourced.PORTAL
         const newLead = await BuyerProspect.create(leadData)
+        await updateBuyerProspectTags(
+            newLead,
+            [submittedID],
+            [],
+            user?.user_id
+        )
         return newLead
     }
 }

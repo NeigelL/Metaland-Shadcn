@@ -9,3 +9,10 @@ export interface ITagHistoryEntry {
     timestamp: Date,
     created_by: String,
 }
+
+
+export interface IDescriptionHistoryEntry {
+    description: String,
+    timestamp: Date,
+    created_by: String,
+}

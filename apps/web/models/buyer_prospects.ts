@@ -3,6 +3,14 @@ import { IBuyerProspect} from "./interfaces/users";
 import referenceSchema, { preValidateReferenceCode } from "./base/reference_code";
 import { changelogPlugin } from "./changelog";
 import { ProspectSourced } from "@/types/prospect";
+import { ITagHistoryAction, ITagHistoryEntry } from "./interfaces/tag_histories";
+
+const statusHistorySchema = new Schema<ITagHistoryEntry>({
+    action: {type: String, default: ITagHistoryAction.ADDED},
+    tag: {type: Schema.Types.ObjectId, ref: "Tag"},
+    timestamp: {type: Date, default: Date.now},
+    created_by: {type: Schema.Types.ObjectId, ref: "User", default: null}
+})
 
 
 const buyerProspectSchema = new Schema<IBuyerProspect>({
@@ -38,7 +46,9 @@ const buyerProspectSchema = new Schema<IBuyerProspect>({
         default: null,
     },
     remarks: {type : String, default: null},
+    notes: {type : String, default: null},
     status: {type: [Schema.Types.ObjectId], ref:"Tag", default: []},
+    statusHistory: [statusHistorySchema],
     sourced: {type: String, enum: Object.values(ProspectSourced), default: ProspectSourced.PORTAL},
 },{
     timestamps : true,
