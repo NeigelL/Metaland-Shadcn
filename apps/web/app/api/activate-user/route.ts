@@ -13,6 +13,15 @@ export async function GET(
   const searchParams = url.searchParams;
   const email = searchParams.get("email") || "";
   const code = searchParams.get("code") || "";
+  const isBuyer = request.url.includes("buyer");
+  const isAgent = request.url.includes("agent");
+  const isRealty = request.url.includes("realty");
+
+  const buyerRole = "680e3ce332db572507c23337" // buyer
+  const agentRole = "680e3ce332db572507c23338" // agent
+  const realtyStaffRole = "680e3ce332db572507c2333a" // realty-staff
+  
+  let roleID = null
 
   await logAccessService({
     request,
@@ -28,11 +37,21 @@ export async function GET(
       message: "User already activated"
     })
   }
+  if(isBuyer) {
+    roleID = buyerRole
+  }
+  if(isAgent) {
+    roleID = agentRole
+  }
+  if(isRealty) {
+    roleID = realtyStaffRole
+  }
+
   const response = await User.findOneAndUpdate(
     { email, login_code: code, login: false },
     {
       $set: { login: true },
-      $addToSet: { roles: "680e3ce332db572507c23337" }
+      $addToSet: { roles: roleID }
     },
     { new: true }
   )
