@@ -3,6 +3,7 @@
 import dbConnect from "@/lib/mongodb"
 import User from "@/models/users";
 import { logAccessService } from "@/services/accessService";
+import Email from "next-auth/providers/email";
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
@@ -47,14 +48,30 @@ export async function GET(
     roleID = realtyStaffRole
   }
 
-  const response = await User.findOneAndUpdate(
-    { email, login_code: code, login: false },
-    {
-      $set: { login: true },
-      $addToSet: { roles: roleID }
-    },
-    { new: true }
-  )
+  let response = null
+
+  if(code?.indexOf("template_") >= 0) {
+    response = null // check on email template if the id exists if so activate the user immediately
+    // if(response) {
+    //   response = await User.findOneAndUpdate(
+    //           { email, login: false },
+    //           {
+    //             $set: { login: true },
+    //             $addToSet: { roles: roleID }
+    //           },
+    //           { new: true }
+    //         )
+    // }
+  } else {
+    response = await User.findOneAndUpdate(
+        { email, login_code: code, login: false },
+        {
+          $set: { login: true },
+          $addToSet: { roles: roleID }
+        },
+        { new: true }
+      )
+  }
 
   return NextResponse.json(
     response ? {
