@@ -13,7 +13,7 @@ const AssetsPage = ()=> {
                         </h1>
                     </div>
                 </div>
-                <div className="flex flex-col sm:flex-col gap-3 mb-4">
+                <div className="w-full">
                     <FileGallery
                         options={{
                             folder: ["agent-assets"].join("/"),
