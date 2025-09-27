@@ -73,49 +73,6 @@ export default function GalleryWithUploader(
         <>
             {!filesRequesting && files.length == 0 && <h4 className="text-2xl font-bold mb-6 mt-2">No {label}</h4>}
             {filesRequesting && files.length == 0 && <h4 className="text-2xl font-bold mb-6"><Loader/></h4>}
-            {/* { folders.length > 0 &&
-                <div className="container mx-auto p-2">
-                    <h4 className="text-2xl font-bold mb-6">Folders <span className="text-xs">in :{folderPath}</span></h4>
-
-                    {
-                        folder !== folderPath && <div className="mt-4 mb-4">
-                        <Link href="#" onClick={
-                            (e:any) => {
-                                e.preventDefault()
-                                let f = folderPath.split("/")
-                                f.pop()
-                                setFolderPath( f.join("/") )
-                            }
-                        } >{SidebarIcon('left-arrow')}</Link>
-                    </div>
-                    }
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4">
-                        {folders.map((file:any) => {
-                            let folderArr = file.Key.split("/")
-                            let folderName = folderArr[folderArr.length - 2]
-                        return  file.Key !==  folderPath+"/" && <div
-                            key={file.Key} className="relative group"
-                            onClick={ (e:any) => {
-                                e.preventDefault()
-                                let f = file.Key.split("")
-                                f.pop()
-                                setFolderPath( f.join("") )
-                            }}
-                            onDoubleClick={ (e:any) => {
-                                if(confirm('Are you sure you want to delete' + file.Key.split("/").pop() + "? " )) {
-                                    s3DeleteObjectQueryApi(file.Key, (res:any) => {
-                                        onCompleteCallbackBase(folder)
-                                    })
-                                }
-                            }}
-                        >
-                            <p className={"text-center font-semibold " + (file.Key !==  folderPath+"/" ? "cursor-pointer" : "") }>{folderName}</p>
-                        </div>
-                        })}
-                    </div>
-                </div>
-            } */}
 
             {files.length > 0 &&
                 <div className="container mx-auto p-2">

@@ -1,6 +1,6 @@
 "use client"
 
-import FileGallery from "@/components/Uploads/FileGallery";
+import FileFolderGallery from "@/components/Uploads/FileFolderGallery";
 
 const AssetsPage = ()=> {
     return (
@@ -14,7 +14,7 @@ const AssetsPage = ()=> {
                     </div>
                 </div>
                 <div className="w-full">
-                    <FileGallery
+                    <FileFolderGallery
                         options={{
                             folder: ["agent-assets"].join("/"),
                             entityID: "agent-assets",
