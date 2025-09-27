@@ -71,7 +71,7 @@ function FileFolderGallery({options : { folder="", entityID = "", collection = "
             {filesRequesting && files.length == 0 && <h4 className="text-sm font-bold mb-6"><Loader/></h4>}
               {folders.length > 0 &&
                 <div className="container mx-auto p-2">
-                    <h4 className="text-sm font-bold mb-6">Folders <span className="text-xs">in : {folderPath}</span></h4>
+                    <h4 className="text-sm font-bold mb-6">Folders <span className="text-xs">in : {folderPath?.replace(folder," ")}</span></h4>
 
                     {
                         folder !== folderPath && <div className="mt-4 mb-4">
