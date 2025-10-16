@@ -3,7 +3,6 @@
 import { HomeIcon,  TreePine,  Factory, Users, Paperclip, File } from "lucide-react";
 import NavSidebar from "./nav-sidebar";
 import { MenuItem } from "@/types/menu";
-import { canFn } from "../permission";
 
 
 

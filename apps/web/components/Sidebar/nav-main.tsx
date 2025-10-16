@@ -1,5 +1,5 @@
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@workspace/ui/components/collapsible"
-import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem } from "@workspace/ui/components/sidebar"
+import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem, useSidebar } from "@workspace/ui/components/sidebar"
 import { ChevronRight, LucideIcon } from "lucide-react"
 import Link from "next/link"
 import { canFn } from "../permission"
@@ -21,7 +21,10 @@ export default function NavMain({
         }[]
     }[]
 }) {
-
+   const {
+    openMobile,
+    setOpenMobile,
+  } = useSidebar()
     return (
     <SidebarGroup>
       <SidebarGroupContent>
@@ -37,7 +40,9 @@ export default function NavMain({
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton tooltip={item.title}>
                         {item.url && item.icon && <item.icon size={14} className="text-gray-500"/>}
-                          {item.url && item.icon && <Link prefetch={false} href={item.url} className="flex items-center gap-2 w-full text-gray-500"><span className="text-xs">{item.title}</span>
+                          {item.url && item.icon && <Link onClick={
+                            (e:any) => setOpenMobile(!open)
+                          } prefetch={false} href={item.url} className="flex items-center gap-2 w-full text-gray-500"><span className="text-xs">{item.title}</span>
                       </Link>}
                       {!item.url && <>
                               {item.icon && <item.icon size={14} className="text-gray-500"/>}
@@ -51,7 +56,9 @@ export default function NavMain({
                     {item.items?.map((subItem) => (
                       <SidebarMenuSubItem key={subItem.title}>
                         <SidebarMenuSubButton asChild>
-                          <a href={subItem.url}>
+                          <a href={subItem.url} onClick={
+                            (e:any) => setOpenMobile(!open)
+                          }>
                             <span>{subItem.title}</span>
                           </a>
                         </SidebarMenuSubButton>

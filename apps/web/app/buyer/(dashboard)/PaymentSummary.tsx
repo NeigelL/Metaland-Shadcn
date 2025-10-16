@@ -37,7 +37,7 @@ export default function PaymentChartSummary() {
     }
     },[amortizations])
 
-    if(isLoading) return <div className="flex items-center justify-center h-24"><Loader/></div>
+    { isLoading && <div className="w-full justify-center h-24"><Loader/></div>}
 
   return  <>{graphData.length > 0 && graphData[0].value > 0 && <div className="rounded-lg border border-gray-200 shadow">
         <div className="p-3 md:p-4 pb-0">

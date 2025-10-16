@@ -48,8 +48,8 @@ export default function DueDates() {
 
     return (
         <>
-        {isLoading && <div className="flex items-center justify-center h-24"><Loader/></div>}
-        { delayedLots && <Card className="w-full">
+        { isLoading && <div className="w-full justify-center h-24"><Loader/></div>}
+        { delayedLots && <Card className="w-full max-h-96 overflow-scroll">
             <CardHeader>
                 <CardTitle className="text-base sm:text-lg">Due Dates</CardTitle>
             </CardHeader>
