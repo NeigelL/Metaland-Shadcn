@@ -2,5 +2,5 @@
 
 export default function ProjectDetail() {
 
-    return <>asd</>
+    return <></>
 }

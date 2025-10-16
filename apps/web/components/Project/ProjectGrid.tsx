@@ -113,14 +113,14 @@ export default function ProjectGrid({ projects }: { projects: (IProject & { tota
           </CardContent>
 
           <CardFooter className="p-4 pt-0 mt-auto">
-            <Link
+            {/* <Link
               href={["/projects",project._id].join("/")}
               className="w-full text-xs sm:text-sm px-3 py-2 sm:py-2.5 bg-gray-600 text-white rounded hover:bg-blue-600 flex items-center justify-center gap-1.5 transition-colors"
               prefetch={false}
             >
               <Search className="h-3 w-3" />
               View Details
-            </Link>
+            </Link> */}
           </CardFooter>
         </Card>
       ))}

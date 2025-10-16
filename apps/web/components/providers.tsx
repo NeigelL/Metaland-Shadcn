@@ -16,22 +16,22 @@ import { usePathname } from "next/navigation";
 const queryClient = new QueryClient()
 const AdminSidebar = dynamic( () => import("./Sidebar/AdminSidebar"), {
   ssr: false,
-  loading: () => <div className="w-full justify-center h-24"><Loader/></div>
+  loading: () => <div><Loader/></div>
 })
 
 const AgentSidebar = dynamic( () => import("./Sidebar/AgentSidebar"), {
   ssr: false,
-  loading: () => <div className="w-full justify-center h-24"><Loader/></div>
+  loading: () => <div><Loader/></div>
 })
 
 const BuyerAppSidebar = dynamic( () => import("./Sidebar/BuyerSidebar"), {
   ssr: false,
-  loading: () => <div className="w-full justify-center h-24"><Loader/></div>
+  loading: () => <div><Loader/></div>
 })
 
 const RealtySidebar = dynamic( () => import("./Sidebar/RealtySidebar"), {
   ssr: false,
-  loading: () => <div className="w-full justify-center h-24"><Loader/></div>
+  loading: () => <div><Loader/></div>
 })
 
 export function Providers({ children, user, accountType, callbackURL }: { user:any, accountType : string , callbackURL : string, children: React.ReactNode }) {
