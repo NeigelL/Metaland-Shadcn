@@ -41,7 +41,7 @@ export default function NavMain({
                   <SidebarMenuButton tooltip={item.title}>
                         {item.url && item.icon && <item.icon size={14} className="text-gray-500"/>}
                           {item.url && item.icon && <Link onClick={
-                            (e:any) => setOpenMobile(!open)
+                            (e:any) => setOpenMobile(!openMobile)
                           } prefetch={false} href={item.url} className="flex items-center gap-2 w-full text-gray-500"><span className="text-xs">{item.title}</span>
                       </Link>}
                       {!item.url && <>
@@ -57,7 +57,7 @@ export default function NavMain({
                       <SidebarMenuSubItem key={subItem.title}>
                         <SidebarMenuSubButton asChild>
                           <a href={subItem.url} onClick={
-                            (e:any) => setOpenMobile(!open)
+                            (e:any) => setOpenMobile(!openMobile)
                           }>
                             <span>{subItem.title}</span>
                           </a>
