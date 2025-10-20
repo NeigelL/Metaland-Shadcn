@@ -55,6 +55,12 @@ export default function PageClient() {
   if(isLoading)
     return <Loader/>
 
+  if(amortization?.deleted === true) {
+    return <div className="w-full justify-center h-24 flex items-center">
+      <p className="text-red-600 font-semibold">Amortization not found.</p>
+    </div>
+  }
+
   { !amortization && <div className="w-full justify-center h-24"><Loader/></div>}
   const balance = getFormattedBalance(amortization.tcp, amortization.total_paid, amortization.discount_percent_amount);
 

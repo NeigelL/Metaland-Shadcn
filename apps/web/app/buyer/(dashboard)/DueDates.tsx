@@ -29,8 +29,8 @@ export default function DueDates() {
                 project: lot.project_id?.name || "No Project",
             }
         })
-        if(d) {
-        tempDelayedLots.push(...d)
+        if(d && d.length > 0) {
+            tempDelayedLots.push({...d[0], amount: d.reduce((acc:any, curr:any) => acc + parseFloat(curr.amount), 0).toFixed(2)})
         }
     }
     setDelayedLots(tempDelayedLots);

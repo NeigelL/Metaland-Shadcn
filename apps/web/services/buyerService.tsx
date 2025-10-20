@@ -36,7 +36,7 @@ export async function getBuyerLotsDueService(user_id: string, active: boolean = 
     const buyerLots:any[] = []
 
     for(let i = 0; i < amortizations.length; i++) {
-        const delayed:any[] = amortizations[i].summary.filter((item:any) => item.isDelayed)
+        const delayed:any[] = amortizations[i].summary.filter((item:any) => item.isDelayed || item.isWarning )
         if(delayed?.length > 0) {
             buyerLots.push({
                 _id:amortizations[i]._id,
