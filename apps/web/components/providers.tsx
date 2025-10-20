@@ -79,7 +79,7 @@ export function Providers({ children, user, accountType, callbackURL }: { user:a
               { accountType == "buyer" && <BuyerAppSidebar /> }
               { accountType == "realty" && <RealtySidebar /> }
               <SidebarInset className="flex-1 flex flex-col">
-                 <SidebarTrigger />
+                 <SidebarTrigger className="size-9" />
                 {children}
               </SidebarInset>
             </SidebarProvider>

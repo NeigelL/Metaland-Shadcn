@@ -3,23 +3,12 @@ import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, Side
 import { ChevronRight, LucideIcon } from "lucide-react"
 import Link from "next/link"
 import { canFn } from "../permission"
+import { MenuItem } from "@/types/menu"
 
 export default function NavMain({
     items
 } : {
-    items: {
-        title: string,
-        title_show?: boolean,
-        url?: string,
-        icon?: LucideIcon,
-        permissions?: string[] | string,
-        isActive?: boolean,
-        items?: {
-            title: string,
-            url: string,
-            icon?: LucideIcon
-        }[]
-    }[]
+    items: MenuItem[]
 }) {
    const {
     openMobile,
@@ -71,7 +60,6 @@ export default function NavMain({
           ))}
         </SidebarMenu>
       </SidebarGroupContent>
-      
     </SidebarGroup>
     )
 

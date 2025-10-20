@@ -7,9 +7,5 @@ export type MenuItem = {
     icon?: LucideIcon,
     permissions?: string[] | string,
     isActive?: boolean,
-    items?: {
-        title: string,
-        url: string,
-        icon?: LucideIcon
-    }[]
+    items?: MenuItem[]
 }

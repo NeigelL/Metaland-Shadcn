@@ -55,6 +55,12 @@ export default function LoggedInUser() {
                 <span>Profile</span>
               </Link>
             </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link href="/profile" className="flex items-center cursor-pointer" prefetch={false}>
+                <User className="mr-2" size={16} />
+                <span>Switch</span>
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="text-red-500" onClick={handleLogout}>
               <LogOut className="mr-2" size={16} />

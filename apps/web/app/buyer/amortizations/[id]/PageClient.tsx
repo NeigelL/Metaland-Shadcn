@@ -50,7 +50,10 @@ export default function PageClient() {
   const params = useParams()
   const id = params?.id as string
   const amortization_id = id
-  const {data: amortization} = useBuyerAmortizationQuery(amortization_id);
+  const {data: amortization, isLoading} = useBuyerAmortizationQuery(amortization_id);
+
+  if(isLoading)
+    return <Loader/>
 
   { !amortization && <div className="w-full justify-center h-24"><Loader/></div>}
   const balance = getFormattedBalance(amortization.tcp, amortization.total_paid, amortization.discount_percent_amount);
