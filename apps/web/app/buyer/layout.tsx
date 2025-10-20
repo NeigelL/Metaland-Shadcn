@@ -5,6 +5,7 @@ import { Providers } from "@/components/providers"
 import { getServerSession } from "next-auth"
 import nextAuthOptions from "@/lib/nextAuthOptions"
 import { Metadata } from "next"
+import { DocumentFooter } from "@/components/Footer/DocumentFooter"
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -39,6 +40,9 @@ export default async function RootLayout({
         >
           {children}
         </Providers>
+         <div className="w-full p-4">
+            <DocumentFooter/>
+      </div>
       </body>
     </html>
   )

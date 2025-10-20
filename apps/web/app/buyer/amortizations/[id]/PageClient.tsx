@@ -55,7 +55,7 @@ export default function PageClient() {
   if(isLoading)
     return <Loader/>
 
-  if(amortization?.deleted === true) {
+  if(amortization?.active === false) {
     return <div className="w-full justify-center h-24 flex items-center">
       <p className="text-red-600 font-semibold">Amortization not found.</p>
     </div>

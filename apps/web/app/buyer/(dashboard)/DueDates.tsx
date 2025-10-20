@@ -29,8 +29,13 @@ export default function DueDates() {
                 project: lot.project_id?.name || "No Project",
             }
         })
+
         if(d && d.length > 0) {
-            tempDelayedLots.push({...d[0], amount: d.reduce((acc:any, curr:any) => acc + parseFloat(curr.amount), 0).toFixed(2)})
+            tempDelayedLots.push({
+                ...d[0],
+                date: d[0].date,
+                amount: d.reduce((acc:any, curr:any) => acc + parseFloat(curr.amount), 0).toFixed(2)
+            })
         }
     }
     setDelayedLots(tempDelayedLots);
@@ -57,7 +62,6 @@ export default function DueDates() {
                     {/* Mobile Card View: visible on small screens only */}
                     <div className="block lg:hidden space-y-3">
                     {delayedLots.map((lot:any, index:any) => {
-                        console.log(lot)
 
                     const timeAgo =  ` (${getTimeAgoLabel(lot.date)})`;
 
