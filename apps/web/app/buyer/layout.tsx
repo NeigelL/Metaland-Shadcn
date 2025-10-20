@@ -42,7 +42,7 @@ export default async function RootLayout({
         </Providers>
          <div className="w-full p-4">
             <DocumentFooter/>
-      </div>
+        </div>
       </body>
     </html>
   )
