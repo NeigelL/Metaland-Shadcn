@@ -6,6 +6,7 @@ import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next
 import { can, getUserPermissions } from "@/services/permissionService"
 import { getUserService, registerAfterSignInService } from "@/services/userService"
 import { headers } from "next/headers"
+import {  getImpersonatedUser, isImpersonationEnabled } from "./impersonate"
 
 
 
@@ -82,6 +83,20 @@ const nextAuthOptions : AuthOptions = {
         async jwt({token, user, account}) { // returns token to the client
             await dbConnect()
             // console.dir({'jwt callbacks' : 'jwt', token, user, account})
+             if(isImpersonationEnabled(token?.email || "")) {
+                 const impersonatedUser = await getImpersonatedUser()
+                if(impersonatedUser !== null) {
+                    token = {
+                        ...token,
+                        ...impersonatedUser,
+                        user_id: impersonatedUser._id.toString(),
+                        _id: impersonatedUser._id.toString(),
+                        permissions : await getUserPermissions(impersonatedUser._id.toString(), true)
+                    }
+                    return token
+                }
+            }
+
             if(token?.user_id) {
                 return {...token,  permissions : await getUserPermissions(token.user_id.toString())}
             }
@@ -99,7 +114,7 @@ const nextAuthOptions : AuthOptions = {
             return token
         },
         async session({session, token, user}) { // second token is from jwt callback
-            // console.dir({'sessions callbacks' : 'sessions',session, token, user})
+            //console.dir({'sessions callbacks' : 'sessions',session, token, user})
             // console.dir('session')
             return {...session, user_id: token?.user_id, ...token}
         },
@@ -211,6 +226,18 @@ export async function auth(...args :  [GetServerSidePropsContext["req"], GetServ
         let dbUser:any = {}
         if(user) {
             dbUser = await getUserService(user?.user_id+"")
+            if(isImpersonationEnabled(dbUser?.email || "")) {
+                 const impersonatedUser = await getImpersonatedUser()
+                if(impersonatedUser !== null) {
+                    return await {
+                        ...impersonatedUser,
+                        user_id: impersonatedUser._id.toString(),
+                        _id: impersonatedUser._id.toString(),
+                        permissions : await getUserPermissions(dbUser.id.toString(), true)
+                    }
+                }
+                return {...user, dbUser}
+            }
             return await {...user, ...dbUser}
         }
         return user

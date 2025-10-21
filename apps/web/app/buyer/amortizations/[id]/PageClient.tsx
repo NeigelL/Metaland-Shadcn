@@ -44,8 +44,8 @@ export default function PageClient() {
   const {data: projectPath = null, isLoading: isLoadingMap} = useBuyerAmortizationMapQuery(amortization_id);
   const {data: similarLots, isLoading: isLoadingSimilarLots} = useBuyerSimilarAmortizationQuery(amortization_id);
 
-  if(isLoading)
-    return <Loader/>
+  if(!amortization || isLoading)
+    return <div className="w-full justify-center h-24"><Loader/></div>
 
   if(amortization?.active === false) {
     return <div className="w-full justify-center h-24 flex items-center">
@@ -53,7 +53,6 @@ export default function PageClient() {
     </div>
   }
 
-  { !amortization && <div className="w-full justify-center h-24"><Loader/></div>}
   const balance = getFormattedBalance(amortization.tcp, amortization.total_paid, amortization.discount_percent_amount);
 
   const formattedTotalPayment = `₱ ${amortization.total_paid.toLocaleString(undefined, {
