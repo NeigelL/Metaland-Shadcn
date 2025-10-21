@@ -248,28 +248,28 @@ export async function getAgentDueDateAmortization(
         {path: 'team_lead', select: 'first_name middle_name last_name fullName phone'},
         {path: 'team_lead_2', select: 'first_name middle_name last_name fullName phone'},
     ])
-    // .select("payment_ids lot_id block_id project_id summary amount tcp")
+    .select("payment_ids lot_id block_id project_id summary amount tcp buyer_ids agent_id agent_id_2 team_lead team_lead_2 lookup_summary")
 
-    const agentLots:any[] = []
-    for(let i = 0; i < amortizations.length; i++) {
-        const delayed = amortizations[i].summary.filter((item:any) => item.isDelayed).map((item:any) => item)
-        if(delayed?.length > 0 && amortizations[i]) {
-            agentLots.push({
-                _id: amortizations[i]._id,
-                buyer_ids: amortizations[i].buyer_ids,
-                project_id: amortizations[i].project_id,
-                block_id: amortizations[i].block_id,
-                lot_id: amortizations[i].lot_id,
-                agent_id: amortizations[i].agent_id,
-                agent_id_2: amortizations[i].agent_id_2,
-                team_lead: amortizations[i].team_lead,
-                team_lead_2: amortizations[i].team_lead_2,
-                delayed: delayed,
-            })
-        }
-    }
+    // const agentLots:any[] = []
+    // for(let i = 0; i < amortizations.length; i++) {
+    //     const delayed = amortizations[i].summary.filter((item:any) => item.isDelayed).map((item:any) => item)
+    //     if(delayed?.length > 0 && amortizations[i]) {
+    //         agentLots.push({
+    //             _id: amortizations[i]._id,
+    //             buyer_ids: amortizations[i].buyer_ids,
+    //             project_id: amortizations[i].project_id,
+    //             block_id: amortizations[i].block_id,
+    //             lot_id: amortizations[i].lot_id,
+    //             agent_id: amortizations[i].agent_id,
+    //             agent_id_2: amortizations[i].agent_id_2,
+    //             team_lead: amortizations[i].team_lead,
+    //             team_lead_2: amortizations[i].team_lead_2,
+    //             delayed: delayed,
+    //         })
+    //     }
+    // }
 
-    return agentLots
+    return amortizations
 }
 
 

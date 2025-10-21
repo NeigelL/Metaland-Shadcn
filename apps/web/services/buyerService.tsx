@@ -33,27 +33,15 @@ export async function getBuyerLotsService(user_id: string, active: boolean = tru
 
 export async function getBuyerLotsDueService(user_id: string, active: boolean = true) {
     await dbConnect()
-    const amortizations:any = await getBuyerLotsService(user_id, active)
-    const buyerLots:any[] = []
-
-    for(let i = 0; i < amortizations.length; i++) {
-        const delayed:any[] = amortizations[i].summary.filter((item:any) => item.isDelayed || item.isWarning )
-        if(delayed?.length > 0) {
-            buyerLots.push({
-                _id:amortizations[i]._id,
-                 project_id: amortizations[i].project_id,
-                block_id: amortizations[i].block_id,
-                lot_id: amortizations[i].lot_id,
-                agent_id: amortizations[i].agent_id,
-                agent_id_2: amortizations[i].agent_id_2,
-                team_lead: amortizations[i].team_lead,
-                team_lead_2: amortizations[i].team_lead_2,
-                delayed: delayed,
-            })
-        }
-    }
-
-    return buyerLots
+    await Project.findOne()
+    await Block.findOne()
+    await Lot.findOne()
+    return await Amortization.find({buyer_ids: user_id, active})
+    .populate([
+        {path:'project_id', select: "_id name"},
+        {path:'block_id', select: "_id name"},
+        {path:'lot_id', select: "_id name"}
+    ]).select("_id project_id block_id lot_id lookup_summary reference_code")
 }
 
 export async function getAmortizationService(amortization_id: String, buyer_id: String, populate :any = [

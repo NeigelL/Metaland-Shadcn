@@ -17,25 +17,18 @@ export default function DueDates() {
   const router = useRouter();
 
   useEffect(() => {
-    let tempDelayedLots:any = [];
-    for(let i = 0; i < lotsData?.length; i++) {
-        let lot:any = lotsData[i];
-        let d:any = lot?.delayed.map((item:any) =>{
-            return {
-                ...lot,
-                _id: lot._id,
-                lot: lot.lot_id?.name || "No Lot",
-                block: lot.block_id?.name || "No Block",
-                date: item.due_date,
-                amount: item.amount.toFixed(2),
-                project: lot.project_id?.name || "No Project",
+    const lots =  lotsData?.map(
+            (lot:any) => {
+                return {
+                    ...lot,
+                    lookup_summary: lot?.lookup_summary,
+                    project: lot?.project_id,
+                    block: lot?.block_id,
+                    lot: lot?.lot_id
+                }
             }
-        })
-        if(d) {
-            tempDelayedLots.push(...d)
-        }
-    }
-    setDelayedLots(tempDelayedLots);
+        )
+    setDelayedLots(lots)
   },[isSuccess])
 
   const getTimeAgoLabel = (date: string) => {
@@ -60,8 +53,6 @@ export default function DueDates() {
                     <div className="block lg:hidden space-y-3">
                     {delayedLots.map((lot:any, index:any) => {
 
-                    const timeAgo =  ` (${getTimeAgoLabel(lot.date)})`;
-
                         return (
                             <Card
                                 key={index}
@@ -75,14 +66,14 @@ export default function DueDates() {
                                 <div className="flex justify-between items-center mb-1">
                                     <span className="font-semibold text-sm truncate">{[lot.project].join(" ")}</span>
                                     <span className={`text-sm font-medium tabular-nums text-destructive`}>
-                                        ₱{parseFloat(lot.amount).toLocaleString()}
+                                        ₱{parseFloat(lot.lookup_summary?.overdue_amount).toLocaleString()}
                                     </span>
                                 </div>
                                 <div className="text-sm text-muted-foreground truncate">{lot?.buyer_ids?.map( (buyer:any) => buyer?.fullName).join(" ")}</div>
-                                <div className="text-sm text-muted-foreground truncate">{[lot.block ,lot.lot].join(" ")}</div>
+                                <div className="text-sm text-muted-foreground truncate">{[lot.block.name ,lot.lot.name].join(" ")}</div>
                                 <div className="text-sm flex items-center text-muted-foreground">
-                                    <span>{formatDateClient(lot.date)}</span>
-                                    {<span className="ml-2 text-xs italic">{timeAgo}</span>}
+                                    <span>{formatDateClient(lot.lookup_summary?.next_payment_date)}</span>
+                                    {<span className="ml-2 text-xs italic">{lot.lookup_summary?.overdue_months} months</span>}
                                 </div>
                             </Card>
                         );
@@ -115,7 +106,7 @@ export default function DueDates() {
                                     }
                                 }
                                 >
-                                    <TableCell className="whitespace-nowrap text-xs sm:text-sm">{[lot.project, lot.block ,lot.lot].join(" ")}</TableCell>
+                                    <TableCell className="whitespace-nowrap text-xs sm:text-sm">{[lot.project.name, lot.block.name, lot.lot.name].join(" ")}</TableCell>
                                     <TableCell className="whitespace-nowrap text-xs sm:text-sm">{lot?.buyer_ids?.map( (buyer:any) => buyer?.fullName).join(" ")}</TableCell>
                                     <TableCell className="text-xs sm:text-sm truncate">
                                         { lot?.agent_id && user_id !== lot?.agent_id?._id && [lot?.agent_id?.fullName, lot?.agent_id?.phone].join(" ") }
@@ -125,15 +116,15 @@ export default function DueDates() {
                                     </TableCell>
                                     <TableCell className="text-xs sm:text-sm">
                                         <div className="flex flex-col sm:flex-row sm:items-center">
-                                        <span className="truncate">{ formatDateClient(lot.date)}</span>
-                                        <span className="text-[10px] text-muted-foreground sm:ml-2">{timeAgo}</span>
+                                        <span className="truncate">{ formatDateClient(lot.lookup_summary?.next_payment_date)}</span>
+                                        <span className="text-[10px] text-muted-foreground sm:ml-2">{lot.lookup_summary?.overdue_months} months</span>
                                         </div>
                                     </TableCell>
                                     <TableCell className="text-right pr-4 text-xs sm:text-sm">
                                         <div className="flex justify-end items-center">
                                         <span className={`mr-1 text-destructive`}>₱</span>
                                         <span className={`tabular-nums  text-destructive`}>
-                                            {parseFloat(lot.amount).toLocaleString()}
+                                            {parseFloat(lot.lookup_summary?.overdue_amount).toLocaleString()}
                                         </span>
                                         </div>
                                     </TableCell>
@@ -146,7 +137,7 @@ export default function DueDates() {
                 </>
                 ) : (
                 <div className="flex h-24 items-center justify-center rounded-md border border-dashed">
-                    <p className="text-sm text-muted-foreground">Buyer are updated with payments</p>
+                    <p className="text-sm text-muted-foreground">Buyers are updated with payments</p>
                 </div>
                 )}
             </CardContent>
