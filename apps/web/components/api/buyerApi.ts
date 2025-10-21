@@ -59,3 +59,22 @@ export function useBuyerAmortizationQuery(id:string) {
     refetchOnReconnect: true,
   });
 }
+
+export function useBuyerAmortizationMapQuery(id:string) {
+  return useQuery({
+    queryKey: ['buyer-amortizations-map-'+id],
+    queryFn: async() => await getBuyerAmortizationMapQueryApi(id),
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+  });
+}
+
+export async function getBuyerAmortizationMapQueryApi(id:string) {
+  try {
+    const response = await axios.get('/api/amortization-map/' + id);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching amortizations maps:', error);
+    throw error;
+  }
+}

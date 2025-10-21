@@ -4,6 +4,7 @@ import Amortization from "@/models/amortizations"
 import Block from "@/models/blocks"
 import Lot from "@/models/lots"
 import Payment from "@/models/payments"
+import Polygon from "@/models/polygons"
 import Project from "@/models/projects"
 import Realty from "@/models/realties"
 import ReceiverAccount from "@/models/receiver_accounts"
@@ -88,4 +89,31 @@ export async function getAmortizationService(amortization_id: String, buyer_id: 
         options: {sort: { display_sort: 1}}
     })
     return amortization
+}
+
+export async function getAmortizationLotMapService(amortization_id: String) {
+    await dbConnect()
+
+    const amortization = await Amortization.findById(amortization_id).select("project_id")
+    const project_id:any = amortization?.project_id
+    const project = await Project.findById(project_id).select("project_map_id")
+
+    const query = project?.project_map_id ? {
+        project_id: project_id,
+        project_map_id: project?.project_map_id || null
+    } : {
+        project_id: project_id
+    }
+
+    const polygons = await Polygon.find(query).select("-createdAt -updatedAt")
+
+    let groupPolygon : any = {
+        projects: polygons.filter(p => p.type === 'project'),
+        blocks: polygons.filter(p => p.type === 'block'),
+        lots: polygons.filter(p => p.type === 'lot'),
+        others: polygons.filter(p => !['lot','block','project'].includes(p.type)),
+        misc: polygons.filter(p => p.type === 'misc'),
+    }
+
+    return groupPolygon
 }

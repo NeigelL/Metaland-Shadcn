@@ -3,9 +3,11 @@
 import { useParams } from "next/navigation";
 import { AmortizationTable } from "@/components/AmortizationSheetPage";
 import { Tabs, TabsTrigger, TabsList, TabsContent } from "@workspace/ui/components/tabs";
-import { useBuyerAmortizationQuery } from "@/components/api/buyerApi";
+import { useBuyerAmortizationMapQuery, useBuyerAmortizationQuery } from "@/components/api/buyerApi";
 import Loader from "@workspace/ui/components/loader";
 import { formatDecimal } from "@workspace/ui/lib/utils";
+import LotMap from "@/components/GoogleMap/LotMap";
+import { useState } from "react";
 
 
 // import { SOAStatement } from "@/models/SOA";
@@ -50,7 +52,10 @@ export default function PageClient() {
   const params = useParams()
   const id = params?.id as string
   const amortization_id = id
+  const [showMap, setShowMap] = useState(false);
   const {data: amortization, isLoading} = useBuyerAmortizationQuery(amortization_id);
+  const {data: projectPath = null, isLoading: isLoadingMap} = useBuyerAmortizationMapQuery(amortization_id);
+  
 
   if(isLoading)
     return <Loader/>
@@ -114,7 +119,7 @@ export default function PageClient() {
       </div>
 
         {/* Info Table - Responsive Fix */}
-        <div className="w-full overflow-x-auto border rounded-xl ">
+      <div className="w-full overflow-x-auto border rounded-xl ">
         <div className="p-4 bg-gray-100 border-b border-gray-200">
           <h2 className="text-base sm:text-lg justify-center item-center">BUYER :
             <span className="font-semibold text-gray-800">
@@ -140,6 +145,21 @@ export default function PageClient() {
               ))}
             </div>
         </div>
+        
+        <div className="w-full overflow-x-auto border rounded-xl">
+              <p
+                onClick={
+                  (e:any) => setShowMap(!showMap)
+                }
+               className="p-4 bg-gray-100 border-b border-gray-200 text-sm sm:text-base font-semibold cursor-pointer" >
+                Show Map
+              </p>
+              {!isLoadingMap && showMap && <LotMap
+                projectPath={projectPath}
+                lot_id={amortization?.lot_id?._id}
+              />}
+        </div>
+
         {/* <CompactTaggingCard
         lotId={String(lotId)}
         currentUser=""
