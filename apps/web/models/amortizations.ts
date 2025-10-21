@@ -2,14 +2,17 @@ import { Schema,models,model, Model } from "mongoose"
 import referenceSchema, { preValidateReferenceCode } from "./base/reference_code";
 import createdSchema, { preValidateCreatedBy } from "./base/created_by";
 import updatedSchema, { preUpdateOneUpdatedBy } from "./base/updated_by";
+import { IAmortization } from "./interfaces/amortizations";
 import deletedSchema, { preUpdateOneDeletedBy } from "./base/deleted_by";
 import { ITagHistoryAction, ITagHistoryEntry } from "./interfaces/tag_histories";
 import { IDescription } from "./interfaces/descriptions";
 import Lot from "./lots";
 import { amortizationTransferLotHistory } from "./historiesModel";
 import { auth } from "@/lib/nextAuthOptions";
-import { IAmortization } from "./interfaces/amortizations";
-import { COMMISSION_ADMIN_IDS, DEFAULT_COMPANY } from "@/serverConstant";
+import { can } from "@/services/permissionService";
+import Payment from "./payments";
+import { DEFAULT_COMPANY } from "@/serverConstant";
+import { EnumCommissionType } from "@/types/commission";
 
 const tagHistorySchema = new Schema<ITagHistoryEntry>({
     action: {type: String, default: ITagHistoryAction.ADDED},
@@ -65,14 +68,12 @@ const amortSchema = new Schema<IAmortization>({
     reservation_date : {type: Date, default: null },
     reservation_paid : {type: Boolean, default: false},
     lot_condition: {type: String, default: ""},
-    balance: {type: Number, default: 0},
+    balance: {type: Number, default: 0, get: (v: number) => Math.round(v * 100) / 100 },
     monthly: {type: Number, default: 0},
     equityMonthly: {type: Number, default: 0},
     commission_sharing: [{
         entity_id: {type: Schema.Types.ObjectId, ref: "User", default: null},
-        type: {type: String, default: null, enum: [
-            "team_lead", "team_lead_2", "realty_id", "agent_id", "agent_id_2", "broker_id"
-        ]},
+        type: {type: String, default: null, enum: EnumCommissionType},
         percent: {type: Number, default: 0},
     }],
     overall_commission_percent:  {type: Number, default: 0} ,
@@ -95,10 +96,21 @@ const amortSchema = new Schema<IAmortization>({
     tagHistory: [tagHistorySchema],
     description: {type: String, default: ""},
     descriptionHistory: [descriptionSchema],
+    lookup_summary: {
+        last_payment_date: {type: Date, default: null},
+        last_payment_amount: {type: Number, default: 0},
+        next_payment_date: {type: Date, default: null},
+        next_payment_amount: {type: Number, default: 0},
+        overdue_amount: {type: Number, default: 0},
+        overdue_months: {type: Number, default: 0},
+        last_notified: {type: Date, default: null},
+        status: {type: String, default: "ON_TRACK"} // ON_TRACK, DUE_SOON, OVERDUE, PAID
+    }
 },{
     timestamps : true,
     toJSON: { virtuals: true },
 });
+
 
 preValidateReferenceCode(amortSchema,"MA","amortizations")
 preValidateCreatedBy(amortSchema)
@@ -145,7 +157,7 @@ amortSchema.pre('updateOne', async function(next) { // updateOne calculate perce
 
                 let oldData = await this.model.findOne(this.getQuery())
                 let user = await auth()
-                if(oldData?.commission_sharing_locked && !COMMISSION_ADMIN_IDS.includes(user?.user_id) ) { // avoid updating this fields once the commission is locked
+                if(oldData?.commission_sharing_locked && !await can("commissions:locked") ) { // avoid updating this fields once the commission is locked
                     ["commission_sharing_locked", "commission_sharing", "realty_id","team_lead", "team_lead_2", "agent_id", "agent_id_2"].forEach((field) => {
                         delete update.$set[field]
                     })
@@ -165,6 +177,7 @@ amortSchema.pre('updateOne', async function(next) { // updateOne calculate perce
 
 amortSchema.post("updateOne", async function(result:any) {
     if(result.modifiedCount > 0 ) {
+        await Payment.findOne()
         const updatedDoc = await this.model.findOne(this.getQuery()).populate("payment_ids")
         await updatedDoc.assessAmortization()
         await updatedDoc.save()
@@ -199,8 +212,70 @@ amortSchema.pre("updateOne", async function(next) { // process transfer
     next()
 })
 
+amortSchema.methods.updateLookupSummary = async function(days:number = 31) { // payment_ids needs to be populated
+    try {
+        if(this.payment_ids?.length == 0) return // no payments yet
+        await this.populate("payment_ids")
+        this._skipMiddleware = true
+        const payments = this.payment_ids || [];
+        const schedules = [...this.monthly_equities, ...this.monthly_schedules];
+        const last_payment = payments.length > 0 ? payments[payments.length - 1] : null;
+        const paidAmount = payments.reduce((acc:number, p:any) => acc + (p.amount || 0), 0);
+
+        let next_schedule = schedules.find(s => {
+            return paidAmount < (s.completed_percent / 100) * (this.tcp - this.discount_percent_amount);
+        });
+        let overdue_months = 0;
+        let overdue_amount = 0;
+        let today = new Date();
+
+        schedules.forEach(s => {
+            if (s.due_date && new Date(s.due_date) < today) {
+                if (paidAmount < (s.completed_percent / 100) * (this.tcp - this.discount_percent_amount)) {
+                    overdue_months += 1;
+                    overdue_amount += s.amount || 0;
+                }
+            }
+        });
+
+        let status = "ON_TRACK";
+        if (overdue_months == 1 && next_schedule && next_schedule.due_date && new Date(next_schedule.due_date) < new Date(today.getFullYear(), today.getMonth(), today.getDate() + days)) {
+            status = "DUE_SOON";
+        } else if (overdue_months > 1) {
+            status = "OVERDUE";
+        }  else if (this.total_paid_percent >= 100) {
+            status = "PAID";
+        }
+
+        this.lookup_summary = {
+            last_payment_date: last_payment?.date_paid || null,
+            last_payment_amount: last_payment?.amount || 0,
+            next_payment_date: next_schedule?.due_date || null,
+            next_payment_amount: next_schedule?.amount || 0,
+            overdue_amount,
+            overdue_months,
+            status
+        };
+        this.markModified('lookup_summary')
+        this.updateNotifiedDate(new Date())
+        await this.save()
+    } catch(error:any) {
+        console.log("Amortization updateLookupSummary Schema error: " + error.toString())
+    }
+}
+
+amortSchema.methods.updateNotifiedDate = async function(date: Date) {
+    try {
+        this.lookup_summary = this.lookup_summary || {}
+        this.lookup_summary.last_notified = date
+    } catch(error:any) {
+        console.log("Amortization updateNotifiedDate Schema error: " + error.toString())
+    }
+}
+
 amortSchema.methods.assessAmortization = async function() { // payment_ids needs to be populated
     try {
+        this._skipMiddleware = true
         let total_paid = 0
         if(this?.payment_ids) {
             total_paid = this.payment_ids.reduce((p:any, currentValue:any) => {
@@ -209,7 +284,7 @@ amortSchema.methods.assessAmortization = async function() { // payment_ids needs
         }
         this.total_paid = total_paid
         if(total_paid && total_paid > 0) {
-            this.total_paid_percent = (total_paid / this.tcp) * 100
+            this.total_paid_percent = (total_paid / (this.tcp - this.discount_percent_amount) ) * 100
         }
 
         //fix commission_sharing structure
@@ -233,11 +308,12 @@ amortSchema.methods.assessAmortization = async function() { // payment_ids needs
 
         let sum_percent = this.reservation > 0 ? ( this.reservation / this.tcp) * 100 : 0
         let balance = this.tcp - this.discount_percent_amount - this.reservation
+        let clean_tcp = this.tcp - this.discount_percent_amount
             for(let i = 0; i < this.monthly_equities.length; i++) {
                 let schedule = this.monthly_equities[i]
 
                 if(schedule.amount && schedule.amount > 0) {
-                    let completed_percent = (schedule.amount / this.tcp) * 100
+                    let completed_percent = (schedule.amount / clean_tcp) * 100
                     sum_percent += completed_percent
                     this.monthly_equities[i].completed_percent = sum_percent
                     this.monthly_equities[i].running_balance = balance - schedule.amount
@@ -249,7 +325,7 @@ amortSchema.methods.assessAmortization = async function() { // payment_ids needs
                 let schedule = this.monthly_schedules[i]
 
                 if(schedule.amount && schedule.amount > 0) {
-                    let completed_percent = (schedule.amount / this.tcp) * 100
+                    let completed_percent = (schedule.amount / clean_tcp) * 100
                     sum_percent += completed_percent
                     this.monthly_schedules[i].completed_percent = sum_percent
                     this.monthly_schedules[i].running_balance = balance - schedule.amount
@@ -443,6 +519,14 @@ amortSchema.index({broker_id: 1})
 amortSchema.index({buyer_ids: 1})
 amortSchema.index({payment_ids: 1})
 amortSchema.index({active: 1})
+amortSchema.index({ "lookup_summary.last_payment_date": 1 })
+amortSchema.index({ "lookup_summary.last_payment_amount": 1 })
+amortSchema.index({ "lookup_summary.next_payment_date": 1 })
+amortSchema.index({ "lookup_summary.next_payment_amount": 1 })
+amortSchema.index({ "lookup_summary.overdue_amount": 1 })
+amortSchema.index({ "lookup_summary.overdue_months": 1 })
+amortSchema.index({ "lookup_summary.last_notified": 1 })
+amortSchema.index({ "lookup_summary.status": 1 })
 // amortSchema.index({reference_code: 1})
 
 

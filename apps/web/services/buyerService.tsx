@@ -117,3 +117,17 @@ export async function getAmortizationLotMapService(amortization_id: String) {
 
     return groupPolygon
 }
+
+export async function getSimilarAmortizationService(amortization_id: String, buyer_id: String) {
+    await dbConnect()
+
+    const amortization = await Amortization.findById(amortization_id).select("project_id")
+    const similarAmortizations = await Amortization.find({
+        _id: { $ne: amortization_id },
+        project_id: amortization?.project_id,
+        active: true,
+        buyer_ids: { $exists: true, $in: [buyer_id] }
+    }).select("_id block_id lot_id lookup_summary")
+
+    return similarAmortizations
+}

@@ -1,7 +1,8 @@
 "use client";
 
-import { GoogleMap, Polygon, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, Marker, Polygon, useJsApiLoader } from "@react-google-maps/api";
 import { useEffect,  useState } from "react";
+import { Label } from "recharts";
 
 type LatLng = google.maps.LatLngLiteral;
 
@@ -10,6 +11,7 @@ type LotMapProps = {
   height?: string;
   projectPath: any;
   lot_id: string;
+  similarLots?: any[];
 };
 
 export default function LotMap({
@@ -17,6 +19,7 @@ export default function LotMap({
   projectPath,
   height = "60vh",
   lot_id,
+  similarLots,
 }: LotMapProps) {
 
     const [project, setProject] = useState<any>( []);
@@ -41,6 +44,12 @@ export default function LotMap({
         setBounds(b);
     }
 
+    const getCenterCoordinates = ( coordinates: any) : { lat: number, lng: number } => {
+      const lat = coordinates.reduce((sum: number, coord: any) => sum + coord.lat, 0) / coordinates.length
+      const lng = coordinates.reduce((sum: number, coord: any) => sum + coord.lng, 0) / coordinates.length
+      return { lat, lng }
+    }
+
       useEffect(() => {
         const ml = projectPath.lots.filter(
           (lot: any) => lot.lot_id === lot_id
@@ -51,8 +60,8 @@ export default function LotMap({
         setLots(projectPath.lots || []);
         setOthers(projectPath.others || []);
         setMisc(projectPath.misc || []);
-        setMyLots(ml[0]?._id || null);
-        setCenter(ml.coordinates)
+        setMyLots(ml[0] || null);
+        setCenter(ml[0]?.centerCoordinates || { lat: 0, lng: 0 });
       }, [isLoaded, projectPath]);
 
 
@@ -106,21 +115,32 @@ export default function LotMap({
                 )
               )
         }
+        {myLots && (
+            <Marker
+            position={getCenterCoordinates(myLots.coordinates)}
+            animation={google.maps.Animation.BOUNCE}
+            />
+        )}
         {
-            [...blocks, ...others, ...blocks, ...lots, ...misc].map( (polygon:any , key:any) => (
-                <Polygon
-                    key={key}
-                    paths={polygon.coordinates}
-                    options={{
-                      fillColor: myLots && myLots === polygon._id ? "#cf1627" : "transparent",
-                      strokeColor: "black",
-                      fillOpacity: myLots && myLots === polygon._id ? 1 : 0.5,
-                      strokeOpacity: 0.8,
-                      strokeWeight: 0.5,
-                      clickable: false,
-                    }}
-                  />
-            ))
+            [...blocks, ...others, ...blocks, ...lots, ...misc].map(
+              (polygon:any , key:any) => {
+                const isSimilarLot = similarLots?.some(lot => lot.lot_id === polygon.lot_id);
+                const isOverdue = polygon?.lot_id?.amortization_id?.lookup_summary?.status == "OVERDUE"
+                const fillColor = myLots && myLots._id === polygon._id || isSimilarLot ? (isOverdue ? "#000" : "#cf1627") : "transparent";
+                  return <Polygon
+                      key={key}
+                      paths={polygon.coordinates}
+                      options={{
+                        fillColor: fillColor,
+                        strokeColor: "black",
+                        fillOpacity: myLots && myLots._id === polygon._id ? 1 : 0.5,
+                        strokeOpacity: 0.8,
+                        strokeWeight: 0.5,
+                        clickable: false,
+                      }}
+                    />
+                }
+            )
         }
         {/* <Polygon
           path={lotPath}

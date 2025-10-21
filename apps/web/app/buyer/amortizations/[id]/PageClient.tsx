@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { AmortizationTable } from "@/components/AmortizationSheetPage";
 import { Tabs, TabsTrigger, TabsList, TabsContent } from "@workspace/ui/components/tabs";
-import { useBuyerAmortizationMapQuery, useBuyerAmortizationQuery } from "@/components/api/buyerApi";
+import { useBuyerAmortizationMapQuery, useBuyerAmortizationQuery, useBuyerSimilarAmortizationQuery } from "@/components/api/buyerApi";
 import Loader from "@workspace/ui/components/loader";
 import { formatDecimal } from "@workspace/ui/lib/utils";
 import LotMap from "@/components/GoogleMap/LotMap";
@@ -27,19 +27,6 @@ interface Schedule {
   mode: string;
 }
 
-const calculateTotalAmountPaid = (schedules: Schedule[]) => {
-  let totalPaid = 0;
-  schedules.forEach((schedule) => {
-    if (!schedule.amountPaid) return;
-    const amountStr = schedule.amountPaid.replace("₱", "").replace(/,/g, "").trim();
-    const amount = parseFloat(amountStr);
-    if (!isNaN(amount)) {
-      totalPaid += amount;
-    }
-  });
-  return totalPaid;
-};
-
 const getFormattedBalance = (tcp: number, payment: number, discount: number): string => {
   const balance = tcp - (payment + discount);
   return `₱ ${balance.toLocaleString(undefined, {
@@ -55,7 +42,7 @@ export default function PageClient() {
   const [showMap, setShowMap] = useState(false);
   const {data: amortization, isLoading} = useBuyerAmortizationQuery(amortization_id);
   const {data: projectPath = null, isLoading: isLoadingMap} = useBuyerAmortizationMapQuery(amortization_id);
-  
+  const {data: similarLots, isLoading: isLoadingSimilarLots} = useBuyerSimilarAmortizationQuery(amortization_id);
 
   if(isLoading)
     return <Loader/>
@@ -157,6 +144,7 @@ export default function PageClient() {
               {!isLoadingMap && showMap && <LotMap
                 projectPath={projectPath}
                 lot_id={amortization?.lot_id?._id}
+                similarLots={similarLots}
               />}
         </div>
 

@@ -78,3 +78,22 @@ export async function getBuyerAmortizationMapQueryApi(id:string) {
     throw error;
   }
 }
+
+export function useBuyerSimilarAmortizationQuery(id:string) {
+  return useQuery({
+    queryKey: ['buyer-amortizations-similar-'+id],
+    queryFn: async() => await getBuyerSimilarAmortizationQueryApi(id),
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
+  });
+}
+
+export async function getBuyerSimilarAmortizationQueryApi(id:string) {
+  try {
+    const response = await axios.get('/api/amortization-similar/' + id);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching getBuyerSimilarAmortizationQueryApi:', error);
+    throw error;
+  }
+}

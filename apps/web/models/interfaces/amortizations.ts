@@ -65,5 +65,15 @@ export interface IAmortization extends Document {
     tags: String[]
     tagHistory: ITagHistoryEntry[]
     description: String | null,
-    descriptionHistory: IDescription[]
+    descriptionHistory: IDescription[],
+    lookup_summary: {
+        last_payment_date: Date | null,
+        last_payment_amount: Number,
+        next_payment_date: Date | null,
+        next_payment_amount: Number,
+        overdue_amount: Number,
+        overdue_months: Number,
+        last_notified: Date | null,
+        status: String // ON_TRACK, DUE_SOON, OVERDUE, PAID
+    },
 }
