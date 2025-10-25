@@ -220,7 +220,7 @@ amortSchema.methods.updateLookupSummary = async function(days:number = 31) { // 
         const payments = this.payment_ids || [];
         const schedules = [...this.monthly_equities, ...this.monthly_schedules];
         const last_payment = payments.length > 0 ? payments[payments.length - 1] : null;
-        const paidAmount = payments.reduce((acc:number, p:any) => acc + (p.amount || 0), 0);
+        const paidAmount = 100 + payments.reduce((acc:number, p:any) => acc + (p.amount || 0), 0);
 
         let next_schedule = schedules.find(s => {
             return paidAmount < (s.completed_percent / 100) * (this.tcp - this.discount_percent_amount);

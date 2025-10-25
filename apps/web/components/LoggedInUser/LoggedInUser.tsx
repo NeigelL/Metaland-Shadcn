@@ -77,6 +77,7 @@ export default function LoggedInUser() {
                         alert("Failed to set impersonation cookie.")
                         return
                       }
+                      window.location.href = '/'
                     }
                   }}>
                     <User className="mr-2" size={16} />
