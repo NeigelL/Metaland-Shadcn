@@ -4,7 +4,7 @@ import dbConnect from "@/lib/mongodb";
 import { sendOTPLogin } from "@/lib/mailer";
 import VerificationToken from "@/models/verification_token";
 
-const OTP_TTL_MINUTES = 10;
+const OTP_TTL_MINUTES = 5;
 
 function generateCode() {
   // 6-digit numeric, no leading 0 issues:
