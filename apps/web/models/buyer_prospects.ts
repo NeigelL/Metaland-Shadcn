@@ -56,7 +56,9 @@ const buyerProspectSchema = new Schema<IBuyerProspect>({
         virtuals: true
     }
 });
-buyerProspectSchema.plugin(changelogPlugin)
+buyerProspectSchema.plugin(changelogPlugin,{
+    "collection_name": "buyer_prospects"
+})
 
 preValidateReferenceCode(buyerProspectSchema,"PRO","buyer_prospects")
 

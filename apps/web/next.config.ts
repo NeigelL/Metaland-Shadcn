@@ -19,73 +19,26 @@ const nextConfig = {
         port: '',
         pathname: '/**/**',
       }, {
-          protocol: 'https',
-          hostname: 'metaland-socket.onrender.com',
-          port: '',
-          pathname: '/**/**',
-        }
-      
+        protocol: 'https',
+        hostname: 'metaland-socket.onrender.com',
+        port: '',
+        pathname: '/**/**',
+      }
     ]
   },
-    // async rewrites() {
-
-    //   const tenant = process.env.NEXT_TENANT;
-
-    //   const tenants:any = {
-    //     'buyer': {
-    //       destination: '/buyer',
-    //       source: '/buyer/:path*',
-    //       value: process.env.NEXT_BUYER_DOMAIN || 'buyer.metaland.properties',
-    //     },
-    //     'admin': {
-    //       destination: '/admin',
-    //       source: '/admin/:path*',
-    //       value: process.env.NEXT_ADMIN_DOMAIN || 'app.metaland.properties',
-    //     },
-    //     'agent': {
-    //       destination: '/agent',
-    //       source: '/agent/:path*',
-    //       value: process.env.NEXT_AGENT_DOMAIN || 'agent.metaland.properties',
-    //     }
-    //   }
-
-    //   let finalRewrites:any = [];
-
-    //   Object.keys(tenants).forEach((key) => {
-    //     const tenantConfig = tenants[key];
-    //     finalRewrites.push({
-    //       source: tenantConfig.source,
-    //       has: [
-    //         {
-    //           type: 'host',
-    //           value: tenantConfig.value,
-    //         },
-    //       ],
-    //       destination: tenantConfig.destination,
-    //     });
-    //     finalRewrites.push({
-    //       source: '/:path*',
-    //       has: [
-    //         {
-    //           type: 'host',
-    //           value: tenantConfig.value,
-    //         },
-    //       ],
-    //       destination: `${tenantConfig.destination}/:path*`,
-    //     });
-    //   })
-    //   const dynamicRewrites = tenant ?  [
-    //     {
-    //       source: '/:path*',
-    //       destination: `/${tenant}/:path*`,
-    //     }
-    //   ] : []
-
-    //   return [
-    //       ...finalRewrites,
-    //       ...dynamicRewrites
-    //     ]
-    // }
+  async headers() {
+    return [
+      {
+        source: "/api/:path*",
+        headers: [
+          { key: "Access-Control-Allow-Credentials", value: "true" },
+          { key: "Access-Control-Allow-Origin", value: process.env.NEXT_ADMIN_DOMAIN || process.env.NEXT_REALTY_DOMAIN || process.env.NEXT_AUTH_URL || process.env.NEXT_BUYER_DOMAIN || process.env.NEXT_AGENT_DOMAIN || "" },
+          { key: "Access-Control-Allow-Methods", value: "GET,OPTIONS,PATCH,DELETE,POST,PUT" },
+          { key: "Access-Control-Allow-Headers", value: "X-Requested-With, Content-Type, Authorization" },
+        ],
+      },
+    ];
+  },
 }
 
 export default nextConfig

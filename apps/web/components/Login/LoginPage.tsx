@@ -10,6 +10,8 @@ import {
 import { signIn} from "next-auth/react";
 import { cn } from "@workspace/ui/lib/utils";
 import { useSearchParams } from "next/navigation";
+import SignInEmail from "./SignInEmail";
+import { useState } from "react";
 
 
 interface LoginPageProps {
@@ -22,6 +24,7 @@ export function LoginPage({ className, url = "https://"+process.env.NEXT_BUYER_D
   const searchParams = useSearchParams()
   const error = searchParams.get('error')
   const msg = searchParams.get('msg')
+  const [loginType, setLoginType] = useState<'google' | 'email'>('google');
   
   const handleLogin = async() => {
     await signIn('google',{
@@ -62,22 +65,37 @@ export function LoginPage({ className, url = "https://"+process.env.NEXT_BUYER_D
         <Card className={cn("w-full max-w-sm md:max-w-lg p-4 md:p-6", className)}>
           <CardHeader className="text-center md:text-left">
             <CardTitle className="text-xl md:text-2xl">Log In</CardTitle>
-            <CardDescription className="text-sm md:text-base">
-              Log in using your Google account.
-            </CardDescription>
+            { loginType === 'google' && (
+              <CardDescription className="text-sm md:text-base">
+                Log in using your Google account.
+              </CardDescription>
+            )}
           </CardHeader>
           <CardContent className="grid gap-4">
+
+            { loginType === 'google' &&
+            <>
             <button
               onClick={handleLogin}
               className="w-full bg-gray-500 hover:bg-blue-700 cursor-pointer text-white font-bold py-3 md:py-2 px-4 rounded text-sm md:text-base transition-colors duration-200"
             >
               Sign in with Google
             </button>
+            <button
+              onClick={() => setLoginType('email')}
+              className="w-full bg-gray-500 hover:bg-blue-700 cursor-pointer text-white font-bold py-3 md:py-2 px-4 rounded text-sm md:text-base transition-colors duration-200"
+            >
+              Try with Email
+            </button>
+            </>
+            }
+
+            {loginType === 'email' && <SignInEmail setLoginType={setLoginType} />}
               {error && <p className="text-red-500 text-center text-xs md:text-sm">
                   {messages[error ?? 'default'] ?? messages.default}
               </p>}
               {
-                msg && <p className="text-red-500 text-center text-xs md:text-sm">
+                msg && msg !== undefined && <p className="text-red-500 text-center text-xs md:text-sm">
                   {msg}
                 </p>
               }

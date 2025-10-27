@@ -64,7 +64,9 @@ const userSchema = new Schema<IUser>({
         virtuals: true
     }
 });
-userSchema.plugin(changelogPlugin)
+userSchema.plugin(changelogPlugin, {
+    "collection_name": "users"
+})
 
 preValidateReferenceCode(userSchema,"USR","users")
 

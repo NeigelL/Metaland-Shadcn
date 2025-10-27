@@ -7,6 +7,10 @@ import { can, getUserPermissions } from "@/services/permissionService"
 import { getUserService, registerAfterSignInService } from "@/services/userService"
 import { headers } from "next/headers"
 import {  getImpersonatedUser, isImpersonationEnabled } from "./impersonate"
+import Credentials from "next-auth/providers/credentials"
+import bcrypt from "bcryptjs"
+import { ObjectId } from "mongodb"
+import VerificationToken from "@/models/verification_token"
 
 
 
@@ -28,46 +32,51 @@ const nextAuthOptions : AuthOptions = {
             clientId: process.env.GOOGLE_CLIENT_ID?? "",
             clientSecret: process.env?.GOOGLE_CLIENT_SECRET ?? "",
         }),
-        // Credentials({
-        //     credentials: {
-        //         email : {
-        //             label: "Email", type : "text"
-        //         },
-        //         password: {label: "Password", type : "password" }
-        //     },
-        //     authorize : async(credentials) => { 
-        //         // not using since only google sign in
-        //         await dbConnect()
-        //         const host = await headers()
-        //         const user:any = await User.findOne({
-        //             email: credentials?.email,
-        //             active: false
-        //         }).select("+password")
+        Credentials({
+            name : "OTP Login",
+            credentials: {
+                email : {
+                    label: "Email", type : "text"
+                },
+                code: {label: "Code", type : "text" }
+            },
+            authorize : async(credentials) => {
+                const email = credentials?.email?.toLowerCase().trim();
+                const code = credentials?.code?.trim();
 
-        //         if(!user) {
-        //             const userEmail = await User.findOne({
-        //                 email: credentials?.email
-        //             }).select("+password")
-        //             if(!userEmail) {
-        //                 await registerAfterSignInService(credentials)
-        //             }
-        //             return null
-        //             // throw new Error("Email not found! Please register")
-        //         }
-        //         if(!credentials?.password) {
-        //             throw new Error ("Password is empty")
-        //         }
+                if (!email || !code) return null;
 
-        //         const match = await bcrypt.compare(
-        //             credentials?.password,
-        //              user?.password
-        //         )
+                await dbConnect()
+                // find a token for this email that hasn't expired
+                const vt = await VerificationToken.findOne({ identifier: email }).sort({ createdAt: -1 });
 
-               
+                if (!vt) return null;
+                if (new Date(vt.expires).getTime() < Date.now()) {
+                    // expired — cleanup & fail
+                    await vt.deleteOne();
+                    return null;
+                }
 
-        //         return user
-        //     } ,
-        // })
+                const ok = await bcrypt.compare(code, vt.tokenHash);
+                if (!ok) return null;
+
+                // OTP valid — consume token
+                await vt.deleteOne();
+
+
+                let user:any = await User.findOne({ email, login: true }).lean();
+                if (user) {
+                    user = {
+                        ...user,
+                        email: user.email,
+                        _id: user._id,
+                        id: (user._id as ObjectId).toHexString(),
+                        name: [user?.first_name, user?.last_name].join(" ")
+                    }
+                }
+                return user as any;
+            },
+        })
     ],
     session : {
         strategy : "jwt",
