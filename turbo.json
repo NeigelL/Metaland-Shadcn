@@ -43,7 +43,8 @@
     "GEMINI_API_KEY",
     "NEXTAUTH_SECRET",
     "AUTH_SECRET",
-    "CSRF_SECRET"
+    "CSRF_SECRET",
+    "RESEND_API_KEY"
   ],
   "globalPassThroughEnv": [
     "NEXTAUTH_URL",
