@@ -218,6 +218,211 @@ export async function getAgentSummaryAmortization({
 
 }
 
+export async function getAgentSalesSummary({
+    start_date = new Date(),
+    end_date = new Date(),
+    group_by = "month",
+    role_ids = [],
+    agent_ids = [],
+    realty_ids = []
+}: {
+    start_date?: Date;
+    end_date?: Date;
+    group_by?: "month" | "summary";
+    role_ids?: string[];
+    agent_ids?: string[];
+    realty_ids?: string[];
+}) {
+    await dbConnect()
+    const user = await auth()
+    agent_ids = [user.user_id]
+    role_ids = ["agent_id","team_lead_id"]
+
+    const agentRole = role_ids.find((role: any) => role === 'agent_id') ? true : false;
+    const teamLeadRole = role_ids.find((role: any) => role === 'team_lead_id') ? true : false;
+    const brokerRole = role_ids.find((role: any) => role === 'broker_id') ? true : false;
+    const roleMatchArray = []
+
+    let agentMatch = agent_ids.length > 0 && agentRole
+        ? { agent_id: { $in: agent_ids.map((agent: any) => new ObjectId(agent)) } }
+        : {};
+
+    let agentMatch2 = agent_ids.length > 0 && agentRole
+        ? { agent_id_2: { $in: agent_ids.map((agent: any) => new ObjectId(agent)) } }
+        : {};
+
+    const teamLeadMatch = agent_ids.length > 0 && teamLeadRole
+        ? { team_lead: { $in: agent_ids.map((teamLead: any) => new ObjectId(teamLead)) } }
+        : {};
+
+    const teamLeadMatch2 = agent_ids.length > 0 && teamLeadRole
+        ? { team_lead_2: { $in: agent_ids.map((teamLead: any) => new ObjectId(teamLead)) } }
+        : {};
+
+    const brokerMatch = agent_ids.length > 0 && brokerRole
+        ? { broker_id: { $in: agent_ids.map((broker: any) => new ObjectId(broker)) } }
+        : {};
+
+    if(role_ids.length === 0) {
+        agentMatch = { agent_id: { $in: agent_ids.map((agent: any) => new ObjectId(agent)) } };
+        agentMatch2 = { agent_id_2: { $in: agent_ids.map((agent: any) => new ObjectId(agent)) } };
+    }
+
+    if(agent_ids.length > 0 && agentRole) {
+        roleMatchArray.push(agentMatch)
+        roleMatchArray.push(agentMatch2)
+    }
+
+    if(agent_ids.length > 0 && teamLeadRole) {
+        roleMatchArray.push(teamLeadMatch)
+        roleMatchArray.push(teamLeadMatch2)
+    }
+
+    if(agent_ids.length > 0 && brokerRole) {
+        roleMatchArray.push(brokerMatch)
+    }
+    if(realty_ids.length > 0) {
+        roleMatchArray.push({ realty_id: { $in: realty_ids.map((realty: any) => new ObjectId(realty)) } })
+    }
+
+    const roleMatch = roleMatchArray.length === 0 ? {} : { $or: roleMatchArray }
+
+    const dateRange: { reservation_date?: { $gte: Date, $lte: Date } } = {
+        reservation_date: {
+            $gte: new Date(start_date),
+            $lte: new Date(end_date)
+        }
+    };
+    if (start_date == null || end_date == null) {
+        delete dateRange["reservation_date"];
+        return [];
+    }
+
+    // Generate all months between start_date and end_date
+    const allDates: string[] = [];
+    let current = new Date(start_date);
+    const end = new Date(end_date);
+    while (current <= end) {
+        let formatted: string;
+        if (group_by === 'month') {
+            formatted = current.toLocaleString('en-US', { month: 'short', year: 'numeric' });
+            allDates.push(formatted);
+        }
+        if (group_by === 'month') {
+            current.setMonth(current.getMonth() + 1);
+        }
+    }
+
+    const results = await Amortization.aggregate([
+        {
+            $match: {
+                active: true,
+                ...roleMatch,
+                ...dateRange
+            }
+        },
+        {
+            $addFields: {
+                formatted_date: {
+                    $switch: {
+                        branches: [
+                            {
+                                case: { $eq: [group_by, "month"] },
+                                then: {
+                                    $dateToString: {
+                                        format: "%b %Y",
+                                        date: "$reservation_date"
+                                    }
+                                }
+                            },
+                        ],
+                        default: {
+                            $dateToString: {
+                                format: "%b %d",
+                                date: "$reservation_date"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "agent_id",
+                foreignField: "_id",
+                as: "agent",
+                pipeline: [
+                    {
+                        $project: {
+                            email: 1, phone: 1, first_name: 1, last_name: 1,
+                            full_name: { $concat: ["$first_name", " ", "$last_name"] }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $lookup: {
+                from: "users",
+                localField: "buyer_ids",
+                foreignField: "_id",
+                as: "buyer_ids",
+                pipeline: [
+                    {
+                        $project: {
+                            email: 1, phone: 1, first_name: 1, last_name: 1,
+                            full_name: { $concat: ["$first_name", " ", "$last_name"] }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $unwind: { path: "$agent", preserveNullAndEmptyArrays: true }
+        },
+        {
+            $group: {
+                _id: "$formatted_date",
+                total_sales: { $sum: 1 },
+                total_tcp: { $sum: "$tcp" },
+                delinquents: {
+                    $sum: {
+                        $cond: [
+                            { $gt: ["$lookup_summary.overdue_months", 2] },
+                            1,
+                            0
+                        ]
+                    }
+                },
+            }
+        },
+    ])
+
+    // Fill missing months with empty data
+    if (group_by === 'month') {
+        const resultMap = new Map<string, any>();
+        results.forEach((item: any) => {
+            resultMap.set(item._id, item);
+        });
+        const filledResults = allDates.map(month => {
+            if (resultMap.has(month)) {
+                return resultMap.get(month);
+            }
+            return {
+                _id: month,
+                total_sales: 0,
+                total_tcp: 0,
+                delinquents: 0
+            }
+        });
+        return filledResults;
+    }
+
+    return results;
+
+}
+
 
 export async function getAgentDueDateAmortization(
     agent_id: string

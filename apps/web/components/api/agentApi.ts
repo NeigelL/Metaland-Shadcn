@@ -155,3 +155,53 @@ export async function deleteAgentLeadQueryApi(buyer_prospect_id: any) {
         throw error;
     }
 }
+
+export async function getAgentSalesQueryApi({
+    start_date = new Date(),
+    end_date = new Date(),
+}: {
+    start_date?: Date;
+    end_date?: Date;
+}) {
+    try {
+        const response = await axios.post('/api/sales-summary', {
+            params: {
+                start_date: start_date.toISOString(),
+                end_date: end_date.toISOString(),
+            },
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching agent sales', error);
+        throw error;
+    }
+}
+
+export function useAgentSalesQuery({
+    start_date = new Date(),
+    end_date = new Date(),
+    props = {}
+}: {
+    start_date?: Date;
+    end_date?: Date;
+    props?: any;
+} = {}) {
+    // Format dates as "YYYY-MM-dd"
+    const formatDate = (date: Date) =>
+        date.toISOString().slice(0, 10);
+
+    const formattedStartDate = formatDate(start_date);
+    const formattedEndDate = formatDate(end_date);
+
+    return useQuery<any[]>({
+        queryKey: ['agent-sales-summary', formattedStartDate, formattedEndDate],
+        queryFn: () =>
+            getAgentSalesQueryApi({
+                start_date: new Date(formattedStartDate),
+                end_date: new Date(formattedEndDate),
+            }),
+        refetchOnWindowFocus: true,
+        refetchOnReconnect: true,
+        ...props,
+    });
+}

@@ -3,8 +3,9 @@
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@workspace/ui/components/card';
 import { useUserStore } from '@/stores/useUserStore';
 import { CalendarIcon, BarChart2, User, LandPlot, HandCoins, Award } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { useAgentSummaryAmortizationsQuery } from '@/components/api/agentApi';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { useAgentSalesQuery, } from '@/components/api/agentApi';
+import { useEffect, useState } from 'react';
 
 
 
@@ -49,14 +50,16 @@ export default function SalesGraph() {
 
     const {first_name, middle_name, last_name, setParameters} = useUserStore()
     const parameters = useUserStore((state) => state.parameters);
-    const{data: summary = []} = useAgentSummaryAmortizationsQuery({
+    const{data: summary = [], isSuccess} = useAgentSalesQuery({
         start_date: parameters?.start_date ??  new Date( new Date().getFullYear() +"-01-01"),
         end_date: parameters?.end_date?? new Date(),
-        group_by: "month"
+        props: {
+          enabled: !!parameters?.start_date && !!parameters?.end_date
+        }
     })
-
     const startDate = parameters?.start_date ?? new Date( new Date().getFullYear() +"-01-01");
     const currentDate = parameters?.end_date ?? new Date();
+    const [chartData, setChartData] = useState<any[]>([]);
 
     const generateMonthLabels = (start: Date, end: Date): string[] => {
         const months: string[] = [];
@@ -73,12 +76,24 @@ export default function SalesGraph() {
     monthLabels.forEach((label:any) => {
         salesByMonth[label] = { totalSales: 0, count: 0, lots: [] };
       });
-    const chartData = monthLabels.map((month:any) => ({
-        month,
-        sales: summary.find( (summary:any) => summary._id === month  )?.total_sales ?? 0,
-        count: summary.find( (summary:any) => summary._id === month )?.total_lot_sold ?? 0,
-        lots: summary.find( (summary:any) => summary._id === month )?.amortizations ?? [],
-      }));
+    // const chartData =  monthLabels.map((month:any) => ({
+    //     month,
+    //     sales: summary.find( (summary:any) => summary._id === month  )?.total_sales ?? 0,
+    //     count: summary.find( (summary:any) => summary._id === month )?.total_lot_sold ?? 0,
+    //     lots: summary.find( (summary:any) => summary._id === month )?.amortizations ?? [],
+    //   }));
+    
+    useEffect(() => {
+      const cd:any = summary?.map((item:any) => {
+        return {
+          month: item._id,
+          sales: item.total_sales,
+          delinquents: item.delinquents,
+        }
+      })
+
+      setChartData(cd)
+    }, [isSuccess])
 
     const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
     if (active && payload && payload.length) {
@@ -126,36 +141,39 @@ export default function SalesGraph() {
                     <span className="text-xs truncate">{[first_name,middle_name,last_name].join(" ")} </span>
                   </div>
                   <div>
-                    <div className="flex items-center gap-2 ml-4">
-                        <input
-                          type="date"
-                          className="border rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-green-400"
-                          aria-label="Start date"
-                          min={parameters?.min_date?.toISOString().slice(0, 10)}
-                          value={parameters?.start_date ? parameters?.start_date?.toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10)}
-                          onChange={
-                            (e) => {
-                              setParameters({
-                                start_date: new Date(e.target.value)
-                              })
-                            }
+                    {
+                    parameters?.min_date && <div className="flex items-center gap-2 ml-4">
+                      <input
+                        type="date"
+                        className="border rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-green-400"
+                        aria-label="Start date"
+                        min={parameters.min_date?.toISOString().slice(0, 10)}
+                        value={parameters?.start_date ? parameters?.start_date?.toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10)}
+                        onChange={
+                          (e) => {
+                            setParameters({
+                              start_date: new Date(e.target.value)
+                            })
                           }
-                        />
-                        <span className="mx-1">to</span>
-                        <input
-                          type="date"
-                          className="border rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-green-400"
-                          aria-label="End date"
-                          value={parameters?.end_date ? parameters?.end_date?.toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10)}
-                          onChange={
-                            (e) => {
-                              setParameters({
-                                end_date: new Date(e.target.value)
-                              })
-                            }
+                        }
+                      />
+                      <span className="mx-1">to</span>
+                      <input
+                        type="date"
+                        className="border rounded px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-green-400"
+                        aria-label="End date"
+                        min={parameters?.start_date ? parameters?.start_date?.toISOString().slice(0, 10) : "2020-01-01"}
+                        value={parameters?.end_date ? parameters?.end_date?.toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10)}
+                        onChange={
+                          (e) => {
+                            setParameters({
+                              end_date: new Date(e.target.value)
+                            })
                           }
-                        />
-                      </div>
+                        }
+                      />
+                    </div>
+                    }
                   </div>
                 </div>
               </div>
@@ -171,23 +189,28 @@ export default function SalesGraph() {
                     <XAxis
                       dataKey="month"
                       tick={{ fontSize: 8 }}
-                      tickLine={false}
-                      axisLine={{ stroke: '#e5e7eb' }}
                       interval="preserveStartEnd"
                     />
                     <YAxis
                       tick={{ fontSize: 8 }}
-                      tickLine={false}
-                      axisLine={false}
-                      tickFormatter={(value) => `₱${(value / 1000).toFixed(0)}K`}
                     />
-                    <Tooltip content={<CustomTooltip />} />
+                    <Tooltip 
+                    // content={<CustomTooltip />} 
+                    />
+                    <Legend />
                     <Bar
                       dataKey="sales"
                       fill="#3bf63b"
                       radius={[4, 4, 0, 0]}
-                      name="Sales Value"
+                      name="Sales"
                     />
+                    <Bar
+                      dataKey="delinquents"
+                      fill="#f44336"
+                      radius={[4, 4, 0, 0]}
+                      name="Delinquent"
+                    />
+
                   </BarChart>
                 </ResponsiveContainer>
               </div>

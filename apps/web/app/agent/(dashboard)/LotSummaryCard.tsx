@@ -22,6 +22,8 @@ export default function LotSummaryCard() {
       if(earliest[0]?.earliest_reservation_date)
       setParameters({
           min_date: new Date(earliest[0]?.earliest_reservation_date),
+          start_date: parameters?.start_date ??  new Date( new Date().getFullYear() +"-01-01"),
+          end_date: new Date(),
       })
     },[earliest])
 

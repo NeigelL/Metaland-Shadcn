@@ -4,7 +4,7 @@ import dbConnect from "./mongodb"
 import User from "@/models/users"
 import { GetServerSidePropsContext, NextApiRequest, NextApiResponse } from "next"
 import { can, getUserPermissions } from "@/services/permissionService"
-import { getUserService, registerAfterSignInService } from "@/services/userService"
+import { getUserService } from "@/services/userService"
 import { headers } from "next/headers"
 import {  getImpersonatedUser, isImpersonationEnabled } from "./impersonate"
 import Credentials from "next-auth/providers/credentials"
@@ -70,6 +70,7 @@ const nextAuthOptions : AuthOptions = {
                         ...user,
                         email: user.email,
                         _id: user._id,
+                        user_id: user._id,
                         id: (user._id as ObjectId).toHexString(),
                         name: [user?.first_name, user?.last_name].join(" ")
                     }

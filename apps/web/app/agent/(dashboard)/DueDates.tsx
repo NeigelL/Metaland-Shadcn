@@ -17,7 +17,7 @@ export default function DueDates() {
   const router = useRouter();
 
   useEffect(() => {
-    const lots =  lotsData?.map(
+    const lots =  lotsData?.filter((lot:any) => lot?.lookup_summary?.overdue_amount > 0).map(
             (lot:any) => {
                 return {
                     ...lot,

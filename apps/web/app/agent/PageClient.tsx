@@ -38,7 +38,7 @@ export function PageClient() {
 
         </div>
 
-        <div className="flex-1 h-110">
+        <div className="flex-1 h-110 lg:w-64 w-full">
             <div className="flex flex-wrap mt-2 mb-2">
               <DueDates/>
             </div>

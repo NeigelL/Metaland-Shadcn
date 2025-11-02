@@ -17,7 +17,7 @@ export  async function GET(request:NextRequest) {
   })
   const user = await auth()
   return NextResponse.json(
-    await getAgentLeadsService(user.id)
+    await getAgentLeadsService(user.user_id)
   )
 }
 
