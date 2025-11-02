@@ -1,8 +1,18 @@
 import dbConnect from "@/lib/mongodb";
+import Amortization from "@/models/amortizations";
 import Block from "@/models/blocks";
 import Lot from "@/models/lots";
+import Polygon, { IPolygon } from "@/models/polygons";
 import Project from "@/models/projects";
 
+
+type GroupPolygon = {
+    projects : IPolygon[];
+    blocks : IPolygon[];
+    lots : IPolygon[];
+    others: IPolygon[];
+    misc: IPolygon[];
+}
 
 export const projectFields:Record<string, string> = {
     agent: "name address1 address2 region province city barangay zip landmark project_type total_area project_status",
@@ -29,6 +39,42 @@ export async function getProjectAvailableService() {
     }
 
     return availableProjects
+}
+
+export async function getAgentProjectDetailService(project_id: string) {
+    await dbConnect()
+
+    await Lot.findOne({})
+    await Block.findOne({})
+    await Amortization.findOne({})
+
+    const project = await Project.findOne({_id: project_id, "portal.agent": true})
+    if(!project) {
+        return null
+    }
+    const query = project?.project_map_id ? {
+        project_id: project_id,
+        project_map_id: project?.project_map_id || null
+    } : {
+        project_id: project_id
+    }
+
+    const polygons = await Polygon.find(query).select("-createdAt -updatedAt").populate([
+        {path: 'lot_id', populate: {path: 'amortization_id', select: 'lookup_summary tags'}},
+        {path: 'block_id'}
+    ])
+
+    let groupPolygon : GroupPolygon = {
+        projects: polygons.filter((p:any) => p.type === 'project'),
+        blocks: polygons.filter((p:any) => p.type === 'block'),
+        lots: polygons.filter((p:any) => p.type === 'lot'),
+        others: polygons.filter((p:any) => !['lot','block','project'].includes(p.type)),
+        misc: polygons.filter((p:any) => p.type === 'misc'),
+    }
+    return {
+        project,
+        polygons: groupPolygon
+    }
 }
 
 export async function getProjectBlocksService(project_id: string) {

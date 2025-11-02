@@ -116,6 +116,25 @@ export function useAgentProjectsAvailableQuery() {
     });
 }
 
+export async function getAgentProjectDetailQueryApi(project_id: string) {
+    try {
+        const response = await axios.get(`/api/projects/${project_id}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching agent project detail', error);
+        throw error;
+    }
+}
+
+export function useAgentProjectDetailQuery(project_id: string) {
+    return useQuery({
+        queryKey: ['agent-project-detail', project_id],
+        queryFn: () => getAgentProjectDetailQueryApi(project_id),
+        refetchOnWindowFocus: true,
+        refetchOnReconnect: true,
+    });
+}
+
 export async function getAgentLeadsQueryApi() {
     try {
         const response = await axios.get('/api/prospects');

@@ -1,4 +1,5 @@
 "use client";
+import { useAgentProjectDetailQuery } from "@/components/api/agentApi";
 import ProjectDetail from "@/components/Project/ProjectDetail";
 import ProjectMap from "@/components/Project/ProjectMap";
 import { Button } from "@workspace/ui/components/button";
@@ -14,6 +15,8 @@ export default function PageClient() {
     const [tabValues] = useState<string[]>(["detail", "map"]);
     const id = params?.id as string
     const project_id = id
+    const {data: projectResult, isLoading, isSuccess} =  useAgentProjectDetailQuery(project_id)
+    const project = projectResult?.project || {}
 
     return <div className="flex-1 p-4 space-y-6 max-w-7xl mx-auto w-full">
         <div className="space-y-4 sm:space-y-6">
@@ -29,6 +32,7 @@ export default function PageClient() {
                 defaultValue="detail"
                 className="w-full"
                 onValueChange={setTabSelected}
+                value={tabSelected}
             >
                 <TabsList className="mb-6 grid w-full grid-cols-2">
                     {tabValues.map((type) => (
@@ -43,11 +47,12 @@ export default function PageClient() {
                 </TabsList>
                 
                 <TabsContent value="detail" className="mt-0">
-                    <ProjectDetail />
+                    {isLoading && <div>Loading project details...</div>}
+                    {isSuccess && <ProjectDetail project={project} />}
                 </TabsContent>
 
                 <TabsContent value="map" className="mt-0">
-                    <ProjectMap />
+                    {isSuccess && <ProjectMap projectPath={projectResult.polygons} />}
                 </TabsContent>
             </Tabs>
         </div>
