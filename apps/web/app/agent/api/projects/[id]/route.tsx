@@ -4,7 +4,10 @@ import { logAccessService } from "@/services/accessService";
 import { getAgentProjectDetailService } from "@/services/projectService";
 import { NextResponse, NextRequest } from "next/server";
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+export async function GET(
+    request: NextRequest,
+    { params }: { params: any }
+) {
     await dbConnect();
     if (!await isLogin()) {
         return new NextResponse("Unauthorized", { status: 401 });
@@ -21,7 +24,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
             return NextResponse.json({ error: "User ID not found" }, { status: 400 });
         }
         // Validate project id param
-        const {id: projectId} = await params;
+        const {id: projectId} = params;
         if (!projectId) {
             return NextResponse.json({ error: "Project ID not provided" }, { status: 400 });
         }
