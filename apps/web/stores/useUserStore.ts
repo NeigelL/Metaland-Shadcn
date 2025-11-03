@@ -19,7 +19,10 @@ export const useUserStore = create<
 }>( (set) => (
     {
         ...loginUser,
-        setParameters: (parameters) => set(() => ({ parameters: { ...parameters } })),
+        getParameters: () => {
+            return useUserStore.getState().parameters
+        },
+        setParameters: (p) => set(() => ({ parameters: { ...(useUserStore.getState().parameters), ...p } })),
         setUser: (user) => set(() => ({ ...user, parameters: {start_date: new Date("2025-01-01"), end_date: new Date( new Date().toISOString().slice(0, 10))  }  })),
         clearUser: () => set(() => ({...loginUser})),
     }

@@ -24,7 +24,7 @@ export async function GET(
             return NextResponse.json({ error: "User ID not found" }, { status: 400 });
         }
         // Validate project id param
-        const {id: projectId} = params;
+        const {id: projectId} = await params;
         if (!projectId) {
             return NextResponse.json({ error: "Project ID not provided" }, { status: 400 });
         }

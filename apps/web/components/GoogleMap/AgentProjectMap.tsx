@@ -111,6 +111,7 @@ export default function AgentProjectMap({
         center={center}
         onLoad={(map) => {
           isMapLoaded();
+          onMapLoad(map);
           if (bounds && !bounds.isEmpty()) {
             map.fitBounds(bounds, 40);
           }
@@ -168,11 +169,11 @@ export default function AgentProjectMap({
       }
 
       // const showOnZoom = polygon.options?.showZoom == mapZoom
-      const showOnZoom = true
+      const showOnZoom =  mapZoom  >= (polygon.centerCoordinates?.zoom ?? 20)
        return mapZoom >= baseZoom && <OverlayView
         position={ getCenterCoordinates(polygon.coordinates)}
         mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-        key={polygon._id + "_label"}
+        key={key+ "_label"}
       >
         <div
           style={{

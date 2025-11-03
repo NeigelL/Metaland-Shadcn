@@ -87,7 +87,7 @@ export default function SalesGraph() {
       const cd:any = summary?.map((item:any) => {
         return {
           month: item._id,
-          sales: item.total_sales,
+          sales: item.total_sales - item.delinquents,
           delinquents: item.delinquents,
         }
       })
@@ -151,9 +151,12 @@ export default function SalesGraph() {
                         value={parameters?.start_date ? parameters?.start_date?.toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10)}
                         onChange={
                           (e) => {
-                            setParameters({
-                              start_date: new Date(e.target.value)
-                            })
+                            const dateValue = new Date(e.target.value);
+                            if (e.target.value && !isNaN(dateValue.getTime())) {
+                              setParameters({
+                                start_date: dateValue
+                              });
+                            }
                           }
                         }
                       />
@@ -166,9 +169,12 @@ export default function SalesGraph() {
                         value={parameters?.end_date ? parameters?.end_date?.toISOString().slice(0, 10) : new Date().toISOString().slice(0, 10)}
                         onChange={
                           (e) => {
-                            setParameters({
-                              end_date: new Date(e.target.value)
-                            })
+                            const dateValue = new Date(e.target.value);
+                            if (e.target.value && !isNaN(dateValue.getTime())) {
+                              setParameters({
+                                end_date: dateValue
+                              });
+                            }
                           }
                         }
                       />
@@ -203,12 +209,14 @@ export default function SalesGraph() {
                       fill="#3bf63b"
                       radius={[4, 4, 0, 0]}
                       name="Sales"
+                      stackId="a"
                     />
                     <Bar
                       dataKey="delinquents"
                       fill="#f44336"
                       radius={[4, 4, 0, 0]}
                       name="Delinquent"
+                      stackId="a"
                     />
 
                   </BarChart>
