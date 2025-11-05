@@ -17,8 +17,27 @@ const fontMono = Geist_Mono({
 })
 
 export const metadata: Metadata = {
+  title: "Agent Portal",
+  description: "Agent Portal",
+  openGraph: {
     title: "Agent Portal",
     description: "Agent Portal",
+    images: [
+      {
+        url: "/images/metaland.png",
+        width: 1200,
+        height: 630,
+        alt: "Metaland Agent Portal Logo",
+      },
+    ],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Agent Portal",
+    description: "Agent Portal",
+    images: ["/images/metaland.png"],
+  },
 };
 
 export default async function RootLayout({
