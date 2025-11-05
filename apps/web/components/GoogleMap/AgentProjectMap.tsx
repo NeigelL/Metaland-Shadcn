@@ -25,7 +25,7 @@ export default function AgentProjectMap({
     const [misc, setMisc] = useState<any>([]);
     const [center, setCenter] = useState<LatLng>({ lat: 0, lng: 0 });
     const [bounds, setBounds] = useState<google.maps.LatLngBounds>();
-    const [mapZoom, setMapZoom] = useState(20)
+    const [mapZoom, setMapZoom] = useState(18)
     const mapRef = useRef<google.maps.Map | null>(null)
 
 
@@ -70,6 +70,10 @@ export default function AgentProjectMap({
       const lat = coordinates.reduce((sum: number, coord: any) => sum + coord.lat, 0) / coordinates.length
       const lng = coordinates.reduce((sum: number, coord: any) => sum + coord.lng, 0) / coordinates.length
       return { lat, lng }
+    }
+
+    const isDefaultCenter = (coordinates: any, centerCoordinates:any) => {
+      return coordinates.length > 0 && (centerCoordinates.lat == coordinates[0].lat && centerCoordinates.lng == coordinates[0].lng) 
     }
 
       useEffect(() => {
@@ -170,8 +174,10 @@ export default function AgentProjectMap({
 
       // const showOnZoom = polygon.options?.showZoom == mapZoom
       const showOnZoom =  mapZoom  >= (polygon.centerCoordinates?.zoom ?? 20)
-       return mapZoom >= baseZoom && <OverlayView
-        position={ getCenterCoordinates(polygon.coordinates)}
+       return showOnZoom && <OverlayView
+        position={
+         isDefaultCenter(polygon.coordinates, polygon.centerCoordinates) ? getCenterCoordinates(polygon.coordinates) : polygon.centerCoordinates
+        }
         mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
         key={key+ "_label"}
       >

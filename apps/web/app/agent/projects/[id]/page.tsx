@@ -10,7 +10,6 @@ export default async function Page(
     props: { params: Params }
 ) {
     const {id} = await props.params
-    console.log("Project ID:", id);
     return <PageClient />;
 }
 
