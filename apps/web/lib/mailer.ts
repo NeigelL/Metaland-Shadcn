@@ -41,7 +41,7 @@ export async function sendOTPLogin({
     const from = "PHILUS <info@metaland.properties>";
     const to = email;
 
-    const email_action = "welcome_packet"
+    const email_action = "otp_login"
     const response = await sendEmail({
         from,
         to,
