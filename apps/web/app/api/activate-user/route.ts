@@ -64,7 +64,7 @@ export async function GET(
     // }
   } else {
     response = await User.findOneAndUpdate(
-        { email, login_code: code, login: false },
+        { email, login_code: code },
         {
           $set: { login: true },
           $addToSet: { roles: roleID }
