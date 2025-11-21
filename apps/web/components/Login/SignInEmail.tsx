@@ -99,6 +99,12 @@ export default function SignInEmail({
             throw new Error('CORS validation failed');
         }
         const data = await res.json();
+        if(!data.ok && data.error) {
+            setMsg(data.error);
+            setStep("email");
+            return;
+        }
+
         if(data.ok && !data.throttled) {
             // alert('OTP sent to your email');
             setMsg('OTP sent to your email');
@@ -137,6 +143,9 @@ export default function SignInEmail({
                     }>
                         Send OTP
                     </Button>
+                    {msg && (
+                            <span className="text-xs text-red-500 ml-2">{msg}</span>
+                        )}
                 </form>
             )}
 
