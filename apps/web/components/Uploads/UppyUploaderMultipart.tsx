@@ -10,17 +10,17 @@ import "@uppy/core/dist/style.css";
 import "@uppy/dashboard/dist/style.css";
 import '@uppy/webcam/dist/style.min.css';
 
-const UppyMultipartUploader = ({options : { folder="", entityID = "", collection = ""} , onCompleteCallback = () => {}, createFolderProp = null  } : any) => {
+const UppyMultipartUploader = ({ options: { folder = "", entityID = "", collection = "" }, onCompleteCallback = () => { }, createFolderProp = null }: any) => {
   const uppy = new Uppy<Meta, Body>({
     restrictions: {
       maxFileSize: 0,
       maxNumberOfFiles: 100
     },
-    autoProceed: false,
+    autoProceed: true,
   })
-// @ts-ignore 
+  // @ts-ignore 
   uppy.use(AwsS3Multipart, {
-    getUploadParameters: async(file:any) => {
+    getUploadParameters: async (file: any) => {
       const response = await fetch("/api/s3", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -40,14 +40,14 @@ const UppyMultipartUploader = ({options : { folder="", entityID = "", collection
       const { uploadURL }: { uploadURL: string } = await response.json()
       return {
         method: "PUT",
-        url: uploadURL+"",
+        url: uploadURL + "",
         headers: {
           "Content-Type": file.type,
         }
       }
     },
 
-    createMultipartUpload: async (file:any) => {
+    createMultipartUpload: async (file: any) => {
       const response = await fetch("/api/s3/multipart/initiate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -77,7 +77,7 @@ const UppyMultipartUploader = ({options : { folder="", entityID = "", collection
     //   const { signedUrl } = await response.json();
     //   return signedUrl;
     // },
-    completeMultipartUpload: async ({ uploadId, key, parts }:any) => {
+    completeMultipartUpload: async ({ uploadId, key, parts }: any) => {
       const response = await fetch("/api/s3/multipart/complete", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -114,28 +114,28 @@ const UppyMultipartUploader = ({options : { folder="", entityID = "", collection
     }
   })
 
-  uppy.on('file-added',(file) => {
+  uppy.on('file-added', (file) => {
     uppy.setFileMeta(file.id, {
       folder,
       entityID,
       collection,
       extension: uppy.getFile(file.id).extension
     })
-})
+  })
 
-uppy.on("complete", (result:any) => {
-  toast.success(
+  uppy.on("complete", (result: any) => {
+    toast.success(
       <div>
         <p className="text-sm">{result?.successful?.length}Files have been uploaded successfully.</p>
       </div>
-  );
-  
-  onCompleteCallback()
-})
+    );
 
-//   useEffect(() => {
-//     return () => uppy.close();
-//   }, [uppy]);
+    onCompleteCallback()
+  })
+
+  //   useEffect(() => {
+  //     return () => uppy.close();
+  //   }, [uppy]);
 
   return (
     <div className="container mx-auto px-2">
