@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { DeleteObjectCommand, S3Client, waitUntilObjectNotExists } from "@aws-sdk/client-s3"
+import { CopyObjectCommand, DeleteObjectCommand, S3Client, waitUntilObjectNotExists } from "@aws-sdk/client-s3"
 import s3Client from "@/lib/aws";
 import { WaiterConfiguration } from "@smithy/util-waiter";
 import dbConnect from "@/lib/mongodb";
@@ -9,8 +9,8 @@ import { logAccessService } from "@/services/accessService";
 export async function GET(request: NextRequest) {
 
   await dbConnect()
-  if(!await isLogin()) {
-      return new NextResponse("Unauthorized", {status: 401})
+  if (!await isLogin()) {
+    return new NextResponse("Unauthorized", { status: 401 })
   }
 
   const url = new URL(request.url)
@@ -22,24 +22,32 @@ export async function GET(request: NextRequest) {
 
     await logAccessService({
       request,
-      metadata : { action: "DELETE BUYER S3 FILES", file: key, bucket: bucketName },
+      metadata: { action: "DELETE BUYER S3 FILES", file: key, bucket: bucketName },
     })
 
-    const deleteObject = await s3Client.send(
-        new DeleteObjectCommand({
-          Bucket: bucketName,
-          Key: key,
-        }),
-      )
+    const copyObject = await s3Client.send(
+      new CopyObjectCommand({
+        Bucket: bucketName,
+        CopySource: `${bucketName}/${key}`,
+        Key: "deleted/" + key,
+      }),
+    );
 
-    const waiterClient: WaiterConfiguration<S3Client> = {client: s3Client, maxWaitTime: 1000}
+    const deleteObject = await s3Client.send(
+      new DeleteObjectCommand({
+        Bucket: bucketName,
+        Key: key,
+      }),
+    )
+
+    const waiterClient: WaiterConfiguration<S3Client> = { client: s3Client, maxWaitTime: 1000 }
 
     const notExists = await waitUntilObjectNotExists(
-          waiterClient,
-        { Bucket: bucketName, Key: key },
-      )
+      waiterClient,
+      { Bucket: bucketName, Key: key },
+    )
 
-    return NextResponse.json( {'deleted':'successfully'} );
+    return NextResponse.json({ 'deleted': 'successfully' });
   } catch (error) {
     console.error("S3 List Error:", error);
     return NextResponse.json(
