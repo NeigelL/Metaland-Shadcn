@@ -19,16 +19,20 @@ export async function POST(req: NextRequest) {
   }
 
   await logAccessService({
-      request: req,
-      metadata : {email: email, action: "otp_send"},
+    request: req,
+    metadata: { email: email, action: "otp_send" },
   });
 
   const normalized = email.toLowerCase().trim();
   await dbConnect()
 
-  const checkedEmail = await User.findOne({email: normalized, active: true});
+  const checkedEmail = await User.findOne({ email: normalized, active: true });
 
-  if(!checkedEmail){
+  if (!checkedEmail) {
+    await logAccessService({
+      request: req,
+      metadata: { action: "OTP SEND", email: email, description: "User is unregistered" },
+    })
     return NextResponse.json({ ok: false, error: "Please reach out to our support team. To assists you in activating your account" }, { status: 400 });
   }
 

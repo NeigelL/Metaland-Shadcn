@@ -7,6 +7,8 @@ import { Button } from "@workspace/ui/components/button";
 import { Alert, AlertDescription, AlertTitle } from "@workspace/ui/components/alert";
 import { useMutation } from "@tanstack/react-query";
 import { signIn } from "next-auth/react";
+import { useSocketBroadcast } from "@/hooks/useSocketListener";
+import { EnumSOCKET } from "@/serverConstant";
 
 
 
@@ -74,7 +76,7 @@ export default function SignInEmail({
                 setMsg("Invalid OTP or login failed.");
             }
         });
-        
+
     };
 
     const formatTime = (seconds: number) => {
@@ -99,16 +101,17 @@ export default function SignInEmail({
             throw new Error('CORS validation failed');
         }
         const data = await res.json();
-        if(!data.ok && data.error) {
+        if (!data.ok && data.error) {
             setMsg(data.error);
             setStep("email");
+            useSocketBroadcast(EnumSOCKET.USER_PROOFS, { message: [email, " has requested an OTP but is unregistered, please reach out to this email to register"].join(" "), link: `#${email}` });
             return;
         }
 
-        if(data.ok && !data.throttled) {
+        if (data.ok && !data.throttled) {
             // alert('OTP sent to your email');
             setMsg('OTP sent to your email');
-        } else if(data.throttled) {
+        } else if (data.throttled) {
             // alert('Please wait before requesting another OTP');
             setMsg('Please wait before requesting another OTP');
         }
@@ -139,13 +142,13 @@ export default function SignInEmail({
                         autoComplete="off"
                     />
                     <Button type="submit" className="w-full" onClick={
-                        (e:any) => sendOtp()
+                        (e: any) => sendOtp()
                     }>
                         Send OTP
                     </Button>
                     {msg && (
-                            <span className="text-xs text-red-500 ml-2">{msg}</span>
-                        )}
+                        <span className="text-xs text-red-500 ml-2">{msg}</span>
+                    )}
                 </form>
             )}
 
@@ -162,18 +165,18 @@ export default function SignInEmail({
                         maxLength={OTP_LENGTH}
                         autoFocus
                     >
-                            <InputOTPGroup>
-                                <InputOTPSlot index={0} />
-                                <InputOTPSlot index={1} />
-                                <InputOTPSlot index={2} />
-                            </InputOTPGroup>
-                            <InputOTPSeparator />
-                            <InputOTPGroup>
-                                <InputOTPSlot index={3} />
-                                <InputOTPSlot index={4} />
-                                <InputOTPSlot index={5} />
-                            </InputOTPGroup>
-                        </InputOTP>
+                        <InputOTPGroup>
+                            <InputOTPSlot index={0} />
+                            <InputOTPSlot index={1} />
+                            <InputOTPSlot index={2} />
+                        </InputOTPGroup>
+                        <InputOTPSeparator />
+                        <InputOTPGroup>
+                            <InputOTPSlot index={3} />
+                            <InputOTPSlot index={4} />
+                            <InputOTPSlot index={5} />
+                        </InputOTPGroup>
+                    </InputOTP>
                     <div className="flex items-center justify-between">
                         <span className="text-xs text-muted-foreground">
                             {expired ? (
