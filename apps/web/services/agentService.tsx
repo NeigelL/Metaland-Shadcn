@@ -86,6 +86,11 @@ export async function getAgentSummaryAmortization({
                     {
                         $match: {
                             deleted: false,
+                            claimed_by: new ObjectId(agent_id),
+                            $or: [
+                                { type: "RICE" },
+                                { type: "CASH" }
+                            ]
                         }
                     }
                 ]
@@ -178,22 +183,24 @@ export async function getAgentSummaryAmortization({
                     }
                 },
                 buyers_ids: { $addToSet: "$buyer_ids" },
-                amortizations: { $push: {
-                    _id: "$_id",
-                    lot: "$lot",
-                    block: "$block",
-                    project: "$project",
-                    reservation_date: "$reservation_date",
-                    tcp: "$tcp",
-                    rice_incentives: "$rice_incentives",
-                    cash_incentives: "$cash_incentives",
-                    buyer_ids: "$buyer_ids",
-                    agent_id: "$agent_id",
-                    agent_id_2: "$agent_id_2",
-                    team_lead: "$team_lead",
-                    team_lead_2: "$team_lead_2",
-                    reference_code: "$reference_code",
-                } }
+                amortizations: {
+                    $push: {
+                        _id: "$_id",
+                        lot: "$lot",
+                        block: "$block",
+                        project: "$project",
+                        reservation_date: "$reservation_date",
+                        tcp: "$tcp",
+                        rice_incentives: "$rice_incentives",
+                        cash_incentives: "$cash_incentives",
+                        buyer_ids: "$buyer_ids",
+                        agent_id: "$agent_id",
+                        agent_id_2: "$agent_id_2",
+                        team_lead: "$team_lead",
+                        team_lead_2: "$team_lead_2",
+                        reference_code: "$reference_code",
+                    }
+                }
             }
         },
         {
@@ -236,7 +243,7 @@ export async function getAgentSalesSummary({
     await dbConnect()
     const user = await auth()
     agent_ids = [user.user_id]
-    role_ids = ["agent_id","team_lead_id"]
+    role_ids = ["agent_id", "team_lead_id"]
 
     const agentRole = role_ids.find((role: any) => role === 'agent_id') ? true : false;
     const teamLeadRole = role_ids.find((role: any) => role === 'team_lead_id') ? true : false;
@@ -263,25 +270,25 @@ export async function getAgentSalesSummary({
         ? { broker_id: { $in: agent_ids.map((broker: any) => new ObjectId(broker)) } }
         : {};
 
-    if(role_ids.length === 0) {
+    if (role_ids.length === 0) {
         agentMatch = { agent_id: { $in: agent_ids.map((agent: any) => new ObjectId(agent)) } };
         agentMatch2 = { agent_id_2: { $in: agent_ids.map((agent: any) => new ObjectId(agent)) } };
     }
 
-    if(agent_ids.length > 0 && agentRole) {
+    if (agent_ids.length > 0 && agentRole) {
         roleMatchArray.push(agentMatch)
         roleMatchArray.push(agentMatch2)
     }
 
-    if(agent_ids.length > 0 && teamLeadRole) {
+    if (agent_ids.length > 0 && teamLeadRole) {
         roleMatchArray.push(teamLeadMatch)
         roleMatchArray.push(teamLeadMatch2)
     }
 
-    if(agent_ids.length > 0 && brokerRole) {
+    if (agent_ids.length > 0 && brokerRole) {
         roleMatchArray.push(brokerMatch)
     }
-    if(realty_ids.length > 0) {
+    if (realty_ids.length > 0) {
         roleMatchArray.push({ realty_id: { $in: realty_ids.map((realty: any) => new ObjectId(realty)) } })
     }
 
@@ -435,25 +442,26 @@ export async function getAgentDueDateAmortization(
     await User.findOne()
     await Payment.findOne()
 
-    const amortizations:any = await Amortization.find({
+    const amortizations: any = await Amortization.find({
         active: true,
         $or: [
-            { agent_id : agent_id },
-            { agent_id_2 : agent_id },
-            { team_lead : agent_id },
-            { team_lead_2 : agent_id },
-        ]}).populate([
-        {path:'project_id'},
-        {path:'block_id'},
-        {path:'lot_id'},
-        {path: "payment_ids"},
-        {path:'buyer_ids', select: 'first_name middle_name last_name fullName phone'},
-        {path: 'agent_id', select: 'first_name middle_name last_name fullName phone'},
-        {path: 'agent_id_2', select: 'first_name middle_name last_name fullName phone'},
-        {path: 'team_lead', select: 'first_name middle_name last_name fullName phone'},
-        {path: 'team_lead_2', select: 'first_name middle_name last_name fullName phone'},
+            { agent_id: agent_id },
+            { agent_id_2: agent_id },
+            { team_lead: agent_id },
+            { team_lead_2: agent_id },
+        ]
+    }).populate([
+        { path: 'project_id' },
+        { path: 'block_id' },
+        { path: 'lot_id' },
+        { path: "payment_ids" },
+        { path: 'buyer_ids', select: 'first_name middle_name last_name fullName phone' },
+        { path: 'agent_id', select: 'first_name middle_name last_name fullName phone' },
+        { path: 'agent_id_2', select: 'first_name middle_name last_name fullName phone' },
+        { path: 'team_lead', select: 'first_name middle_name last_name fullName phone' },
+        { path: 'team_lead_2', select: 'first_name middle_name last_name fullName phone' },
     ])
-    .select("payment_ids lot_id block_id project_id summary amount tcp buyer_ids agent_id agent_id_2 team_lead team_lead_2 lookup_summary")
+        .select("payment_ids lot_id block_id project_id summary amount tcp buyer_ids agent_id agent_id_2 team_lead team_lead_2 lookup_summary")
 
     // const agentLots:any[] = []
     // for(let i = 0; i < amortizations.length; i++) {
@@ -478,18 +486,18 @@ export async function getAgentDueDateAmortization(
 }
 
 
-export async function getAgentAmortizationService(amortization_id: String, agent_id: String, populate :any = [
-    {path:'project_id'},
-    {path:'block_id'},
-    {path:'lot_id'},
-    {path:'realty_id'},
-    {path:'agent_id'},
-    {path:'buyer_ids', populate:{path:'spouse_user_id'}},
-    {path:'buyer_ids.spouse_user_id'},
-    {path:'team_lead'},
-    {path:'team_lead_2'},
-    {path:'agent_id_2'},
-    {path: 'tags'}
+export async function getAgentAmortizationService(amortization_id: String, agent_id: String, populate: any = [
+    { path: 'project_id' },
+    { path: 'block_id' },
+    { path: 'lot_id' },
+    { path: 'realty_id' },
+    { path: 'agent_id' },
+    { path: 'buyer_ids', populate: { path: 'spouse_user_id' } },
+    { path: 'buyer_ids.spouse_user_id' },
+    { path: 'team_lead' },
+    { path: 'team_lead_2' },
+    { path: 'agent_id_2' },
+    { path: 'tags' }
 ]) {
     await dbConnect()
     await Project.findOne()
@@ -504,17 +512,17 @@ export async function getAgentAmortizationService(amortization_id: String, agent
     const amortization = await Amortization.findOne({
         _id: amortization_id,
         $or: [
-            {agent_id: agent_id},
-            {agent_id_2: agent_id},
-            {team_lead: agent_id},
-            {team_lead_2: agent_id}
+            { agent_id: agent_id },
+            { agent_id_2: agent_id },
+            { team_lead: agent_id },
+            { team_lead_2: agent_id }
         ]
     })
-    .populate(populate).populate({
-        path: 'payment_ids',
-        populate: {path: 'receiver_account_id acceptable_payment_id verified_by created_by updated_by'},
-        options: {sort: { display_sort: 1}}
-    })
+        .populate(populate).populate({
+            path: 'payment_ids',
+            populate: { path: 'receiver_account_id acceptable_payment_id verified_by created_by updated_by' },
+            options: { sort: { display_sort: 1 } }
+        })
     return amortization
 }
 
@@ -523,14 +531,14 @@ export async function getAgentLeadsService(leadId: string) {
     const leads = await BuyerProspect.find({
         created_by: leadId,
         status: { $nin: ProspectStatus.DELETED }
-    }).populate({path:'status', select: "name _id"})
+    }).populate({ path: 'status', select: "name _id" })
     return leads
 }
 
 export async function saveAgentLeadService(leadData: any) {
     await dbConnect()
     const existingLead = await checkAgentLeadService(leadData)
-    if(existingLead) {
+    if (existingLead) {
         return { error: "Lead with the same email or phone number already exists." }
     } else {
         const submittedID = "68c4f4a8d443c3af24b040de"
@@ -559,7 +567,7 @@ export async function checkAgentLeadService(data: any) {
     return lead
 }
 
-export async function deleteAgentLeadService(leadId: string ) {
+export async function deleteAgentLeadService(leadId: string) {
     const user = await auth()
     const userId = user.id
     await dbConnect()
