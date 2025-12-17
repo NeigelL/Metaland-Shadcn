@@ -577,3 +577,23 @@ export async function deleteAgentLeadService(leadId: string) {
         { new: true }
     )
 }
+
+
+export async function getAgentBuyerLotsService(user_id: string, active: boolean = true) {
+    await dbConnect()
+    await Project.findOne()
+    await Block.findOne()
+    await Lot.findOne()
+    await Realty.findOne()
+    await User.findOne()
+    return await Amortization.find({ $or: [{ agent_id: user_id }, { agent_id_2: user_id }], active })
+        .populate([
+            { path: 'project_id' },
+            { path: 'block_id' },
+            { path: 'lot_id' },
+            { path: 'realty_id' },
+            { path: 'agent_id' },
+            { path: 'buyer_ids' },
+            { path: 'payment_ids' }
+        ])
+}

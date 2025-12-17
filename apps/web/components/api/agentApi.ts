@@ -157,7 +157,7 @@ export function useLeadsQuery() {
 
 export async function saveAgentLeadQueryApi(data: any) {
     try {
-        const response = await axios.post('/api/prospects', {...data, action: "SAVE"});
+        const response = await axios.post('/api/prospects', { ...data, action: "SAVE" });
         return response.data;
     } catch (error) {
         console.error('Error saving agent lead', error);
@@ -167,7 +167,7 @@ export async function saveAgentLeadQueryApi(data: any) {
 
 export async function deleteAgentLeadQueryApi(buyer_prospect_id: any) {
     try {
-        const response = await axios.post('/api/prospects', { action: "DELETE", leadId: buyer_prospect_id});
+        const response = await axios.post('/api/prospects', { action: "DELETE", leadId: buyer_prospect_id });
         return response.data;
     } catch (error) {
         console.error('Error deleting agent lead', error);
@@ -222,5 +222,24 @@ export function useAgentSalesQuery({
         refetchOnWindowFocus: true,
         refetchOnReconnect: true,
         ...props,
+    });
+}
+
+export async function getAgentBuyerAmortizationsQueryApi() {
+    try {
+        const response = await axios.get('/api/buyer');
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching buyer lots:', error);
+        throw error;
+    }
+}
+
+export function useAgentBuyerAmortizationsQuery() {
+    return useQuery({
+        queryKey: ['agent-buyer-amortizations'],
+        queryFn: getAgentBuyerAmortizationsQueryApi,
+        refetchOnWindowFocus: true,
+        refetchOnReconnect: true,
     });
 }

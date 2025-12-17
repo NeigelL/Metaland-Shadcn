@@ -10,6 +10,7 @@ import { useBuyerAmortizationsQuery } from "@/components/api/buyerApi";
 import PropertyGrid from "@/components/Property/PropertyGrid";
 import { Search } from "lucide-react";
 import { Input } from "@workspace/ui/components/input";
+import { useAgentBuyerAmortizationsQuery } from "@/components/api/agentApi";
 
 
 interface Lot {
@@ -41,7 +42,7 @@ export function PageClient() {
   const [activeTab, setActiveTab] = useState<"all" | "ongoing" | "fullyPaid">("all");
   const searchParams = useSearchParams();
   const defaultTab = searchParams.get('tab') as "all" | "ongoing" | "fullyPaid" | null;
-  const{data: amortizations} = useBuyerAmortizationsQuery()
+  const { data: amortizations } = useAgentBuyerAmortizationsQuery()
 
   useEffect(() => {
     const updatedLotsDetails = {
@@ -85,8 +86,8 @@ export function PageClient() {
   // Filter the lots based on the selected filter
   const filteredLots = lotsDetails.lots.filter(lot => {
     const matchesSearch =
-    lot.lot.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    lot.project?.toLowerCase().includes(searchQuery.toLowerCase());
+      lot.lot.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      lot.project?.toLowerCase().includes(searchQuery.toLowerCase());
 
     if (activeTab === "all") {
       return matchesSearch;
@@ -123,7 +124,7 @@ export function PageClient() {
               TRACK ALL RESERVED PROPERTIES
             </p>
           </div>
-          
+
           Search Bar
           <div className="relative w-full md:w-80">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -140,7 +141,7 @@ export function PageClient() {
 
       {/* Tabs Navigation */}
       <div className="space-y-4">
-      <Tabs
+        <Tabs
           defaultValue="all"
           value={activeTab}
           onValueChange={(v: string) => setActiveTab(v as "all" | "ongoing" | "fullyPaid")}
@@ -148,9 +149,9 @@ export function PageClient() {
         >
           <div className="flex items-center justify-between">
             <TabsList className="w-full overflow-x-auto flex-nowrap whitespace-nowrap scrollbar-hide">
-            <TabsTrigger value="all" className="capitalize text-[11px] sm:text-sm px-2 sm:px-3">All</TabsTrigger>
-            <TabsTrigger value="ongoing" className="capitalize text-[11px] sm:text-sm px-2 sm:px-3">Ongoing</TabsTrigger>
-            <TabsTrigger value="fullyPaid" className="capitalize text-[11px] sm:text-sm px-2 sm:px-3">Fully Paid</TabsTrigger>
+              <TabsTrigger value="all" className="capitalize text-[11px] sm:text-sm px-2 sm:px-3">All</TabsTrigger>
+              <TabsTrigger value="ongoing" className="capitalize text-[11px] sm:text-sm px-2 sm:px-3">Ongoing</TabsTrigger>
+              <TabsTrigger value="fullyPaid" className="capitalize text-[11px] sm:text-sm px-2 sm:px-3">Fully Paid</TabsTrigger>
             </TabsList>
           </div>
 
