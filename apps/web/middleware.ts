@@ -8,9 +8,9 @@ export const config = {
 const PUBLIC_FILE = /\.(.*)$/i
 
 export function middleware(request: NextRequest) {
- const host = request.headers.get('host')
- const url = request.nextUrl.clone()
- let prefix = ''
+  const host = request.headers.get('host')
+  const url = request.nextUrl.clone()
+  let prefix = ''
 
   if (
     PUBLIC_FILE.test(url.pathname) ||
@@ -25,15 +25,17 @@ export function middleware(request: NextRequest) {
 
   if (host?.includes(process.env.NEXT_BUYER_DOMAIN || 'buyer.metaland.properties')) {
     prefix = '/buyer'
-  }  else if(host?.includes(process.env.NEXT_AGENT_DOMAIN || 'agent.metaland.properties')) {
+  } else if (host?.includes(process.env.NEXT_AGENT_DOMAIN || 'agent.metaland.properties')) {
     prefix = '/agent'
-  }  else if(host?.includes(process.env.NEXT_ADMIN_DOMAIN || 'admin.metaland.properties')) {
+  } else if (host?.includes(process.env.NEXT_ADMIN_DOMAIN || 'admin.metaland.properties')) {
     prefix = '/admin'
-  } else if(host?.includes(process.env.NEXT_REALTY_DOMAIN || 'realty.metaland.properties')) {
+  } else if (host?.includes(process.env.NEXT_REALTY_DOMAIN || 'realty.metaland.properties')) {
     prefix = '/realty'
+  } else if (host?.includes(process.env.NEXT_SALES_MANAGER_DOMAIN || 'salesmanager.metaland.properties')) {
+    prefix = '/salesmanager'
   }
 
-  if(prefix) {
+  if (prefix) {
     const redirectUrl = new URL(`${prefix}${request.nextUrl.pathname}`, request.url)
     redirectUrl.search = url.searchParams.toString()
     let response = NextResponse.rewrite(redirectUrl)
@@ -44,11 +46,11 @@ export function middleware(request: NextRequest) {
         throw new Error(`Failed to set header ${name}: ${err}`);
       }
     })
-      const cookies = request.cookies.getAll()
-      for (const cookie of cookies) {
-        response.cookies.set(cookie.name, cookie.value)
-      }
-    return response ;
+    const cookies = request.cookies.getAll()
+    for (const cookie of cookies) {
+      response.cookies.set(cookie.name, cookie.value)
+    }
+    return response;
   }
 
   return NextResponse.next(); // fallback

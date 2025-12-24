@@ -9,6 +9,7 @@
     "admin": "turbo admin",
     "agent": "turbo agent",
     "realty": "turbo realty",
+    "salesmanager": "turbo salesmanager",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },

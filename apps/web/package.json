@@ -9,6 +9,7 @@
     "admin": "next dev -p 5001 --experimental-https --turbopack",
     "agent": "next dev -p 5002 --experimental-https --turbopack",
     "realty": "next dev -p 5003 --experimental-https --turbopack",
+    "salesmanager": "next dev -p 5004 --experimental-https --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

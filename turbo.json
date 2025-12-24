@@ -3,33 +3,49 @@
   "ui": "tui",
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": [".next/**", "!.next/cache/**"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        ".env*"
+      ],
+      "outputs": [
+        ".next/**",
+        "!.next/cache/**"
+      ]
     },
     "lint": {
-      "dependsOn": ["^lint"]
+      "dependsOn": [
+        "^lint"
+      ]
     },
     "check-types": {
-      "dependsOn": ["^check-types"]
+      "dependsOn": [
+        "^check-types"
+      ]
     },
     "dev": {
       "cache": false,
       "persistent": true
     },
-     "admin": {
+    "admin": {
       "cache": false,
       "persistent": true
     },
-     "agent": {
+    "agent": {
       "cache": false,
       "persistent": true
     },
-     "buyer": {
+    "buyer": {
       "cache": false,
       "persistent": true
     },
-     "realty": {
+    "realty": {
+      "cache": false,
+      "persistent": true
+    },
+    "salesmanager": {
       "cache": false,
       "persistent": true
     }
