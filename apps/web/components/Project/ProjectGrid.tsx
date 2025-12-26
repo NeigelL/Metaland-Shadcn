@@ -37,20 +37,20 @@ export default function ProjectGrid({ projects }: { projects: (IProject & { tota
           key={index}
           className="flex flex-col h-full hover:shadow-md transition-shadow"
         >
-          <div className="bg-gray-50 p-4 border-b flex items-center justify-between min-h-[3.5rem]">
+          <div className="bg-gray-50 p-4 border-b items-center justify-between min-h-[3.5rem]">
             <div className="flex items-center gap-2 min-w-0 flex-1 mr-2">
               <MapPin className="h-4 w-4 text-blue-600 shrink-0" />
-              <h3 className="font-medium truncate text-sm sm:text-base">
+              <h3 className="font-medium text-sm sm:text-base">
                 {project.name}
               </h3>
             </div>
-            {project?.project_status && <span
+            {project?.project_status && <div
               className={`text-xs px-2 py-1 rounded-full shrink-0 ${getStatusStyle(
                 project?.project_status
               )}`}
             >
               {project?.project_status?.toUpperCase()}
-            </span>}
+            </div>}
           </div>
 
           <CardContent className="p-4 flex-grow flex flex-col">
@@ -74,7 +74,7 @@ export default function ProjectGrid({ projects }: { projects: (IProject & { tota
                     AREA
                   </span>
                 </div>
-                <p className="text-xs sm:text-sm pl-5">{ [ formatDecimal(project?.total_area, false) + "", " sqm"] }</p>
+                <p className="text-xs sm:text-sm pl-5">{[formatDecimal(project?.total_area, false) + "", " sqm"]}</p>
               </div>
 
               <div>
@@ -86,12 +86,12 @@ export default function ProjectGrid({ projects }: { projects: (IProject & { tota
                 </div>
                 <div className="flex flex-wrap gap-1 pl-5">
                   {/* {project.type.map((type:any, i:any) => ( */}
-                    <Badge
-                      variant="outline"
-                      className="text-xs py-0.5 px-1.5 sm:px-2"
-                    >
-                      {project.project_type}
-                    </Badge>
+                  <Badge
+                    variant="outline"
+                    className="text-xs py-0.5 px-1.5 sm:px-2"
+                  >
+                    {project.project_type}
+                  </Badge>
                   {/* ))} */}
                 </div>
               </div>
@@ -114,7 +114,7 @@ export default function ProjectGrid({ projects }: { projects: (IProject & { tota
 
           <CardFooter className="p-4 pt-0 mt-auto">
             <Link
-              href={["/projects",project._id].join("/")}
+              href={["/projects", project._id].join("/")}
               className="w-full text-xs sm:text-sm px-3 py-2 sm:py-2.5 bg-gray-600 text-white rounded hover:bg-blue-600 flex items-center justify-center gap-1.5 transition-colors"
               prefetch={false}
             >
