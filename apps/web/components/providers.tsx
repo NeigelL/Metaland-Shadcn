@@ -14,36 +14,41 @@ import { usePathname } from "next/navigation";
 
 
 const queryClient = new QueryClient()
-const AdminSidebar = dynamic( () => import("./Sidebar/AdminSidebar"), {
+const AdminSidebar = dynamic(() => import("./Sidebar/AdminSidebar"), {
   ssr: false,
-  loading: () => <div><Loader/></div>
+  loading: () => <div><Loader /></div>
 })
 
-const AgentSidebar = dynamic( () => import("./Sidebar/AgentSidebar"), {
+const AgentSidebar = dynamic(() => import("./Sidebar/AgentSidebar"), {
   ssr: false,
-  loading: () => <div><Loader/></div>
+  loading: () => <div><Loader /></div>
 })
 
-const BuyerAppSidebar = dynamic( () => import("./Sidebar/BuyerSidebar"), {
+const BuyerAppSidebar = dynamic(() => import("./Sidebar/BuyerSidebar"), {
   ssr: false,
-  loading: () => <div><Loader/></div>
+  loading: () => <div><Loader /></div>
 })
 
-const RealtySidebar = dynamic( () => import("./Sidebar/RealtySidebar"), {
+const RealtySidebar = dynamic(() => import("./Sidebar/RealtySidebar"), {
   ssr: false,
-  loading: () => <div><Loader/></div>
+  loading: () => <div><Loader /></div>
 })
 
-export function Providers({ children, user, accountType, callbackURL }: { user:any, accountType : string , callbackURL : string, children: React.ReactNode }) {
+const SalesManagerSidebar = dynamic(() => import("./Sidebar/SalesManagerSidebar"), {
+  ssr: false,
+  loading: () => <div><Loader /></div>
+})
 
-  const {setUser, user_id} = useUserStore()
+export function Providers({ children, user, accountType, callbackURL }: { user: any, accountType: string, callbackURL: string, children: React.ReactNode }) {
+
+  const { setUser, user_id } = useUserStore()
   const path = usePathname()
   React.useEffect(() => {
-      setUser(JSON.parse(user))
+    setUser(JSON.parse(user))
   }, [user])
 
 
-  React.useEffect(()=> {
+  React.useEffect(() => {
 
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker
@@ -59,7 +64,7 @@ export function Providers({ children, user, accountType, callbackURL }: { user:a
         });
     }
 
-  },[])
+  }, [])
 
   return (
     <NextThemesProvider
@@ -72,21 +77,22 @@ export function Providers({ children, user, accountType, callbackURL }: { user:a
       <QueryClientProvider client={queryClient}>
         {
           user && user !== "null" && path !== "/activate" ? <>
-          <SessionProvider session={JSON.parse(user)}>
-            <SidebarProvider>
-              { accountType == "admin" && <AdminSidebar /> }
-              { accountType == "agent" && <AgentSidebar /> }
-              { accountType == "buyer" && <BuyerAppSidebar /> }
-              { accountType == "realty" && <RealtySidebar /> }
-              <SidebarInset className="flex-1 flex flex-col">
-                 <SidebarTrigger className="size-9" />
-                {children}
-              </SidebarInset>
-            </SidebarProvider>
-          </SessionProvider>
+            <SessionProvider session={JSON.parse(user)}>
+              <SidebarProvider>
+                {accountType == "admin" && <AdminSidebar />}
+                {accountType == "agent" && <AgentSidebar />}
+                {accountType == "buyer" && <BuyerAppSidebar />}
+                {accountType == "realty" && <RealtySidebar />}
+                {accountType == "salesmanager" && <SalesManagerSidebar />}
+                <SidebarInset className="flex-1 flex flex-col">
+                  <SidebarTrigger className="size-9" />
+                  {children}
+                </SidebarInset>
+              </SidebarProvider>
+            </SessionProvider>
           </> : <div className="relative flex flex-1 flex-col">
-            { path !== "/activate"  ? <LoginPage
-             url={callbackURL}
+            {path !== "/activate" ? <LoginPage
+              url={callbackURL}
             /> : <div className="flex-1 flex items-center justify-center">{children}</div>}
           </div>
         }
