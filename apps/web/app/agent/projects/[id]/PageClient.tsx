@@ -2,6 +2,7 @@
 import { useAgentProjectDetailQuery } from "@/components/api/agentApi";
 import ProjectDetail from "@/components/Project/ProjectDetail";
 import ProjectMap from "@/components/Project/ProjectMap";
+import FileGallery from "@/components/Uploads/FileGallery";
 import { Button } from "@workspace/ui/components/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@workspace/ui/components/tabs";
 import { ChevronLeft } from "lucide-react";
@@ -15,7 +16,7 @@ export default function PageClient() {
     const [tabValues] = useState<string[]>(["detail", "map"]);
     const id = params?.id as string
     const project_id = id
-    const {data: projectResult, isLoading, isSuccess} =  useAgentProjectDetailQuery(project_id)
+    const { data: projectResult, isLoading, isSuccess } = useAgentProjectDetailQuery(project_id)
     const project = projectResult?.project || {}
 
     return <div className="flex-1 p-4 space-y-6 max-w-7xl mx-auto w-full">
@@ -45,10 +46,19 @@ export default function PageClient() {
                         </TabsTrigger>
                     ))}
                 </TabsList>
-                
+
                 <TabsContent value="detail" className="mt-0">
                     {isLoading && <div>Loading project details...</div>}
                     {isSuccess && <ProjectDetail project={project} />}
+                    <div className="mt-2 w-full">
+                        {id && <FileGallery
+                            options={{
+                                folder: ["projects", id, "portal-resources"].join("/"),
+                                entityID: id,
+                                collection: "projects",
+                            }}
+                        />}
+                    </div>
                 </TabsContent>
 
                 <TabsContent value="map" className="mt-0">
