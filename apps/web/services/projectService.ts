@@ -120,18 +120,18 @@ export const getSalesManagerProjectsDashboardService = async () => {
             })
         })
 
-        const polygons = await Polygon.find({ project_id: { $in: projectList.map((p: any) => p._id) } }).select("-createdAt -updatedAt").populate([
-            { path: 'lot_id' },
-            { path: 'block_id' }
-        ])
+        // const polygons = await Polygon.find({ project_id: { $in: projectList.map((p: any) => p._id) } }).select("-createdAt -updatedAt").populate([
+        //     { path: 'lot_id' },
+        //     { path: 'block_id' }
+        // ])
 
-        let groupPolygon: GroupPolygon = {
-            projects: polygons.filter((p: any) => p.type === 'project'),
-            blocks: polygons.filter((p: any) => p.type === 'block'),
-            lots: polygons.filter((p: any) => p.type === 'lot'),
-            others: polygons.filter((p: any) => !['lot', 'block', 'project'].includes(p.type)),
-            misc: polygons.filter((p: any) => p.type === 'misc'),
-        }
+        // let groupPolygon: GroupPolygon = {
+        //     projects: polygons.filter((p: any) => p.type === 'project'),
+        //     blocks: polygons.filter((p: any) => p.type === 'block'),
+        //     lots: polygons.filter((p: any) => p.type === 'lot'),
+        //     others: polygons.filter((p: any) => !['lot', 'block', 'project'].includes(p.type)),
+        //     misc: polygons.filter((p: any) => p.type === 'misc'),
+        // }
 
         return projects[key] = {
             _id: project._id,
@@ -141,7 +141,7 @@ export const getSalesManagerProjectsDashboardService = async () => {
             sold,
             onhold,
             available,
-            polygons: groupPolygon,
+            // polygons: groupPolygon,
             address: project.address1,
             branch_id: project.branch_id,
             barangay: project.barangay,
@@ -150,7 +150,6 @@ export const getSalesManagerProjectsDashboardService = async () => {
             project_type: project.project_type,
             total_area: project.total_area,
             expected_label: project.expected.label,
-
         }
     }))
 

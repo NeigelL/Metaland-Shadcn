@@ -15,7 +15,7 @@ export async function GET(
     const user = await auth();
     await logAccessService({
         request,
-        metadata: { action: "GET PROJECT BY ID", user_id: user?.user_id },
+        metadata: { action: "GET PROJECT BY ID SALES MANAGER", user_id: user?.user_id },
     });
 
     try {
@@ -24,7 +24,7 @@ export async function GET(
             return NextResponse.json({ error: "User ID not found" }, { status: 400 });
         }
         // Validate project id param
-        const {id: projectId} = await params;
+        const { id: projectId } = await params;
         if (!projectId) {
             return NextResponse.json({ error: "Project ID not provided" }, { status: 400 });
         }
