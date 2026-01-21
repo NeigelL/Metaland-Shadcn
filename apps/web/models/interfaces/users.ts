@@ -24,7 +24,8 @@ export interface IBuyerProspect {
 
 export interface IUser {
     company_id: string | null,
-    spouse_user_id?: String  | null,
+    avatar?: string | null,
+    spouse_user_id?: String | null,
     realty_id?: String | null,
     department_id?: String | null,
     first_name: string | null,
@@ -39,7 +40,7 @@ export interface IUser {
     gender?: string | null,
     birthdate?: Date,
     civil_status?: string | null,
-    password? : string | null,
+    password?: string | null,
     email: string | null,
     phone?: string | null,
     account_type: string | null,

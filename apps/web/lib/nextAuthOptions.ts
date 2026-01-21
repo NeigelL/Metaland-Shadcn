@@ -131,11 +131,17 @@ const nextAuthOptions: AuthOptions = {
         async signIn({ user, account, profile }) {
             await dbConnect()
             // console.dir({'signIn callbacks' : 'signIn',user, account, profile})
-            const checkUser: any = await User.findOne({ email: user.email, login: true })
-            const host = await headers()
+            const checkUser: any = await User.findOne({ email: user.email, login: true }).select("-bank_accounts -password -references -__v")
+            const host: any = await headers()
             if (checkUser && checkUser?._id) {
                 await getUserPermissions(checkUser._id.toString(), true)
                 // console.dir({'asd' : host.get("host")})
+
+                // update avatar if available
+                if (host.get("host") && [process.env.NEXT_AGENT_DOMAIN, process.env.NEXT_BUYER_DOMAIN, process.env.NEXT_REALTY_DOMAIN, process.env.NEXT_ADMIN_DOMAIN, process.env.NEXT_SALES_MANAGER_DOMAIN].includes(host.get("host")) && user?.image && checkUser?.avatar !== user.image) {
+                    await User.updateOne({ _id: checkUser._id }, { avatar: user.image })
+                }
+
                 if (process.env.NEXT_AGENT_DOMAIN == host.get("host")) {
                     if (await can("role:agent", checkUser._id.toString())) {
                         return checkUser
