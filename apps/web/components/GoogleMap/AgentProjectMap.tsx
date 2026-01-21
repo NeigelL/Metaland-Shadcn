@@ -117,13 +117,13 @@ export default function AgentProjectMap({
 
   return (
     <div className="w-full overflow-hidden rounded-2xl border border-slate-700/60">
-      <div className="absolute z-10 m-4 flex gap-4">
-        <div className="flex items-center gap-2 bg-white/90 rounded px-3 py-1 shadow">
-          <span className="inline-block w-4 h-4 rounded-sm border border-black" style={{ background: "#fff" }} />
+      <div className="absolute left-1/2 top-4 z-10 flex -translate-x-1/2 gap-4">
+        <div className="flex items-center gap-2 rounded bg-white/90 px-3 py-1 shadow">
+          <span className="inline-block h-4 w-4 rounded-sm border border-black" style={{ background: "#fff" }} />
           <span className="text-sm text-slate-800">Available</span>
         </div>
-        <div className="flex items-center gap-2 bg-white/90 rounded px-3 py-1 shadow">
-          <span className="inline-block w-4 h-4 rounded-sm border border-black" style={{ background: "#cf1627" }} />
+        <div className="flex items-center gap-2 rounded bg-white/90 px-3 py-1 shadow">
+          <span className="inline-block h-4 w-4 rounded-sm border border-black" style={{ background: "#cf1627" }} />
           <span className="text-sm text-slate-800">Sold</span>
         </div>
       </div>
