@@ -68,7 +68,7 @@ export default function PropertyGrid({ lots }: { lots: any[] }) {
                   <div className="flex items-start space-x-2">
                     <Wallet className="h-4 w-4 mt-0.5 text-muted-foreground" />
                     <div>
-                      <p className="text-xs text-muted-foreground">TCP</p>
+                      <p className="text-xs text-muted-foreground">TSP</p>
                       <p className="text-sm font-medium">₱{parseFloat(String(lot.tcp)).toLocaleString()}</p>
                       {/* {(() => {
             const matchingProject = projectsDetails.projects.find(p => 
