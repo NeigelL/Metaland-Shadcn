@@ -46,7 +46,6 @@ export default function PageClient() {
                                     <TableHead>Location</TableHead>
                                     <TableHead className="text-right">Available Lots</TableHead>
                                     <TableHead className="text-right">Lowest SQM</TableHead>
-                                    <TableHead className="text-right">Avg. TCP</TableHead>
                                     <TableHead className="text-right">Action</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -135,15 +134,12 @@ function ProjectRow({ project, isOpen, onToggle }: { project: IProject, isOpen: 
             onClick={onToggle}
         >
             <TableCell className="font-medium">{project.name}</TableCell>
-            <TableCell>{[project.city, project.province].filter(Boolean).join(", ")}</TableCell>
+            <TableCell>{[project.address1, project.city, project.province].filter(Boolean).join(", ")}</TableCell>
             <TableCell className="text-right">
                 {isLoading ? <Loader2 className="h-4 w-4 animate-spin ml-auto" /> : stats?.count || 0}
             </TableCell>
             <TableCell className="text-right">
                 {isLoading ? <Loader2 className="h-4 w-4 animate-spin ml-auto" /> : stats?.lowestSqm ? `${stats.lowestSqm.toLocaleString()} sqm` : '-'}
-            </TableCell>
-            <TableCell className="text-right">
-                {isLoading ? <Loader2 className="h-4 w-4 animate-spin ml-auto" /> : stats?.avgTcp ? `₱${stats.avgTcp.toLocaleString(undefined, { maximumFractionDigits: 0 })}` : '-'}
             </TableCell>
             <TableCell className="text-right">
                 <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); onToggle(); }}>

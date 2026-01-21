@@ -116,7 +116,7 @@ export default function AgentProjectMap({
   }
 
   return (
-    <div className="w-full overflow-hidden rounded-2xl border border-slate-700/60">
+    <div className="w-full overflow-hidden rounded-2xl border border-slate-700/60 relative">
       <div className="absolute left-1/2 top-4 z-10 flex -translate-x-1/2 gap-4">
         <div className="flex items-center gap-2 rounded bg-white/90 px-3 py-1 shadow">
           <span className="inline-block h-4 w-4 rounded-sm border border-black" style={{ background: "#fff" }} />

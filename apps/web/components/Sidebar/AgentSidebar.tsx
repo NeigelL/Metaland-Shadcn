@@ -18,7 +18,7 @@ const items: MenuItem[] = [
     icon: TreePine,
   },
   {
-    title: "PROJECTS UPDATES",
+    title: "MAPS",
     url: "/projects/updates",
     icon: MapPin,
   },
