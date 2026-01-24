@@ -1,7 +1,5 @@
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import Link from "next/link";
-import Loader from "@workspace/ui/components/loader";
 import { useQuery } from "@tanstack/react-query";
 import { getS3FolderFilesQueryApi } from "../api/awsApi";
 interface FileGalleryProps {
@@ -28,6 +26,11 @@ const isImage = (key: string) => {
 const isPDF = (key: string) => {
     const ext = key.toLowerCase().split(".").pop();
     return ["pdf"].includes(ext || "");
+};
+
+const isVideo = (key: string) => {
+    const ext = key.toLowerCase().split(".").pop();
+    return ["mp4", "webm", "ogg", "mov"].includes(ext || "");
 };
 
 const FileCardSkeleton = () => (
@@ -123,6 +126,13 @@ function FileGallery({ options: { folder = "" }, onCompleteCallback }: FileGalle
                                                 }}
                                                 src={file.src}
                                             />
+                                        ) : isVideo(file.Key) ? (
+                                            <video
+                                                src={file.src}
+                                                className="w-full h-full object-cover"
+                                                muted
+                                                preload="metadata"
+                                            />
                                         ) : isPDF(file.Key) ? (
                                             <div className="w-full h-full flex items-center justify-center bg-red-50 text-red-500">
                                                 <svg className="w-16 h-16" fill="currentColor" viewBox="0 0 20 20">
@@ -139,13 +149,14 @@ function FileGallery({ options: { folder = "" }, onCompleteCallback }: FileGalle
 
                                         {/* Overlay Action */}
                                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-200 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                                            <Link
+                                            <a
                                                 href={file.src}
                                                 target="_blank"
+                                                rel="noopener noreferrer"
                                                 className="bg-white text-gray-800 px-4 py-2 rounded-full text-sm font-medium shadow-lg hover:bg-blue-50 transition-colors transform translate-y-2 group-hover:translate-y-0 duration-200"
                                             >
                                                 View File
-                                            </Link>
+                                            </a>
                                         </div>
                                     </div>
 
