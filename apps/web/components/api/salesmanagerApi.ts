@@ -19,3 +19,22 @@ export function useSalesManagerProjectsQuery() {
         refetchOnReconnect: true,
     });
 }
+
+export async function getSalesManagerGoalsQueryApi() {
+    try {
+        const response = await axios.get('/api/goals');
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching sales manager goals available', error);
+        throw error;
+    }
+}
+
+export function useSalesManagerGoalsQuery() {
+    return useQuery({
+        queryKey: ['sales-manager-goals'],
+        queryFn: () => getSalesManagerGoalsQueryApi(),
+        refetchOnWindowFocus: true,
+        refetchOnReconnect: true,
+    });
+}
