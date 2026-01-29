@@ -19,11 +19,10 @@ export async function GET(request: NextRequest) {
       request,
       metadata: { action: "VIEW GOALS SALESMANAGER", user_id: user?.user_id },
     })
-    const amortizations = await Amortization.find({ active: true, sales_manager_id: new ObjectId("694614c008c06445d5192d77") }).select("tcp")
+    const amortizations = await Amortization.find({ active: true, sales_manager_id: new ObjectId(user?.user_id) }).select("tcp")
     return NextResponse.json({
       success: true,
       data: {
-        amortizations: amortizations,
         sales_target: amortizations.length,
         sales_total_tcp: amortizations.reduce((acc: number, item: any) => acc + item.tcp, 0)
       }
